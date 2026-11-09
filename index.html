@@ -1,695 +1,1536 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Erdkunde 8: Mega-Klausur-Coach Indien</title>
-  <style>
-    :root {
-      --primary: #FF7043;
-      --primary-dark: #D84315;
-      --secondary: #26A69A;
-      --accent: #FFCA28;
-      --bg: #121826;
-      --card-bg: #1E293B;
-      --card-hover: #334155;
-      --text: #F8FAFC;
-      --text-muted: #94A3B8;
-      --success: #4ADE80;
-      --danger: #F87171;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 40px;
-    }
-
-    header {
-      background: linear-gradient(135deg, #D84315, #FF7043);
-      padding: 20px 15px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    }
-
-    header h1 {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-    }
-
-    header p {
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
-    .progress-container {
-      width: 100%;
-      background-color: rgba(255,255,255,0.2);
-      height: 8px;
-      border-radius: 4px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: var(--accent);
-      transition: width 0.4s ease;
-    }
-
-    nav {
-      display: flex;
-      overflow-x: auto;
-      background: var(--card-bg);
-      padding: 8px 5px;
-      gap: 8px;
-      position: sticky;
-      top: 73px;
-      z-index: 99;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .nav-btn {
-      flex: 0 0 auto;
-      padding: 8px 14px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 20px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .nav-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 15px auto;
-      padding: 0 12px;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .card h2 {
-      color: var(--accent);
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card h3 {
-      color: var(--secondary);
-      font-size: 1rem;
-      margin: 12px 0 6px 0;
-    }
-
-    .badge {
-      background: rgba(255,112,67,0.2);
-      color: var(--primary);
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-
-    p, li {
-      font-size: 0.92rem;
-      color: #CBD5E1;
-      margin-bottom: 8px;
-    }
-
-    ul, ol {
-      padding-left: 20px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    @media (min-width: 600px) {
-      .grid-2 {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    .quiz-box {
-      background: rgba(255,255,255,0.03);
-      border-left: 4px solid var(--accent);
-      padding: 12px;
-      border-radius: 0 8px 8px 0;
-      margin-top: 10px;
-    }
-
-    .btn {
-      display: inline-block;
-      width: 100%;
-      padding: 12px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 0.95rem;
-      cursor: pointer;
-      text-align: center;
-      margin-top: 8px;
-      touch-action: manipulation;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn-secondary {
-      background: var(--card-hover);
-      color: var(--text);
-    }
-
-    /* Interaktive Grafik-Komponenten */
-    .pyramid-chart {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin: 15px 0;
-      background: #0F172A;
-      padding: 12px;
-      border-radius: 10px;
-    }
-
-    .pyramid-row {
-      display: flex;
-      align-items: center;
-      height: 22px;
-      font-size: 0.75rem;
-    }
-
-    .pyramid-label {
-      width: 65px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .pyramid-bars {
-      flex: 1;
-      display: flex;
-      height: 100%;
-    }
-
-    .bar-m, .bar-w {
-      height: 100%;
-      transition: width 0.5s ease;
-    }
-
-    .bar-m {
-      background: #3B82F6;
-      margin-left: auto;
-      border-radius: 3px 0 0 3px;
-    }
-
-    .bar-w {
-      background: #EC4899;
-      border-radius: 0 3px 3px 0;
-    }
-
-    .climate-graph {
-      width: 100%;
-      height: 200px;
-      background: #0F172A;
-      border-radius: 10px;
-      margin: 15px 0;
-      position: relative;
-    }
-
-    .caste-level {
-      padding: 10px;
-      margin-bottom: 6px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .caste-1 { background: #B91C1C; color: white; }
-    .caste-2 { background: #C2410C; color: white; }
-    .caste-3 { background: #D97706; color: white; }
-    .caste-4 { background: #15803D; color: white; }
-    .caste-5 { background: #475569; color: white; }
-
-    /* Match Game */
-    .match-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .match-card {
-      background: var(--card-hover);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      border: 2px solid transparent;
-      cursor: pointer;
-    }
-
-    .match-card.selected {
-      border-color: var(--accent);
-      background: rgba(255,202,40,0.1);
-    }
-
-    .match-card.correct {
-      border-color: var(--success);
-      background: rgba(74,222,128,0.1);
-      opacity: 0.6;
-      pointer-events: none;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>🌍 Erdkunde 8: Indien-Coach</h1>
-    <p>Interaktive Lern-Roadmap für die morgige Klausur</p>
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-  </header>
-
-  <nav id="navbar">
-    <button class="nav-btn active" onclick="switchTab('lvl1')">1. Gegensätze</button>
-    <button class="nav-btn" onclick="switchTab('lvl2')">2. Monsun & Wetter</button>
-    <button class="nav-btn" onclick="switchTab('lvl3')">3. Wirtschaft & Sektoren</button>
-    <button class="nav-btn" onclick="switchTab('lvl4')">4. Bevölkerung & Kaste</button>
-    <button class="nav-btn" onclick="switchTab('lvl5')">5. Mumbai & Dharavi</button>
-    <button class="nav-btn" onclick="switchTab('lvl6')">6. High-Tech & Zukunft</button>
-    <button class="nav-btn" onclick="switchTab('visual')">📊 Visuelles Labor</button>
-    <button class="nav-btn" onclick="switchTab('game')">🧩 Match-Puzzle</button>
-  </nav>
-
-  <main>
-    <!-- LEVEL 1 -->
-    <div id="lvl1" class="tab-content active">
-      <div class="card">
-        <h2><span class="badge">Level 1</span> Land der Gegensätze</h2>
-        <p>Indien ist ein Land extremer Unterschiede – geografisch, wirtschaftlich und gesellschaftlich.</p>
-        
-        <h3>1. Die 3 großen Naturräume (S. 172/173)</h3>
-        <ul>
-          <li><strong>Himalaya-Gebirge:</strong> Höchstes Gebirge der Welt im Norden (Schneemassen, Eis, Quelle der großen Flüsse).</li>
-          <li><strong>Ganges-Ebene:</strong> Fruchtbares Tiefland, dicht besiedelt, Wiege der Landwirtschaft.</li>
-          <li><strong>Dekkan-Hochland:</strong> Trockenes Plateau im Süden, eingerahmt von West- & Ostghats.</li>
-        </ul>
-
-        <h3>2. Extremes Gefälle: Arm vs. Reich</h3>
-        <p>Moderne IT-Wolkenkratzer in Bangalore stehen im krassen Gegensatz zu den Behausungen im Slum Dharavi (Mumbai).</p>
-
-        <div class="quiz-box">
-          <strong>Klausur-Tipp:</strong> Wenn gefragt wird: <em>„Warum ist Indien ein Land der Gegensätze?“</em> $\rightarrow$ Nenne immer 1 Naturbeispiel (Himalaya vs. Wüste Thar) UND 1 Wirtschaftsbeispiel (High-Tech IT vs. Armut im Slum)!
-        </div>
-        <button class="btn" onclick="completeLevel(1)">Level 1 geschafft! ➔</button>
-      </div>
-    </div>
-
-    <!-- LEVEL 2 -->
-    <div id="lvl2" class="tab-content">
-      <div class="card">
-        <h2><span class="badge">Level 2</span> Der Monsun & Das Wetter</h2>
-        <p>Der Monsun bestimmt das gesamte Leben und die Landwirtschaft in Indien.</p>
-
-        <div class="grid-2">
-          <div style="background:rgba(59,130,246,0.1); padding:10px; border-radius:8px;">
-            <h3 style="color:#60A5FA;">☀️ Sommermonsun (Juni - Sept)</h3>
-            <ul>
-              <li><strong>Wind:</strong> Weht vom Indischen Ozean aufs Land (Südwest).</li>
-              <li><strong>Eigenschaft:</strong> Extrem feucht & bringt Starkregen!</li>
-              <li><strong>Folge:</strong> Segen für Ernte, aber Überschwemmungen.</li>
-            </div>
-            <div style="background:rgba(245,158,11,0.1); padding:10px; border-radius:8px;">
-              <h3 style="color:#FBBF24;">❄️ Wintermonsun (Okt - Mai)</h3>
-              <li><strong>Wind:</strong> Weht vom Kontinent (Asien) zum Meer (Nordost).</li>
-              <li><strong>Eigenschaft:</strong> Sehr trocken!</li>
-              <li><strong>Folge:</strong> Dürre, Wassermangel auf den Feldern.</li>
-            </div>
-        </div>
-
-        <h3>Wichtige Wetter-Begriffe (Glossar)</h3>
-        <ul>
-          <li><strong>ITC (Innertropische Konvergenzzone):</strong> Tiefdruckrinne um den Äquator, die mit der Sonne wandert und die Monsunwinde zieht.</li>
-          <li><strong>Luv & Lee:</strong> <em>Luv</em> = Die dem Wind zugewandte Regenseite (z. B. Westghats). <em>Lee</em> = Die windabgewandte, trockene Seite im Schatten des Gebirges.</li>
-          <li><strong>Luftfeuchtigkeit:</strong> Je wärmer die Luft über dem Ozean wird, desto mehr Wasserdampf saugt sie auf!</li>
-        </ul>
-
-        <button class="btn" onclick="completeLevel(2)">Level 2 geschafft! ➔</button>
-      </div>
-    </div>
-
-    <!-- LEVEL 3 -->
-    <div id="lvl3" class="tab-content">
-      <div class="card">
-        <h2><span class="badge">Level 3</span> Wirtschaftssektoren & Begriffe</h2>
-        <p>Das schnelle Glossar für die begrifflichen Aufgaben in der Klausur.</p>
-
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <div style="background:#0F172A; padding:10px; border-radius:8px;">
-            <strong style="color:var(--accent);">1. Primärer Sektor:</strong> Rohstoffgewinnung (Landwirtschaft, Fischerei, Bergbau). In Indien arbeiten hier die meisten Menschen.
-          </div>
-          <div style="background:#0F172A; padding:10px; border-radius:8px;">
-            <strong style="color:var(--accent);">2. Sekundärer Sektor:</strong> Industrie & Verarbeitung (Fabriken, Textilien, Maschinenbau).
-          </div>
-          <div style="background:#0F172A; padding:10px; border-radius:8px;">
-            <strong style="color:var(--accent);">3. Tertiärer Sektor:</strong> Dienstleistungen (IT-Software, Callcenter, Ärtze, Banken).
-          </div>
-        </div>
-
-        <h3>Weitere Pflichtbegriffe:</h3>
-        <ul>
-          <li><strong>Informeller Sektor:</strong> „Schattenwirtschaft“. Arbeiten ohne Arbeitsvertrag, Steuern oder Sozialversicherung (z.B. Straßenverkäufer, Müllsammler). Sehr verbreitet in Indien!</li>
-          <li><strong>Infrastruktur:</strong> Straßen, Schienen, Stromnetz, Wasserleitungen & Schulen einer Region.</li>
-          <li><strong>Tertiarisierung:</strong> Der Trend, dass immer mehr Jobs im 3. Sektor (Dienstleistungen) entstehen.</li>
-        </ul>
-
-        <button class="btn" onclick="completeLevel(3)">Level 3 geschafft! ➔</button>
-      </div>
-    </div>
-
-    <!-- LEVEL 4 -->
-    <div id="lvl4" class="tab-content">
-      <div class="card">
-        <h2><span class="badge">Level 4</span> Bevölkerung, Migration & Kaste</h2>
-        
-        <h3>1. Das indische Kastenwesen (S. 176)</h3>
-        <p>Traditionelle Gesellschaftsordnung im Hinduismus (obwohl offiziell verboten):</p>
-        <div class="caste-level caste-1"><span>1. Brahmanen</span> <span>Priester & Gelehrte</span></div>
-        <div class="caste-level caste-2"><span>2. Kshatriyas</span> <span>Krieger & Herrscher</span></div>
-        <div class="caste-level caste-3"><span>3. Vaishyas</span> <span>Händler & Bauern</span></div>
-        <div class="caste-level caste-4"><span>4. Shudras</span> <span>Handwerker & Arbeiter</span></div>
-        <div class="caste-level caste-5"><span>Dalits ("Unberührbare")</span> <span>Ärmste Arbeiten, Ausgrenzung</span></div>
-
-        <h3>2. Push- & Pull-Faktoren (Landflucht)</h3>
-        <div class="grid-2">
-          <div style="background:rgba(248,113,113,0.1); padding:10px; border-radius:8px;">
-            <strong style="color:var(--danger);">Push-Faktoren (Wegdrücken):</strong>
-            <ul>
-              <li>Dürre & Ernteausfall</li>
-              <li>Armut & Kastenarmut</li>
-              <li>Fehlende Schulen/Ärzte</li>
-            </ul>
-          </div>
-          <div style="background:rgba(74,222,128,0.1); padding:10px; border-radius:8px;">
-            <strong style="color:var(--success);">Pull-Faktoren (Anziehen):</strong>
-            <ul>
-              <li>Jobaussichten in der Stadt</li>
-              <li>Bessere Krankenhäuser</li>
-              <li>Hoffnung auf Aufstieg</li>
-            </ul>
-          </div>
-        </div>
-
-        <button class="btn" onclick="completeLevel(4)">Level 4 geschafft! ➔</button>
-      </div>
-    </div>
-
-    <!-- LEVEL 5 -->
-    <div id="lvl5" class="tab-content">
-      <div class="card">
-        <h2><span class="badge">Level 5</span> Megastadt Mumbai & Slum Dharavi</h2>
-        <p>In Dharavi leben über 1 Mio. Menschen auf engstem Raum. Wie löst man Slum-Probleme?</p>
-
-        <h3>Die 3 Lösungskonzepte aus dem Lehrbuch (S. 182/183):</h3>
-        <ol>
-          <li><strong>Site-and-Service-Projekte:</strong> Der Staat stellt erschlossenes Land (Wasser, Strom) bereit. Die Bewohner bauen ihre Häuser selbst schrittweise auf.</li>
-          <li><strong>Slumsanierung:</strong> Bestehende Hütten werden verbessert, Wege gepflastert, Abwasserkanäle & Toiletten gebaut. Die Menschen bleiben vor Ort.</li>
-          <li><strong>Umsiedlung:</strong> Slums werden abgerissen. Bewohner werden in neue Hochhäuser am Stadtrand umgesiedelt (Nachteil: Lange Wege zur Arbeit!).</li>
-        </ol>
-
-        <button class="btn" onclick="completeLevel(5)">Level 5 geschafft! ➔</button>
-      </div>
-    </div>
-
-    <!-- LEVEL 6 -->
-    <div id="lvl6" class="tab-content">
-      <div class="card">
-        <h2><span class="badge">Level 6</span> High-Tech & Nachhaltigkeit</h2>
-        
-        <h3>1. Bangalore – Indiens „Silicon Valley“ (S. 186)</h3>
-        <p>Warum siedeln sich hier Weltfirmen an?</p>
-        <ul>
-          <li>Viele gut ausgebildete, englischsprachige IT-Experten.</li>
-          <li>Günstige Gehaltskosten im Vergleich zu den USA/Europa.</li>
-          <li><strong>Sonderwirtschaftszonen (SWZ):</strong> Steuervorteile für ausländische Investoren.</li>
-          <li><strong>Joint Ventures:</strong> Zusammenarbeiten indischer Firmen mit westlichen Unternehmen.</li>
-        </ul>
-
-        <h3>2. Barefoot College & Grüne Revolution</h3>
-        <ul>
-          <li><strong>Barefoot College:</strong> Bildet Frauen aus Dörfern zu Solar-Ingenieurinnen aus, um Strom & Licht in abgelegene Regionen zu bringen.</li>
-          <li><strong>Grüne Revolution:</strong> Einsatz von neuem Saatgut, Dünger und Bewässerung zur Steigerung der Ernteerträge in der Landwirtschaft.</li>
-        </ul>
-
-        <button class="btn" onclick="completeLevel(6)">Alles gelernt! Zum Labor ➔</button>
-      </div>
-    </div>
-
-    <!-- VISUELLES LABOR -->
-    <div id="visual" class="tab-content">
-      <div class="card">
-        <h2>📊 Visuelles Geo-Labor: Auswertungs-Training</h2>
-        <p>In Klausuren musst du Diagramme beschreiben & erklären können!</p>
-
-        <h3>1. Bevölkerungspyramiden im Vergleich (S. 179)</h3>
-        <div style="display:flex; gap:6px; margin-bottom:10px;">
-          <button class="btn btn-secondary" onclick="updatePyramid('indien')">Indien (Dreieck)</button>
-          <button class="btn btn-secondary" onclick="updatePyramid('de')">Deutschland (Urne)</button>
-        </div>
-
-        <div class="pyramid-chart" id="pyramidContainer">
-          <!-- Dynamisch generiert -->
-        </div>
-        <p id="pyramidDesc" style="font-size:0.85rem; color:var(--accent);"></p>
-
-        <h3>2. Klimadiagramm Mumbai (S. 174 M2)</h3>
-        <div class="climate-graph" id="climateGraph">
-          <svg width="100%" height="100%" viewBox="0 0 300 150">
-            <!-- Regen Balken Juni-Sept -->
-            <rect x="130" y="20" width="15" height="110" fill="#3B82F6" opacity="0.8"/>
-            <rect x="150" y="10" width="15" height="120" fill="#3B82F6"/>
-            <rect x="170" y="30" width="15" height="100" fill="#3B82F6" opacity="0.8"/>
-            <rect x="190" y="60" width="15" height="70" fill="#3B82F6" opacity="0.6"/>
-            <!-- Temp Linie -->
-            <path d="M 20 60 Q 150 40 280 65" stroke="#EF4444" stroke-width="3" fill="none"/>
-          </svg>
-        </div>
-        <p style="font-size:0.8rem;">Blaue Balken = Extrem hohe Niederschläge im Juni–September (Sommermonsun). Rote Linie = Dauerhaft hohe Temperaturen um 28–30°C.</p>
-      </div>
-    </div>
-
-    <!-- MATCH GAME -->
-    <div id="game" class="tab-content">
-      <div class="card">
-        <h2>🧩 Match-Puzzle: Fachbegriffe verbinden</h2>
-        <p>Tippe zuerst auf einen Begriff links und dann auf die passende Erklärung rechts!</p>
-        
-        <div class="match-grid" id="matchGrid">
-          <!-- Dynamisch erzeugt -->
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <script>
-    // Tab Navigation
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    // Fortschrittsbalken
-    let completed = new Set();
-    function completeLevel(lvl) {
-      completed.add(lvl);
-      const percent = (completed.size / 6) * 100;
-      document.getElementById('progressBar').style.width = percent + '%';
-      playLevelSound();
-
-      const nextTabs = ['lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6', 'visual'];
-      switchTab(nextTabs[lvl]);
-    }
-
-    // Sound FX (Web Audio API - keine externe Datei nötig!)
-    function playLevelSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.2);
-      } catch(e) {}
-    }
-
-    // Pyramiden Daten
-    const dataPyramid = {
-      indien: {
-        desc: "Dreiecksform: Sehr breite Basis = Hohe Geburtenrate (viele Kinder). Nach oben hin schmaler = Geringere Lebenserwartung.",
-        rows: [
-          {age: "75+", m: 10, w: 12},
-          {age: "60-74", m: 25, w: 27},
-          {age: "45-59", m: 45, w: 43},
-          {age: "30-44", m: 65, w: 62},
-          {age: "15-29", m: 85, w: 80},
-          {age: "0-14", m: 100, w: 92}
-        ]
-      },
-      de: {
-        desc: "Urnen-/Pilzform: Schmale Basis = Wenige Kinder. Breiter Bauch = Sehr viele ältere Menschen (überalterte Gesellschaft).",
-        rows: [
-          {age: "75+", m: 35, w: 45},
-          {age: "60-74", m: 70, w: 72},
-          {age: "45-59", m: 95, w: 92},
-          {age: "30-44", m: 60, w: 58},
-          {age: "15-29", m: 45, w: 43},
-          {age: "0-14", m: 35, w: 33}
-        ]
-      }
-    };
-
-    function updatePyramid(type) {
-      const container = document.getElementById('pyramidContainer');
-      const info = dataPyramid[type];
-      document.getElementById('pyramidDesc').innerText = info.desc;
-      
-      let html = '';
-      info.rows.forEach(r => {
-        html += `
-          <div class="pyramid-row">
-            <div class="pyramid-bars"><div class="bar-m" style="width:${r.m}%"></div></div>
-            <div class="pyramid-label">${r.age}</div>
-            <div class="pyramid-bars"><div class="bar-w" style="width:${r.w}%"></div></div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    // Match Game Logic
-    const gamePairs = [
-      { id: 1, term: "Sommermonsun", def: "Bringt feuchte Luft vom Meer & Starkregen" },
-      { id: 2, term: "Push-Faktor", def: "Armut & Dürre drückt Menschen vom Land weg" },
-      { id: 3, term: "Informeller Sektor", def: "Arbeit ohne Vertrag & Steuern (z.B. Straßenverkauf)" },
-      { id: 4, term: "Dalits", def: "Benachteiligte Gruppe außerhalb des Kastenwesens" },
-      { id: 5, term: "Bangalore", def: "Indiens High-Tech IT-Zentrum" }
-    ];
-
-    let selectedTerm = null;
-
-    function initGame() {
-      const grid = document.getElementById('matchGrid');
-      let terms = gamePairs.map(p => ({id: p.id, txt: p.term, type: 'term'}));
-      let defs = gamePairs.map(p => ({id: p.id, txt: p.def, type: 'def'}));
-      
-      // Shuffle
-      terms.sort(() => Math.random() - 0.5);
-      defs.sort(() => Math.random() - 0.5);
-
-      let html = '';
-      for(let i=0; i<gamePairs.length; i++) {
-        html += `<div class="match-card" data-id="${terms[i].id}" data-type="term" onclick="handleCardClick(this)">${terms[i].txt}</div>`;
-        html += `<div class="match-card" data-id="${defs[i].id}" data-type="def" onclick="handleCardClick(this)">${defs[i].txt}</div>`;
-      }
-      grid.innerHTML = html;
-    }
-
-    function handleCardClick(card) {
-      if(card.classList.contains('correct')) return;
-
-      if(!selectedTerm) {
-        document.querySelectorAll('.match-card').forEach(c => c.classList.remove('selected'));
-        selectedTerm = card;
-        card.classList.add('selected');
-      } else {
-        if(selectedTerm.dataset.type !== card.dataset.type && selectedTerm.dataset.id === card.dataset.id) {
-          selectedTerm.classList.remove('selected');
-          selectedTerm.classList.add('correct');
-          card.classList.add('correct');
-          selectedTerm = null;
-          playLevelSound();
-        } else {
-          selectedTerm.classList.remove('selected');
-          selectedTerm = card;
-          card.classList.add('selected');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indien Geo-Klausur Roadmap - Klasse 8</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for rewards -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F0F4F8;
+            color: #2D3748;
         }
-      }
-    }
 
-    // Init
-    updatePyramid('indien');
-    initGame();
-  </script>
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A0AEC0;
+        }
+
+        /* Pulsing animations */
+        @keyframes pulse-gentle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-gentle {
+            animation: pulse-gentle 2s infinite ease-in-out;
+        }
+
+        .badge-glow {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Chart bar styling */
+        .chart-bar-transition {
+            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-12">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('roadmap')">
+                <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                    <i class="fa-solid fa-compass text-2xl text-yellow-200"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">Indien Geo-Profi 🇮🇳</h1>
+                    <p class="text-xs text-amber-100 font-medium">Klassenarbeit-Trainer • 8. Klasse</p>
+                </div>
+            </div>
+
+            <!-- Stats & Sound toggle -->
+            <div class="flex items-center space-x-3 md:space-x-6">
+                <!-- Stars Counter -->
+                <div class="bg-black/20 px-3 py-1.5 rounded-full flex items-center space-x-2 border border-white/20">
+                    <i class="fa-solid fa-star text-yellow-300 text-lg"></i>
+                    <span id="total-stars" class="font-bold text-lg">0 / 18</span>
+                </div>
+
+                <!-- Sound Button -->
+                <button id="sound-btn" onclick="toggleSound()" class="bg-white/20 hover:bg-white/30 p-2.5 rounded-full text-white transition-all" title="Ton an/aus">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="bg-black/15 px-4 flex justify-center space-x-2 md:space-x-3 text-sm font-semibold overflow-x-auto">
+            <button onclick="switchTab('roadmap')" id="tab-roadmap" class="tab-btn py-2.5 px-3 border-b-4 border-yellow-300 text-yellow-200 flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-map"></i> <span>Roadmap</span>
+            </button>
+            <button onclick="switchTab('visuals')" id="tab-visuals" class="tab-btn py-2.5 px-3 border-b-4 border-transparent text-amber-100 hover:text-white flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-chart-column"></i> <span>Visuelles Geo-Labor</span>
+            </button>
+            <button onclick="switchTab('puzzle')" id="tab-puzzle" class="tab-btn py-2.5 px-3 border-b-4 border-transparent text-amber-100 hover:text-white flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-puzzle-piece"></i> <span>Match-Puzzle</span>
+            </button>
+            <button onclick="switchTab('cheatsheet')" id="tab-cheatsheet" class="tab-btn py-2.5 px-3 border-b-4 border-transparent text-amber-100 hover:text-white flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-file-invoice"></i> <span>Spickzettel & Methodik</span>
+            </button>
+            <button onclick="switchTab('notes')" id="tab-notes" class="tab-btn py-2.5 px-3 border-b-4 border-transparent text-amber-100 hover:text-white flex items-center space-x-2 whitespace-nowrap">
+                <i class="fa-solid fa-pen-to-square"></i> <span>Eigene Notizen</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 mt-6 flex-grow w-full">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: ROADMAP SECTION                     -->
+        <!-- ========================================== -->
+        <section id="sec-roadmap" class="space-y-6">
+            <!-- Hero Banner -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <span class="bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Morgen ist die Arbeit!</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800">Deine Turbo-Vorbereitung für Indien 🚀</h2>
+                    <p class="text-slate-600 text-sm max-w-xl">
+                        Klicke dich durch die 6 Level. Jedes Level erklärt ein Thema aus deinem Buch in einfachen Worten mit Bildaufbau und hat ein Mini-Quiz für Sterne!
+                    </p>
+                </div>
+                <!-- Global Progress -->
+                <div class="w-full md:w-56 bg-amber-50 p-4 rounded-2xl border border-amber-200 text-center space-y-2">
+                    <span class="text-xs font-bold text-amber-700 uppercase">Gesamtfortschritt</span>
+                    <div class="w-full bg-amber-200 h-4 rounded-full overflow-hidden">
+                        <div id="overall-progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                    <span id="overall-progress-text" class="text-sm font-extrabold text-amber-900">0% abgeschlossen</span>
+                </div>
+            </div>
+
+            <!-- Level Nodes Roadmap Path -->
+            <div class="relative py-4">
+                <div class="hidden md:block absolute left-1/2 top-10 bottom-10 w-1 border-r-4 border-dashed border-amber-300 -translate-x-1/2 z-0"></div>
+                <div class="space-y-8 relative z-10" id="levels-container"></div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: VISUELLES GEO-LABOR (GRAPHICS & PYRAMIDS) -->
+        <!-- ========================================== -->
+        <section id="sec-visuals" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 space-y-6">
+                <div>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Wichtig für die Arbeit!</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-column text-indigo-600"></i> Visuelles Geo-Labor: Diagramme & Pyramiden
+                    </h2>
+                    <p class="text-slate-600 text-sm">
+                        In der Klausur musst du Grafiken beschreiben und auswerten können. Hier kannst du alle wichtigen Diagramme aus deinem Buch interaktiv ausprobieren!
+                    </p>
+                </div>
+
+                <!-- Sub-Navigation for Visuals -->
+                <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+                    <button onclick="switchVisualSubTab('pyramid')" id="vtab-pyramid" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow">
+                        <i class="fa-solid fa-users"></i> Bevölkerungspyramide
+                    </button>
+                    <button onclick="switchVisualSubTab('klima')" id="vtab-klima" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-cloud-showers-heavy"></i> Klimadiagramm Mumbai
+                    </button>
+                    <button onclick="switchVisualSubTab('kaste')" id="vtab-kaste" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-sitemap"></i> Kasten-Pyramide
+                    </button>
+                    <button onclick="switchVisualSubTab('altersstruktur')" id="vtab-altersstruktur" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-chart-pie"></i> Altersstruktur (Kuchen)
+                    </button>
+                    <button onclick="switchVisualSubTab('tabelle')" id="vtab-tabelle" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-table"></i> Südasiens Daten
+                    </button>
+                </div>
+
+                <!-- 1. BEVÖLKERUNGSPYRAMIDE LAB -->
+                <div id="vsub-pyramid" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                        <div>
+                            <h3 class="font-bold text-indigo-900 text-base">M3 Bevölkerungspyramide im Vergleich</h3>
+                            <p class="text-xs text-indigo-700">Schalte um, um die Pyramidenform von Indien mit Deutschland zu vergleichen!</p>
+                        </div>
+                        <!-- Mode Selector -->
+                        <div class="flex space-x-1 bg-white p-1 rounded-xl border border-indigo-200 text-xs font-bold shadow-sm">
+                            <button onclick="renderPyramid('indien2018')" id="py-btn-indien2018" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white">Indien 2018 (Dreieck)</button>
+                            <button onclick="renderPyramid('de2018')" id="py-btn-de2018" class="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100">Deutschland 2018 (Urne)</button>
+                            <button onclick="renderPyramid('indien2050')" id="py-btn-indien2050" class="px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100">Indien 2050 (Prognose)</button>
+                        </div>
+                    </div>
+
+                    <!-- Pyramid Chart Graphic Container -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center text-xs text-slate-300 font-bold border-b border-slate-700 pb-2">
+                            <span class="text-blue-400">◄ Männer (in Mio.)</span>
+                            <span id="pyramid-chart-title" class="text-amber-300 text-sm font-black">Indien 2018: Typische Dreiecksform</span>
+                            <span class="text-pink-400">Frauen (in Mio.) ►</span>
+                        </div>
+
+                        <!-- Pyramid Bars Container -->
+                        <div class="space-y-1 text-xs" id="pyramid-bars">
+                            <!-- Injected dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-1">
+                            <strong class="text-amber-900 text-sm block">🔍 Wie beschreibe ich Indiens Pyramide?</strong>
+                            <p class="text-amber-800">
+                                • <strong>Form:</strong> Breite Basis (sehr viele Kinder & Jugendliche unter 15 Jahren), nach oben hin wird es immer schmaler (geringe Lebenserwartung der Senioren).<br>
+                                • <strong>Grund:</strong> Hohe Geburtenrate! Viele Familien wünschen sich mehrere Kinder als Altersvorsorge & Hilfe im Haushalt.
+                            </p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200 space-y-1">
+                            <strong class="text-blue-900 text-sm block">⚖️ Vergleich zu Deutschland (Urne):</strong>
+                            <p class="text-blue-800">
+                                • In Deutschland ist die Basis schmal (wenig Kinder) und die Mitte (Erwerbstätige) sowie Spitze (Senioren) sehr breit.<br>
+                                • Indien hat eine sehr <strong>junge Bevölkerung</strong> – Deutschland eine <strong>alternde Bevölkerung</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. KLIMADIAGRAMM MUMBAI LAB -->
+                <div id="vsub-klima" class="hidden space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 space-y-1">
+                        <h3 class="font-bold text-blue-900 text-base">M2 Klimadiagramm von Mumbai (18° N, 72° E)</h3>
+                        <p class="text-xs text-blue-700">Jahresniederschlag: <strong>2090 mm</strong> • Durchschnittstemperatur: <strong>27,5 °C</strong></p>
+                    </div>
+
+                    <!-- Combined Visual Chart -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-inner space-y-4">
+                        <div class="flex justify-between items-center text-xs font-bold text-slate-600">
+                            <span class="text-blue-600">Niederschlag in mm (Balken 🟦)</span>
+                            <span class="text-red-500">Temperatur in °C (Linie 🔴)</span>
+                        </div>
+
+                        <!-- Bar Graph Container -->
+                        <div class="h-56 flex items-end justify-between gap-1 sm:gap-2 border-b-2 border-slate-300 pb-1 px-2 pt-6 relative" id="klima-bars">
+                            <!-- Temp overlay points injected by JS -->
+                        </div>
+
+                        <!-- Months Labels -->
+                        <div class="flex justify-between text-xs font-bold text-slate-500 px-2 text-center">
+                            <span>J</span><span>F</span><span>M</span><span>A</span><span>M</span>
+                            <span class="text-blue-600 font-extrabold bg-blue-100 px-1 rounded">J</span>
+                            <span class="text-blue-600 font-extrabold bg-blue-100 px-1 rounded">J</span>
+                            <span class="text-blue-600 font-extrabold bg-blue-100 px-1 rounded">A</span>
+                            <span class="text-blue-600 font-extrabold bg-blue-100 px-1 rounded">S</span>
+                            <span>O</span><span>N</span><span>D</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 text-xs text-rose-900 space-y-2">
+                        <strong class="text-sm font-bold block">💡 Klausur-Fakt zum Klimadiagramm:</strong>
+                        <p>
+                            Im <strong>Juni, Juli, August und September</strong> schnellen die blauen Balken extrem in die Höhe (über 800 mm im Juli allein!). Das ist der feuchte <strong>Sommermonsun</strong>. Die Monate November bis April haben kaum Niederschlag (Wintertrockenheit).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. KASTEN-PYRAMIDE LAB -->
+                <div id="vsub-kaste" class="hidden space-y-4">
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
+                        <h3 class="font-bold text-amber-900 text-base">M1 Aufspaltung der hinduistischen Gesellschaft</h3>
+                        <p class="text-xs text-amber-700">Klicke auf die verschiedenen Kasten-Schichten, um ihre Rolle in der Gesellschaft zu lernen!</p>
+                    </div>
+
+                    <!-- Visual Stacked Pyramid -->
+                    <div class="max-w-md mx-auto space-y-2 pt-2" id="kaste-pyramid-container">
+                        <!-- Injected via JS -->
+                    </div>
+
+                    <div id="kaste-detail-box" class="bg-slate-800 text-white p-4 rounded-2xl text-xs space-y-1">
+                        <strong class="text-amber-300 text-sm block" id="kaste-detail-title">Klicke eine Schicht oben an!</strong>
+                        <p id="kaste-detail-desc" class="text-slate-300">Hier siehst du genaue Informationen zu den Berufen und Sozialrechten dieser Kaste.</p>
+                    </div>
+                </div>
+
+                <!-- 4. ALTERSSTRUKTUR KREISDIAGRAMM LAB -->
+                <div id="vsub-altersstruktur" class="hidden space-y-4">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                        <h3 class="font-bold text-slate-800 text-base">M5 Altersstruktur Indien vs. Deutschland im Vergleich</h3>
+                        <p class="text-xs text-slate-600">Dieses Diagramm zeigt die Verteilung der Altersgruppen (Seite 179 im Buch).</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                        <!-- Indien Pie Representation -->
+                        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-200 space-y-4 text-center">
+                            <h4 class="font-bold text-amber-900 text-sm">🇮🇳 Indien (Sehr junge Gesellschaft)</h4>
+                            <div class="relative w-40 h-40 mx-auto rounded-full shadow-lg border-4 border-white overflow-hidden flex items-center justify-center bg-gradient-to-tr from-amber-400 via-emerald-400 to-indigo-500">
+                                <div class="bg-white/90 p-2 rounded-full text-[10px] font-extrabold text-slate-800 shadow">
+                                    27% Kinder<br>67% Erwerbstätig<br>6% Senioren
+                                </div>
+                            </div>
+                            <ul class="text-xs text-left space-y-1 bg-white p-3 rounded-xl">
+                                <li><span class="inline-block w-3 h-3 bg-amber-400 rounded-full mr-1"></span> <strong>0–14 Jahre:</strong> 27 % (Sehr hoch!)</li>
+                                <li><span class="inline-block w-3 h-3 bg-emerald-400 rounded-full mr-1"></span> <strong>15–64 Jahre:</strong> 67 % (Arbeitskraft)</li>
+                                <li><span class="inline-block w-3 h-3 bg-indigo-500 rounded-full mr-1"></span> <strong>>64 Jahre:</strong> nur 6 %</li>
+                            </ul>
+                        </div>
+
+                        <!-- Deutschland Pie Representation -->
+                        <div class="bg-blue-50 p-5 rounded-2xl border border-blue-200 space-y-4 text-center">
+                            <h4 class="font-bold text-blue-900 text-sm">🇩🇪 Deutschland (Alternde Gesellschaft)</h4>
+                            <div class="relative w-40 h-40 mx-auto rounded-full shadow-lg border-4 border-white overflow-hidden flex items-center justify-center bg-gradient-to-tr from-blue-400 via-indigo-400 to-rose-400">
+                                <div class="bg-white/90 p-2 rounded-full text-[10px] font-extrabold text-slate-800 shadow">
+                                    13% Kinder<br>67% Erwerbstätig<br>20% Senioren
+                                </div>
+                            </div>
+                            <ul class="text-xs text-left space-y-1 bg-white p-3 rounded-xl">
+                                <li><span class="inline-block w-3 h-3 bg-blue-400 rounded-full mr-1"></span> <strong>0–14 Jahre:</strong> nur 13 %</li>
+                                <li><span class="inline-block w-3 h-3 bg-indigo-400 rounded-full mr-1"></span> <strong>15–64 Jahre:</strong> 67 %</li>
+                                <li><span class="inline-block w-3 h-3 bg-rose-400 rounded-full mr-1"></span> <strong>>64 Jahre:</strong> 20 % (Sehr hoch!)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. TABELLEN SÜDASIEN LAB -->
+                <div id="vsub-tabelle" class="hidden space-y-4">
+                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                        <h3 class="font-bold text-emerald-900 text-base">M3 Die Länder Südasiens (Buch S. 172)</h3>
+                        <p class="text-xs text-emerald-700">Vergleiche Fläche und Einwohnerzahl der Nachbarländer Indiens!</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                            <thead class="bg-slate-800 text-white font-bold">
+                                <tr>
+                                    <th class="p-3">Land</th>
+                                    <th class="p-3">Gebiet (Fläche in km²)</th>
+                                    <th class="p-3">Bevölkerung (in Mio.)</th>
+                                    <th class="p-3">Besonderheit</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-semibold text-slate-700">
+                                <tr class="bg-amber-50">
+                                    <td class="p-3 font-bold text-amber-900">🇮🇳 Indien</td>
+                                    <td class="p-3">3.287.260 km²</td>
+                                    <td class="p-3 font-black text-amber-700">1.391,9 Mio.</td>
+                                    <td class="p-3">Zweitbevölkerungsreichstes Land der Erde</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold">🇵🇰 Pakistan</td>
+                                    <td class="p-3">796.100 km²</td>
+                                    <td class="p-3">216,6 Mio.</td>
+                                    <td class="p-3">Nachbarland im Westen</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold">🇧🇩 Bangladesch</td>
+                                    <td class="p-3">144.000 km²</td>
+                                    <td class="p-3">163,7 Mio.</td>
+                                    <td class="p-3">Sehr hohe Bevölkerungsdichte im Ganges-Delta</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold">🇳🇵 Nepal</td>
+                                    <td class="p-3">147.180 km²</td>
+                                    <td class="p-3">28,6 Mio.</td>
+                                    <td class="p-3">Himalaya-Gebirgsstaat</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-bold">🇱🇰 Sri Lanka</td>
+                                    <td class="p-3">65.610 km²</td>
+                                    <td class="p-3">21,9 Mio.</td>
+                                    <td class="p-3">Inselstaat südlich von Indien</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 3: PUZZLE & MATCHING GAME              -->
+        <!-- ========================================== -->
+        <section id="sec-puzzle" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 space-y-4">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-puzzle-piece text-orange-500"></i> Geo-Begriffe Match-Game
+                        </h2>
+                        <p class="text-slate-600 text-sm">Verbinde die Fachbegriffe links mit der passenden Erklärung rechts!</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-orange-100 text-orange-800 font-bold px-4 py-2 rounded-xl text-sm">
+                            Matches: <span id="match-score">0</span> / <span id="match-total">10</span>
+                        </div>
+                        <button onclick="initPuzzleGame()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl font-bold text-sm transition">
+                            <i class="fa-solid fa-rotate-right"></i> Neu mischen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4" id="puzzle-board"></div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 4: KLAUSUR-SPICKZETTEL & METHODIK      -->
+        <!-- ========================================== -->
+        <section id="sec-cheatsheet" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice text-emerald-500"></i> Klausur-Spickzettel & Methodik-Guide
+                    </h2>
+                    <p class="text-slate-600 text-sm">Schritt-für-Schritt Anleitungen zur Auswertung von Aufgaben & Grafiken in der Geographie-Klausur.</p>
+                </div>
+
+                <!-- Guide 1: 4-Schritte Problem-Lösung -->
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl p-6 shadow-md space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-brain"></i> 1. Die 4-Schritte-Formel für Geo-Probleme
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 text-slate-800">
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-emerald-600 block">SCHRITT 1</span>
+                            <strong class="text-sm">Problem nennen</strong>
+                            <p class="text-xs text-slate-500 mt-1">z.B. "In Dharavi leben 1 Mio. Menschen in engen Slums."</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-emerald-600 block">SCHRITT 2</span>
+                            <strong class="text-sm">Ursache erklären</strong>
+                            <p class="text-xs text-slate-500 mt-1">z.B. "Landflucht durch Push- & Pull-Faktoren."</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-emerald-600 block">SCHRITT 3</span>
+                            <strong class="text-sm">Lösung/Maßnahme</strong>
+                            <p class="text-xs text-slate-500 mt-1">z.B. "Site-and-Service oder Slumsanierung."</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-emerald-600 block">SCHRITT 4</span>
+                            <strong class="text-sm">Eigene Bewertung</strong>
+                            <p class="text-xs text-slate-500 mt-1">z.B. "Sanierung schützt die soziale Gemeinschaft."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guide 2: 3-Schritte Material- / Diagrammauswertung -->
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl p-6 shadow-md space-y-4">
+                    <h3 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> 2. Wie werte ich ein Diagramm / eine Pyramide aus?
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-slate-800">
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-indigo-600 block">1. DAS THEMA</span>
+                            <strong class="text-sm">Was zeigt die Grafik?</strong>
+                            <p class="text-xs text-slate-500 mt-1">Titel, Ort, Zeitraum & Achsen ablesen (z.B. "Das Klimadiagramm von Mumbai zeigt Temperatur & Regen von Jan bis Dez").</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-indigo-600 block">2. AUFFÄLLIGKEITEN</span>
+                            <strong class="text-sm">Werte & Spitzen nennen!</strong>
+                            <p class="text-xs text-slate-500 mt-1">Höchste/niedrigste Werte zitieren (z.B. "Im Juli fällt der meiste Regen mit ca. 800 mm").</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl shadow">
+                            <span class="text-xs font-extrabold text-indigo-600 block">3. ERKLÄRUNG</span>
+                            <strong class="text-sm">Geographisch begründen!</strong>
+                            <p class="text-xs text-slate-500 mt-1">Verknüpfe mit deinem Wissen! (z.B. "Der Regen im Sommer entsteht durch den feuchten Sommermonsun").</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Cheat Sheet Items -->
+                <div class="space-y-3" id="cheatsheet-accordion"></div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- TAB 5: CUSTOM NOTES & FLASHCARDS           -->
+        <!-- ========================================== -->
+        <section id="sec-notes" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-md border border-slate-100 space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-indigo-500"></i> Eigene Notizen & Merkkarten
+                    </h2>
+                    <p class="text-slate-600 text-sm">Füge hier eigene Fragen oder Tipps deines Lehrers hinzu. Sie bleiben im Browser gespeichert!</p>
+                </div>
+
+                <form id="note-form" onsubmit="addCustomNote(event)" class="bg-indigo-50 p-4 rounded-2xl border border-indigo-100 space-y-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input type="text" id="note-title" placeholder="Titel / Frage (z.B. Was ist Landflucht?)" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm">
+                        <input type="text" id="note-category" placeholder="Kategorie (z.B. Monsun, Begriff)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm">
+                    </div>
+                    <textarea id="note-content" placeholder="Antwort / Notiz..." required rows="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-400 focus:outline-none text-sm"></textarea>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Notiz hinzufügen
+                    </button>
+                </form>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="custom-notes-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LEVEL MODAL POPUP -->
+    <div id="level-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl max-h-[90vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            <!-- Modal Header -->
+            <div id="modal-header" class="p-6 text-white bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div id="modal-icon-bg" class="bg-white/20 p-3 rounded-2xl text-2xl">
+                        <i id="modal-icon" class="fa-solid fa-mountain"></i>
+                    </div>
+                    <div>
+                        <span id="modal-badge" class="text-xs font-extrabold uppercase tracking-widest bg-black/20 px-2.5 py-0.5 rounded-full">Level 1</span>
+                        <h3 id="modal-title" class="text-xl md:text-2xl font-bold">Titel</h3>
+                    </div>
+                </div>
+                <button onclick="closeLevelModal()" class="text-white/80 hover:text-white bg-black/20 hover:bg-black/40 w-9 h-9 rounded-full flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Navigation Tabs -->
+            <div class="bg-slate-100 border-b border-slate-200 px-6 py-2 flex space-x-4 text-sm font-bold">
+                <button id="modal-tab-learn" onclick="switchModalSubTab('learn')" class="text-amber-600 border-b-2 border-amber-500 py-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open"></i> 1. Verstehen & Lernen
+                </button>
+                <button id="modal-tab-quiz" onclick="switchModalSubTab('quiz')" class="text-slate-500 hover:text-slate-800 py-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-question"></i> 2. Mini-Quiz für Sterne
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto flex-grow space-y-6" id="modal-body">
+                <div id="modal-content-learn" class="space-y-6"></div>
+                <div id="modal-content-quiz" class="hidden space-y-6"></div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                <span class="text-xs text-slate-500 font-medium">Tipp: Lies zuerst den Lern-Teil vor dem Quiz!</span>
+                <button onclick="closeLevelModal()" class="bg-slate-700 hover:bg-slate-800 text-white font-bold px-5 py-2 rounded-xl text-sm transition">
+                    Schließen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO SYNTHESIZER FOR SOUND EFFECTS -->
+    <script>
+        let soundEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(180, now + 0.1);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'star') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.setValueAtTime(880, now + 0.1); // A5
+                    osc.frequency.setValueAtTime(1174.66, now + 0.2); // D6
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                }
+            } catch(e) {
+                console.log("Audio error", e);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-lg';
+                playSound('click');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-lg';
+            }
+        }
+    </script>
+
+    <!-- MAIN APP LOGIC -->
+    <script>
+        // DATA STRUCTURE FOR THE 6 ROADMAP LEVELS
+        const levelsData = [
+            {
+                id: 1,
+                title: "Gegensätze & Geschichte",
+                subtitle: "Naturräume, Arm vs. Reich & Kolonie",
+                icon: "fa-mountain-sun",
+                color: "from-amber-500 to-orange-500",
+                badge: "Level 1",
+                summary: "Indien ist ein Land der Gegensätze: Von Eisbergen im Himalaya bis zur Wüste Thar. Und von britischer Kolonialgeschichte bis zur modernen Mittelschicht.",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-2xl">
+                            <h4 class="font-bold text-amber-900 text-lg">1. Die 4 großen Naturräume</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-700 space-y-1 mt-2">
+                                <li><strong>Himalaya (Norden):</strong> Höchstes Gebirge der Welt, speist die großen Ströme.</li>
+                                <li><strong>Flussniederungen:</strong> Fruchtbares Tiefland (Ganges, Brahmaputra, Indus).</li>
+                                <li><strong>Dekkan-Hochland:</strong> Großes Plateau im Süden, eingerahmt von den West- und Ostghats.</li>
+                                <li><strong>Wüste Thar (Westen):</strong> Heiße, trockene Landschaft in Rajasthan.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-2xl">
+                            <h4 class="font-bold text-blue-900 text-lg">2. Kolonialgeschichte & Gesellschaft</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 text-xs">
+                                <div class="bg-white p-3 rounded-xl border border-blue-200">
+                                    <strong class="text-amber-700 block text-sm">🏛️ Kolonie (bis 1947)</strong>
+                                    <p class="mt-1">Indien war über 100 Jahre eine britische Kolonie (unter fremder Herrschaft). Seit 1947 ist Indien unabhängig und die größte Demokratie der Erde!</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-blue-200">
+                                    <strong class="text-emerald-700 block text-sm">📈 Das Entstehen der Mittelschicht</strong>
+                                    <p class="mt-1">Neben extremer Armut wächst eine <strong>Mittelschicht</strong> (Menschen mit stabilem Einkommen, die sich Autos, Bildung & gute Wohnungen leisten können).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Was war Indien bis zum Jahr 1947?",
+                        options: ["Eine britische Kolonie unter Fremdherrschaft", "Ein Teil von Europa", "Eine unbewohnte Insel"],
+                        correct: 0,
+                        explain: "Richtig! Großbritannien beherrschte Indien als Kolonie bis zur Unabhängigkeit 1947."
+                    },
+                    {
+                        q: "Welches Gebirge schirmt Indien im Norden ab?",
+                        options: ["Die Alpen", "Der Himalaya", "Die Anden"],
+                        correct: 1,
+                        explain: "Genau! Der Himalaya ist das höchste Gebirge der Erde."
+                    },
+                    {
+                        q: "Was zeichnet die indische 'Mittelschicht' aus?",
+                        options: ["Sie lebt auf der Straße", "Es sind Menschen mit geregeltem Einkommen zwischen arm und reich", "Es sind alles Milliardäre"],
+                        correct: 1,
+                        explain: "Klasse! Die Mittelschicht wächst stark und treibt die Wirtschaft an."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Der Monsun, ITC & Luv/Lee",
+                subtitle: "Regenphysik & Winde verstehen",
+                icon: "fa-cloud-showers-heavy",
+                color: "from-blue-500 to-cyan-600",
+                badge: "Level 2",
+                summary: "Wie entsteht der Monsun? Lerne den Effekt von Luv & Lee an den Gebirgen und die Innertropische Konvergenzzone (ITC) kennen!",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
+                                <strong class="text-blue-900 text-sm block">1. ITC (Innertropische Konvergenzzone)</strong>
+                                <p class="mt-1">Eine Tiefdruckrinne rund um den Äquator, wo Passatwinde aufeinandertreffen. Sie wandert im Sommer mit dem Sonnenhöchststand nach Norden über Indien und löst den feuchten Sommermonsun aus!</p>
+                            </div>
+                            <div class="bg-cyan-50 p-3 rounded-xl border border-cyan-200">
+                                <strong class="text-cyan-900 text-sm block">2. Verdunstung & Luftfeuchtigkeit</strong>
+                                <p class="mt-1">Warme Luft nimmt mehr <strong>Luftfeuchtigkeit</strong> auf. Über dem Indischen Ozean <strong>verdunstet</strong> riesige Mengen Wasser zu Wasserdampf, der vom Sommermonsun an Land getragen wird.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800 text-white p-4 rounded-2xl space-y-2">
+                            <h4 class="font-bold text-amber-300 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-wind"></i> Das Luv- und Lee-Prinzip am Gebirge (z.B. Westghats)
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+                                <div class="bg-white/10 p-3 rounded-xl border border-white/20">
+                                    <strong class="text-cyan-300 block text-sm">🌧️ Luv (Dem Wind zugewandt)</strong>
+                                    <p class="mt-1">Feuchte Meeresluft steigt am Gebirge auf, kühlt ab, kondensiert $\rightarrow$ <strong>Starke Steigungsregen!</strong> (z.B. an der Küste vor den Westghats).</p>
+                                </div>
+                                <div class="bg-white/10 p-3 rounded-xl border border-white/20">
+                                    <strong class="text-amber-300 block text-sm">🏜️ Lee (Dem Wind abgewandt)</strong>
+                                    <p class="mt-1">Die Luft sinkt hinter dem Gebirge ab und erwärmt sich $\rightarrow$ Trockener Windschatten! (z.B. im Dekkan-Hochland).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Was passiert auf der LUV-Seite eines Gebirges?",
+                        options: ["Die Luft sinkt ab und es wird trocken", "Die Luft steigt auf, kühlt ab und es regnet stark", "Es schneit immer Eiscreme"],
+                        correct: 1,
+                        explain: "Super! Luv ist dem Wind zugewandt: Luft steigt auf und es regnet (Steigungsregen)."
+                    },
+                    {
+                        q: "Was ist die ITC (Innertropische Konvergenzzone)?",
+                        options: ["Eine Tiefdruckrinne am Äquator, die mit der Sonne wandert", "Ein Schiffshafen in Mumbai", "Ein Gebirge in Indien"],
+                        correct: 0,
+                        explain: "Perfekt! Die ITC zieht im Sommer nach Norden und bringt die feuchten Luftmassen mit."
+                    },
+                    {
+                        q: "Warum fällt im LEE der Westghats (im Dekkan-Hochland) weniger Regen?",
+                        options: ["Weil das Lee im Windschatten liegt und sich die absinkende Luft erwärmt", "Weil der Ozean dort ist", "Weil das Gebirge den Regen aufisst"],
+                        correct: 0,
+                        explain: "Richtig! Lee ist die windabgewandte, trockene Regenschatten-Seite."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Wirtschaftssektoren & Strukturwandel",
+                subtitle: "Sektoren, Tertiarisierung & Fachbegriffe",
+                icon: "fa-chart-pie",
+                color: "from-emerald-500 to-teal-600",
+                badge: "Level 3",
+                summary: "Verstehe wie sich Wirtschaft verändert: Vom Bauernhof (Primär) über Fabriken (Sekundär) bis hin zu IT & Callcentern (Tertiär).",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                <strong class="text-emerald-900 block text-sm">1. Primärer Sektor</strong>
+                                <p class="mt-1">Rohstoffgewinnung: Landwirtschaft, Fischerei, Bergbau.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                <strong class="text-emerald-900 block text-sm">2. Sekundärer Sektor</strong>
+                                <p class="mt-1">Verarbeitung & Industrie: Textilfabriken, Maschinenbau, Bauwesen.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                <strong class="text-emerald-900 block text-sm">3. Tertiärer Sektor</strong>
+                                <p class="mt-1">Dienstleistungen: IT-Software, Banken, Ärzte, Handel, Callcenter.</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                            <h4 class="font-bold text-slate-800 text-sm">Wichtige Begriffe:</h4>
+                            <p><strong>• Tertiarisierung:</strong> Der Wandel, bei dem immer mehr Menschen im Dienstleistungssektor arbeiten.</p>
+                            <p><strong>• Informeller Sektor:</strong> Arbeiten ohne Vertrag & Steuern (Straßenverkäufer, Tagelöhner).</p>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Zu welchem Sektor gehört der Reisanbau eines Bauern?",
+                        options: ["Primärer Sektor", "Sekundärer Sektor", "Tertiärer Sektor"],
+                        correct: 0,
+                        explain: "Richtig! Rohstoffgewinnung und Landwirtschaft sind der primäre Sektor."
+                    },
+                    {
+                        q: "Was bedeutet 'Tertiarisierung'?",
+                        options: ["Dass alle Bauern werden", "Dass der Dienstleistungssektor (Tertiär) immer wichtiger wird", "Dass Fabriken geschlossen werden"],
+                        correct: 1,
+                        explain: "Ausgezeichnet! Genau das passiert aktuell in indischen Großstädten."
+                    },
+                    {
+                        q: "Was versteht man unter 'Strukturwandel'?",
+                        options: ["Wenn sich die Wirtschaftsstruktur einer Region über die Zeit verändert", "Wenn ein Haus umgebaut wird", "Dass das Klima sich nicht ändert"],
+                        correct: 0,
+                        explain: "Stimmt genau!"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Bevölkerung & Push/Pull",
+                subtitle: "Migration, Kasten & UNICEF",
+                icon: "fa-users",
+                color: "from-purple-500 to-indigo-600",
+                badge: "Level 4",
+                summary: "Warum ziehen Millionen vom Land in die Stadt? Was sind Push- und Pull-Faktoren, Wanderarbeiter und wer schützt Kinderrechte?",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 space-y-2">
+                            <h4 class="font-bold text-purple-900 text-sm">1. Push- & Pull-Faktoren der Landflucht</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                <div class="bg-white p-3 rounded-xl border border-red-200">
+                                    <strong class="text-red-600 block text-sm">🔴 Push-Faktoren (Drücken weg)</strong>
+                                    <p class="mt-1">Armut, fehlende Jobs, Dürren, schlechte Schulen & Medizin.</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border border-emerald-200">
+                                    <strong class="text-emerald-600 block text-sm">🟢 Pull-Faktoren (Ziehen an)</strong>
+                                    <p class="mt-1">Hoffnung auf Arbeit, höheres Einkommen, Bildung & Aufstieg.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                                <strong class="text-indigo-900 block font-bold">Wanderarbeiter</strong>
+                                <p class="mt-1">Arbeiten vorübergehend woanders für Geld für die Familie.</p>
+                            </div>
+                            <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                                <strong class="text-indigo-900 block font-bold">Sterberate</strong>
+                                <p class="mt-1">Todesfälle pro 1.000 Einwohner im Jahr.</p>
+                            </div>
+                            <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                                <strong class="text-indigo-900 block font-bold">UNICEF & Dalits</strong>
+                                <p class="mt-1">Unterstützung für Kinder aus armen Familien & Kastenlosen.</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Was ist ein 'Push-Faktor' bei der Landflucht?",
+                        options: ["Ein Grund, der Menschen aus dem Dorf wegdrückt (z.B. Armut, Dürre)", "Ein Grund, der Touristen anlockt", "Ein schönes Kino in der Stadt"],
+                        correct: 0,
+                        explain: "Korrekt! Push = wegdrücken von der Heimat."
+                    },
+                    {
+                        q: "Wer sind 'Wanderarbeiter'?",
+                        options: ["Urlauber in den Alpen", "Menschen, die vorübergehend woanders arbeiten, um Geld für die Familie zu verdienen", "Sportler im Marathon"],
+                        correct: 1,
+                        explain: "Genau! Oft arbeiten Männer aus Dörfern in Großstadt-Baustellen."
+                    },
+                    {
+                        q: "Was macht das Kinderhilfswerk UNICEF in Indien?",
+                        options: ["Es baut Autos", "Es unterstützt Bildung & Schutz für Kinder aus armen Verhältnissen und Dalits", "Es verkauft Handys"],
+                        correct: 1,
+                        explain: "Super! UNICEF kämpft für Chancengleichheit aller Kinder."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Megastädte & Slum-Lösungen",
+                subtitle: "Mumbai, Dharavi & 3 Konzepte",
+                icon: "fa-city",
+                color: "from-rose-500 to-pink-600",
+                badge: "Level 5",
+                summary: "Mumbai ist eine 20-Millionen-Metropole. Die Hälfte der Bewohner lebt in Slums wie Dharavi. Wie kann man die Situation verbessern?",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 text-xs">
+                            <h4 class="font-bold text-rose-900 text-sm">Der Slum Dharavi (Mumbai)</h4>
+                            <p class="mt-1">Über 1 Million Menschen leben auf engstem Raum. Hütten aus Wellblech & Plastik, fehlende Toiletten & sauberes Wasser.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-slate-800 text-sm">Die 3 Konzepte zur Verbesserung:</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-white p-3 rounded-xl border-2 border-emerald-400">
+                                    <strong class="text-emerald-700 block text-sm">1. Site-and-Service</strong>
+                                    <p class="mt-1">Staat stellt Land mit Wasser & Strom bereit, Anwohner bauen Häuser selbst.</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border-2 border-blue-400">
+                                    <strong class="text-blue-700 block text-sm">2. Slumsanierung</strong>
+                                    <p class="mt-1">Siedlung bleibt stehen! Wasser, Strom & Wege werden eingebaut.</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl border-2 border-amber-400">
+                                    <strong class="text-amber-700 block text-sm">3. Umsiedlung</strong>
+                                    <p class="mt-1">Abriss des Slums, Bewohner ziehen in Betonhaushöfe am Stadtrand.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Was zeichnet den Slum 'Dharavi' in Mumbai aus?",
+                        options: ["Es ist ein Luxusviertel", "Über 1 Mio. Menschen leben dort auf engstem Raum", "Es gibt nur Parks"],
+                        correct: 1,
+                        explain: "Stimmt! Dharavi ist einer der größten Slums Asiens."
+                    },
+                    {
+                        q: "Was passiert beim Konzept 'Site-and-Service'?",
+                        options: ["Staat liefert Erschließung (Wasser/Strom), Anwohner bauen das Haus selbst", "Abriss ohne Ersatz", "Es werden Roboter gebaut"],
+                        correct: 0,
+                        explain: "Ausgezeichnet! 'Site' = Grundstück, 'Service' = Wasser/Strom."
+                    },
+                    {
+                        q: "Warum ist die 'Slumsanierung' oft beliebter als Umsiedlung?",
+                        options: ["Weil die Nachbarschaft und der Arbeitsplatz im Viertel erhalten bleiben", "Weil es teurer ist", "Weil niemand dort wohnen will"],
+                        correct: 0,
+                        explain: "Sehr gut! Die sozialen Netzwerke bleiben intakt."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "IT, Globalisierung & Solar",
+                subtitle: "Bangalore, SWZ, Joint Venture & Barefoot",
+                icon: "fa-microchip",
+                color: "from-blue-600 to-indigo-700",
+                badge: "Level 6",
+                summary: "Indien ist High-Tech-Pionier! Wie locken Sonderwirtschaftszonen ausländische Investoren an? Und wie helfen Joint Ventures?",
+                learnContent: `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-200">
+                                <strong class="text-blue-900 text-sm block">1. Sonderwirtschaftszone (SWZ)</strong>
+                                <p class="mt-1">Gebiete mit niedrigen Steuern & Zollfreiheit, um Firmen anzulocken.</p>
+                            </div>
+                            <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                                <strong class="text-indigo-900 text-sm block">2. Joint Venture</strong>
+                                <p class="mt-1">Gemeinsames Wagnis – Zusammenschluss ausländischer & indischer Firmen.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200">
+                                <strong class="text-amber-900 text-sm block">3. Barefoot College</strong>
+                                <p class="mt-1">Großmütter lernen den Bau von Solaranlagen für arme Dörfer.</p>
+                            </div>
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+                                <strong class="text-emerald-900 text-sm block">4. Grüne Revolution</strong>
+                                <p class="mt-1">Hochertragssaatgut & Dünger steigerten die Ernten drastisch.</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    {
+                        q: "Was ist der Hauptvorteil einer 'Sonderwirtschaftszone'?",
+                        options: ["Steuervorteile & Erleichterungen, um ausländische Investoren anzulocken", "Dass dort nur Eis verkauft werden darf", "Dass dort Autos verboten sind"],
+                        correct: 0,
+                        explain: "Korrekt! Niedrige Steuern locken internationale Großkonzerne an."
+                    },
+                    {
+                        q: "Was ist ein 'Joint Venture'?",
+                        options: ["Eine Abenteuersportart", "Ein Zusammenschluss von zwei Unternehmen für ein gemeinsames Projekt", "Ein altes Bauwerk"],
+                        correct: 1,
+                        explain: "Super! Oft schließt sich eine US-Firma mit einer indischen IT-Firma zusammen."
+                    },
+                    {
+                        q: "Was lernen die Frauen am 'Barefoot College'?",
+                        options: ["Solaranlagen bauen, um Dörfer mit grünem Licht zu versorgen", "Programmieren für Hollywood", "Flugzeuge steuern"],
+                        correct: 0,
+                        explain: "Genau! Ungebildete Dorffrauen werden zu Ingenieurinnen."
+                    }
+                ]
+            }
+        ];
+
+        // PUZZLE MATCHING DATA (10 DEFINITIONS)
+        const puzzlePairs = [
+            { id: 1, term: "Informeller Sektor", desc: "Arbeiten ohne Vertrag, Steuern oder Schutz (z.B. Straßenverkäufer)." },
+            { id: 2, term: "Luv", desc: "Dem Wind zugewandte Gebirgsseite mit starken Niederschlägen." },
+            { id: 3, term: "Lee", desc: "Windabgewandte Gebirgsseite im trockenen Regenschatten." },
+            { id: 4, term: "ITC Zone", desc: "Tiefdruckrinne am Äquator, die Monsunwinde steuert." },
+            { id: 5, term: "Push-Faktor", desc: "Grund für das Verlassen der Heimat (z.B. Armut, Dürre)." },
+            { id: 6, term: "Pull-Faktor", desc: "Anziehungskraft der Großstadt (z.B. Hoffnung auf Arbeitsplätze)." },
+            { id: 7, term: "Tertiarisierung", desc: "Wandel zu mehr Beschäftigung im Dienstleistungssektor." },
+            { id: 8, term: "Joint Venture", desc: "Zusammenschluss von zwei Firmen für ein gemeinsames Projekt." },
+            { id: 9, term: "Sonderwirtschaftszone", desc: "Gebiet mit Steuervorteilen für ausländische Investoren." },
+            { id: 10, term: "Wanderarbeiter", desc: "Menschen, die befristet woanders arbeiten, um Familien zu ernähren." }
+        ];
+
+        // CHEATSHEET ACCORDION DATA
+        const cheatsheetItems = [
+            {
+                q: "1. Warum ist Indien ein 'Land der Gegensätze'?",
+                a: "<strong>Natur:</strong> Eisiger Himalaya im Norden vs. heiße Wüste Thar im Westen.<br><strong>Gesellschaft:</strong> Britische Kolonie bis 1947, heute wachsende Mittelschicht & IT-Boom vs. Armut in Slums & Dalits."
+            },
+            {
+                q: "2. Wie entsteht der Monsun & was bedeuten Luv & Lee?",
+                a: "<strong>ITC & Sonne:</strong> Im Sommer wandert die ITC nach Norden. Feuchte Luft vom Ozean wird angesaugt.<br><strong>Luv:</strong> Windseite der Westghats $\rightarrow$ Aufsteigende Luft kühlt ab $\rightarrow$ Regen.<br><strong>Lee:</strong> Windschatten-Seite $\rightarrow$ Absinkende warme Luft $\rightarrow$ Trockenheit."
+            },
+            {
+                q: "3. Welche 3 Wirtschaftssektoren gibt es & was ist Tertiarisierung?",
+                a: "• <strong>Primär:</strong> Landwirtschaft, Bergbau.<br>• <strong>Sekundär:</strong> Fabriken & Industrie.<br>• <strong>Tertiär:</strong> Dienstleistungen (IT, Banken).<br>• <strong>Tertiarisierung:</strong> Der Trend zu immer mehr Jobs im Dienstleistungssektor."
+            },
+            {
+                q: "4. Was sind Push- und Pull-Faktoren bei der Landflucht?",
+                a: "• <strong>Push (Wegdrücken):</strong> Armut, Dürre, fehlende Schulen.<br>• <strong>Pull (Anziehen):</strong> Hoffnung auf Jobs, höheres Einkommen, Medizin."
+            },
+            {
+                q: "5. Wie lockt Indien Investoren an (SWZ & Joint Venture)?",
+                a: "• <strong>Sonderwirtschaftszone (SWZ):</strong> Niedrige Steuern & Zollfreiheit.<br>• <strong>Joint Venture:</strong> Partnerschaft ausländischer mit indischen Firmen."
+            },
+            {
+                q: "6. Welche 3 Konzepte gibt es zur Verbesserung von Slums?",
+                a: "1. <strong>Site-and-Service:</strong> Staat liefert erschlossenes Land (Wasser/Strom), Anwohner bauen Häuser.<br>2. <strong>Slumsanierung:</strong> Viertel bleibt stehen & wird mit Rohren/Strom modernisiert.<br>3. <strong>Umsiedlung:</strong> Abriss & Umzug in Betonhaushöfe am Stadtrand."
+            }
+        ];
+
+        // BEVÖLKERUNGSPYRAMIDEN DATA
+        const pyramidDataSets = {
+            indien2018: {
+                title: "Indien 2018: Dreiecksform (Breite Basis)",
+                data: [
+                    { age: "70+", m: 15, f: 16 },
+                    { age: "60-69", m: 28, f: 30 },
+                    { age: "50-59", m: 45, f: 44 },
+                    { age: "40-49", m: 62, f: 60 },
+                    { age: "30-39", m: 80, f: 78 },
+                    { age: "20-29", m: 98, f: 94 },
+                    { age: "10-19", m: 115, f: 108 },
+                    { age: "0-9", m: 122, f: 112 }
+                ]
+            },
+            de2018: {
+                title: "Deutschland 2018: Urnenform (Schmale Basis)",
+                data: [
+                    { age: "70+", m: 35, f: 45 },
+                    { age: "60-69", m: 50, f: 52 },
+                    { age: "50-59", m: 72, f: 70 },
+                    { age: "40-49", m: 55, f: 54 },
+                    { age: "30-39", m: 48, f: 46 },
+                    { age: "20-29", m: 45, f: 42 },
+                    { age: "10-19", m: 38, f: 36 },
+                    { age: "0-9", m: 35, f: 33 }
+                ]
+            },
+            indien2050: {
+                title: "Indien 2050: Bienenkorb-Prognose (Stabilisiert)",
+                data: [
+                    { age: "70+", m: 45, f: 50 },
+                    { age: "60-69", m: 68, f: 70 },
+                    { age: "50-59", m: 82, f: 80 },
+                    { age: "40-49", m: 90, f: 88 },
+                    { age: "30-39", m: 92, f: 90 },
+                    { age: "20-29", m: 90, f: 88 },
+                    { age: "10-19", m: 82, f: 80 },
+                    { age: "0-9", m: 75, f: 72 }
+                ]
+            }
+        };
+
+        // MUMBAI CLIMATE DATA
+        const mumbaiData = [
+            { month: "J", rain: 0, temp: 24 },
+            { month: "F", rain: 0, temp: 24 },
+            { month: "M", rain: 0, temp: 26 },
+            { month: "A", rain: 5, temp: 28 },
+            { month: "M", rain: 20, temp: 30 },
+            { month: "J", rain: 550, temp: 29 },
+            { month: "J", rain: 800, temp: 27 },
+            { month: "A", rain: 520, temp: 27 },
+            { month: "S", rain: 320, temp: 27 },
+            { month: "O", rain: 90, temp: 28 },
+            { month: "N", rain: 10, temp: 27 },
+            { month: "D", rain: 0, temp: 25 }
+        ];
+
+        // KASTENWESEN DATA
+        const kasteData = [
+            { name: "1. Brahmanen", desc: "Priester und Gelehrte. Höchste Ansehenskaste in der Gesellschaft.", color: "bg-amber-400 text-amber-950" },
+            { name: "2. Kshatriyas", desc: "Krieger, Herrscher, Könige und hohe Beamte.", color: "bg-amber-500 text-amber-950" },
+            { name: "3. Vaishyas", desc: "Kaufleute, Händler, Handwerker und Bauern mit eigenem Land.", color: "bg-orange-500 text-white" },
+            { name: "4. Shudras", desc: "Dienstboten, Tagelöhner, Knechte und Arbeiter.", color: "bg-orange-600 text-white" },
+            { name: "5. Dalits (Kastenlose)", desc: "Unterste Schicht ('Unberührbare'). Verrichtung von als 'unrein' geltenden Arbeiten (Straßenkehrer, Ledergerber). Haben traditionally kaum Rechte.", color: "bg-slate-700 text-white" }
+        ];
+
+        // LOCAL STORAGE STATE
+        let userProgress = JSON.parse(localStorage.getItem('indien_geo_progress')) || {
+            completedLevels: [],
+            stars: {},
+            customNotes: []
+        };
+
+        let activeLevel = null;
+        let selectedTerm = null;
+        let selectedDesc = null;
+        let matchedCount = 0;
+
+        window.onload = function() {
+            renderRoadmap();
+            renderCheatsheet();
+            renderCustomNotes();
+            updateGlobalStats();
+            initPuzzleGame();
+
+            // Render Visual Labs Default Views
+            renderPyramid('indien2018');
+            renderKlimaChart();
+            renderKastePyramid();
+        };
+
+        function switchTab(tabId) {
+            playSound('click');
+            ['roadmap', 'visuals', 'puzzle', 'cheatsheet', 'notes'].forEach(t => {
+                document.getElementById('sec-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).classList.remove('border-yellow-300', 'text-yellow-200');
+                document.getElementById('tab-' + t).classList.add('border-transparent', 'text-amber-100');
+            });
+
+            document.getElementById('sec-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('border-yellow-300', 'text-yellow-200');
+            document.getElementById('tab-' + tabId).classList.remove('border-transparent', 'text-amber-100');
+        }
+
+        function switchVisualSubTab(subTabId) {
+            playSound('click');
+            ['pyramid', 'klima', 'kaste', 'altersstruktur', 'tabelle'].forEach(t => {
+                document.getElementById('vsub-' + t).classList.add('hidden');
+                const btn = document.getElementById('vtab-' + t);
+                btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200";
+            });
+
+            document.getElementById('vsub-' + subTabId).classList.remove('hidden');
+            document.getElementById('vtab-' + subTabId).className = "px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow";
+        }
+
+        // RENDER PYRAMID CHART
+        function renderPyramid(type) {
+            playSound('click');
+            ['indien2018', 'de2018', 'indien2050'].forEach(t => {
+                const btn = document.getElementById('py-btn-' + t);
+                if (t === type) {
+                    btn.className = "px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-bold";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 font-bold";
+                }
+            });
+
+            const pInfo = pyramidDataSets[type];
+            document.getElementById('pyramid-chart-title').innerText = pInfo.title;
+
+            const container = document.getElementById('pyramid-bars');
+            container.innerHTML = '';
+
+            pInfo.data.forEach(row => {
+                const mW = Math.min(100, Math.round((row.m / 130) * 100));
+                const fW = Math.min(100, Math.round((row.f / 130) * 100));
+
+                const rowHtml = `
+                    <div class="flex items-center text-[10px] space-x-2">
+                        <div class="w-1/2 flex justify-end items-center">
+                            <span class="text-slate-400 mr-2">${row.m}m</span>
+                            <div class="bg-blue-500 h-3.5 rounded-l chart-bar-transition" style="width: ${mW}%"></div>
+                        </div>
+                        <div class="w-12 text-center font-bold text-amber-300 shrink-0 text-[10px]">${row.age}</div>
+                        <div class="w-1/2 flex justify-start items-center">
+                            <div class="bg-pink-500 h-3.5 rounded-r chart-bar-transition" style="width: ${fW}%"></div>
+                            <span class="text-slate-400 ml-2">${row.f}m</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += rowHtml;
+            });
+        }
+
+        // RENDER MUMBAI KLIMA CHART
+        function renderKlimaChart() {
+            const container = document.getElementById('klima-bars');
+            container.innerHTML = '';
+
+            mumbaiData.forEach(d => {
+                const barH = Math.round((d.rain / 800) * 100);
+                const isSommerMonsun = (d.rain >= 300);
+
+                const col = document.createElement('div');
+                col.className = "flex-1 flex flex-col items-center h-full justify-end group relative";
+
+                col.innerHTML = `
+                    <!-- Tooltip -->
+                    <div class="opacity-0 group-hover:opacity-100 pointer-events-none absolute -top-8 bg-black text-white text-[9px] p-1 rounded z-20 whitespace-nowrap">
+                        ${d.rain} mm | ${d.temp}°C
+                    </div>
+
+                    <!-- Temp Dot Indicator -->
+                    <div class="w-2 h-2 rounded-full bg-red-500 absolute mb-1" style="bottom: ${Math.round((d.temp / 35) * 100)}%"></div>
+
+                    <!-- Rain Bar -->
+                    <div class="w-full ${isSommerMonsun ? 'bg-blue-600' : 'bg-blue-300'} rounded-t chart-bar-transition" style="height: ${barH}%"></div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // RENDER KASTEN PYRAMID
+        function renderKastePyramid() {
+            const container = document.getElementById('kaste-pyramid-container');
+            container.innerHTML = '';
+
+            kasteData.forEach((k, idx) => {
+                const widthStyle = `${100 - (idx * 12)}%`;
+                const btn = document.createElement('button');
+                btn.className = `w-full ${k.color} font-extrabold py-3 px-4 rounded-xl shadow hover:scale-105 transition transform text-xs text-center mx-auto block`;
+                btn.style.maxWidth = widthStyle;
+                btn.innerText = k.name;
+                btn.onclick = () => {
+                    playSound('click');
+                    document.getElementById('kaste-detail-title').innerText = k.name;
+                    document.getElementById('kaste-detail-desc').innerText = k.desc;
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // RENDER ROADMAP
+        function renderRoadmap() {
+            const container = document.getElementById('levels-container');
+            container.innerHTML = '';
+
+            levelsData.forEach((level, idx) => {
+                const isCompleted = userProgress.completedLevels.includes(level.id);
+                const starCount = userProgress.stars[level.id] || 0;
+                const isLeft = idx % 2 === 0;
+
+                const nodeHtml = `
+                    <div class="flex flex-col md:flex-row items-center ${isLeft ? 'md:flex-row-reverse' : ''} justify-center gap-6">
+                        <div class="w-full md:w-5/12 bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition-all border border-slate-100 group relative">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-800 px-3 py-1 rounded-full">
+                                    ${level.badge}
+                                </span>
+                                <div class="flex space-x-1 text-yellow-400 text-sm">
+                                    <i class="${starCount >= 1 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                                    <i class="${starCount >= 2 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                                    <i class="${starCount >= 3 ? 'fa-solid' : 'fa-regular'} fa-star"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 group-hover:text-amber-600 transition">
+                                ${level.title}
+                            </h3>
+                            <p class="text-xs font-semibold text-amber-600 mb-2">${level.subtitle}</p>
+                            <p class="text-slate-600 text-xs mb-4 line-clamp-2">${level.summary}</p>
+
+                            <button onclick="openLevelModal(${level.id})" class="w-full bg-gradient-to-r ${level.color} text-white font-bold py-2.5 px-4 rounded-2xl shadow hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
+                                <span>${isCompleted ? 'Wiederholen & Lernen' : 'Level Starten'}</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <button onclick="openLevelModal(${level.id})" class="w-16 h-16 rounded-3xl bg-gradient-to-tr ${level.color} text-white flex items-center justify-center text-2xl shadow-lg border-4 border-white hover:scale-110 transition-transform ${isCompleted ? 'badge-glow' : ''}">
+                                <i class="fa-solid ${isCompleted ? 'fa-check' : level.icon}"></i>
+                            </button>
+                        </div>
+                        <div class="hidden md:block w-5/12"></div>
+                    </div>
+                `;
+                container.innerHTML += nodeHtml;
+            });
+        }
+
+        function openLevelModal(levelId) {
+            playSound('click');
+            activeLevel = levelsData.find(l => l.id === levelId);
+            if (!activeLevel) return;
+
+            document.getElementById('modal-badge').innerText = activeLevel.badge;
+            document.getElementById('modal-title').innerText = activeLevel.title;
+            document.getElementById('modal-icon').className = `fa-solid ${activeLevel.icon}`;
+
+            document.getElementById('modal-content-learn').innerHTML = activeLevel.learnContent;
+            buildModalQuiz();
+            switchModalSubTab('learn');
+
+            document.getElementById('level-modal').classList.remove('hidden');
+        }
+
+        function closeLevelModal() {
+            playSound('click');
+            document.getElementById('level-modal').classList.add('hidden');
+        }
+
+        function switchModalSubTab(tab) {
+            playSound('click');
+            if (tab === 'learn') {
+                document.getElementById('modal-content-learn').classList.remove('hidden');
+                document.getElementById('modal-content-quiz').classList.add('hidden');
+                document.getElementById('modal-tab-learn').className = "text-amber-600 border-b-2 border-amber-500 py-1 flex items-center gap-1.5 font-bold";
+                document.getElementById('modal-tab-quiz').className = "text-slate-500 hover:text-slate-800 py-1 flex items-center gap-1.5 font-semibold";
+            } else {
+                document.getElementById('modal-content-learn').classList.add('hidden');
+                document.getElementById('modal-content-quiz').classList.remove('hidden');
+                document.getElementById('modal-tab-quiz').className = "text-amber-600 border-b-2 border-amber-500 py-1 flex items-center gap-1.5 font-bold";
+                document.getElementById('modal-tab-learn').className = "text-slate-500 hover:text-slate-800 py-1 flex items-center gap-1.5 font-semibold";
+            }
+        }
+
+        function buildModalQuiz() {
+            const quizContainer = document.getElementById('modal-content-quiz');
+            quizContainer.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900">
+                        <strong>💡 Beantworte alle 3 Fragen richtig, um 3 Sterne zu verdienen!</strong>
+                    </div>
+
+                    ${activeLevel.questions.map((q, qIdx) => `
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <h5 class="font-bold text-slate-800 text-sm">${qIdx + 1}. ${q.q}</h5>
+                            <div class="space-y-2" id="q-options-${qIdx}">
+                                ${q.options.map((opt, optIdx) => `
+                                    <button onclick="checkAnswer(${qIdx}, ${optIdx})" class="w-full text-left bg-white hover:bg-amber-50 border border-slate-200 p-3 rounded-xl text-xs font-semibold text-slate-700 transition flex justify-between items-center group">
+                                        <span>${opt}</span>
+                                        <i class="fa-regular fa-circle text-slate-300 group-hover:text-amber-500"></i>
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div id="q-feedback-${qIdx}" class="hidden p-3 rounded-xl text-xs font-bold"></div>
+                        </div>
+                    `).join('')}
+
+                    <div class="text-center pt-2">
+                        <button onclick="finishLevelQuiz()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-3 px-8 rounded-2xl shadow-lg hover:scale-105 transition text-sm">
+                            Quiz Auswerten & Sterne Speichern ⭐
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        let currentQuizAnswers = {};
+
+        function checkAnswer(qIdx, optIdx) {
+            const question = activeLevel.questions[qIdx];
+            const feedbackEl = document.getElementById(`q-feedback-${qIdx}`);
+            currentQuizAnswers[qIdx] = (optIdx === question.correct);
+
+            if (optIdx === question.correct) {
+                playSound('correct');
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${question.explain}`;
+            } else {
+                playSound('wrong');
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold bg-red-100 text-red-800 border border-red-300";
+                feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Huch! Noch nicht ganz. Versuch es nochmal!`;
+            }
+            feedbackEl.classList.remove('hidden');
+        }
+
+        function finishLevelQuiz() {
+            let correctCount = 0;
+            activeLevel.questions.forEach((_, idx) => {
+                if (currentQuizAnswers[idx] === true) correctCount++;
+            });
+
+            if (!userProgress.completedLevels.includes(activeLevel.id)) {
+                userProgress.completedLevels.push(activeLevel.id);
+            }
+            userProgress.stars[activeLevel.id] = Math.max(userProgress.stars[activeLevel.id] || 0, correctCount);
+            
+            localStorage.setItem('indien_geo_progress', JSON.stringify(userProgress));
+
+            playSound('star');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            alert(`Super! Du hast ${correctCount} von 3 Sternen im Level geholt! ⭐`);
+
+            updateGlobalStats();
+            renderRoadmap();
+            closeLevelModal();
+        }
+
+        function updateGlobalStats() {
+            let totalStars = 0;
+            Object.values(userProgress.stars).forEach(s => totalStars += s);
+
+            document.getElementById('total-stars').innerText = `${totalStars} / 18`;
+            const progressPct = Math.round((userProgress.completedLevels.length / levelsData.length) * 100);
+            document.getElementById('overall-progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('overall-progress-text').innerText = `${progressPct}% abgeschlossen`;
+        }
+
+        // MATCHING GAME
+        function initPuzzleGame() {
+            selectedTerm = null;
+            selectedDesc = null;
+            matchedCount = 0;
+            document.getElementById('match-score').innerText = 0;
+
+            const board = document.getElementById('puzzle-board');
+            board.innerHTML = '';
+
+            const terms = [...puzzlePairs].sort(() => Math.random() - 0.5);
+            const descs = [...puzzlePairs].sort(() => Math.random() - 0.5);
+
+            const termsCol = document.createElement('div');
+            termsCol.className = "space-y-3";
+            termsCol.innerHTML = `<h4 class="font-bold text-xs uppercase text-slate-400 tracking-wider mb-2">Begriffe</h4>`;
+
+            terms.forEach(p => {
+                const btn = document.createElement('button');
+                btn.id = `term-${p.id}`;
+                btn.className = "puzzle-term-btn w-full text-left bg-orange-50 hover:bg-orange-100 border-2 border-orange-200 p-3.5 rounded-2xl text-xs font-bold text-orange-900 transition flex justify-between items-center";
+                btn.innerHTML = `<span>${p.term}</span> <i class="fa-solid fa-chevron-right text-orange-300"></i>`;
+                btn.onclick = () => selectPuzzleItem('term', p.id, btn);
+                termsCol.appendChild(btn);
+            });
+
+            const descsCol = document.createElement('div');
+            descsCol.className = "space-y-3";
+            descsCol.innerHTML = `<h4 class="font-bold text-xs uppercase text-slate-400 tracking-wider mb-2">Erklärungen</h4>`;
+
+            descs.forEach(p => {
+                const btn = document.createElement('button');
+                btn.id = `desc-${p.id}`;
+                btn.className = "puzzle-desc-btn w-full text-left bg-slate-50 hover:bg-slate-100 border-2 border-slate-200 p-3.5 rounded-2xl text-xs font-semibold text-slate-700 transition";
+                btn.innerText = p.desc;
+                btn.onclick = () => selectPuzzleItem('desc', p.id, btn);
+                descsCol.appendChild(btn);
+            });
+
+            board.appendChild(termsCol);
+            board.appendChild(descsCol);
+        }
+
+        function selectPuzzleItem(type, id, btn) {
+            playSound('click');
+            if (type === 'term') {
+                document.querySelectorAll('.puzzle-term-btn').forEach(b => b.classList.remove('ring-4', 'ring-orange-400'));
+                btn.classList.add('ring-4', 'ring-orange-400');
+                selectedTerm = { id, btn };
+            } else {
+                document.querySelectorAll('.puzzle-desc-btn').forEach(b => b.classList.remove('ring-4', 'ring-blue-400'));
+                btn.classList.add('ring-4', 'ring-blue-400');
+                selectedDesc = { id, btn };
+            }
+
+            if (selectedTerm && selectedDesc) {
+                if (selectedTerm.id === selectedDesc.id) {
+                    playSound('correct');
+                    selectedTerm.btn.className = "w-full text-left bg-emerald-500 text-white p-3.5 rounded-2xl text-xs font-bold opacity-50 cursor-default";
+                    selectedDesc.btn.className = "w-full text-left bg-emerald-500 text-white p-3.5 rounded-2xl text-xs font-bold opacity-50 cursor-default";
+
+                    matchedCount++;
+                    document.getElementById('match-score').innerText = matchedCount;
+
+                    if (matchedCount === puzzlePairs.length) {
+                        playSound('star');
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                        alert("🎉 Fantastisch! Alle Begriffe richtig gelöst!");
+                    }
+                } else {
+                    playSound('wrong');
+                    selectedTerm.btn.classList.add('bg-red-100', 'border-red-400');
+                    selectedDesc.btn.classList.add('bg-red-100', 'border-red-400');
+                    setTimeout(() => {
+                        selectedTerm?.btn?.classList?.remove('ring-4', 'ring-orange-400', 'bg-red-100', 'border-red-400');
+                        selectedDesc?.btn?.classList?.remove('ring-4', 'ring-blue-400', 'bg-red-100', 'border-red-400');
+                    }, 500);
+                }
+                selectedTerm = null;
+                selectedDesc = null;
+            }
+        }
+
+        // ACCORDION CHEATSHEET
+        function renderCheatsheet() {
+            const container = document.getElementById('cheatsheet-accordion');
+            container.innerHTML = '';
+
+            cheatsheetItems.forEach((item, idx) => {
+                const el = document.createElement('div');
+                el.className = "bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden transition";
+                el.innerHTML = `
+                    <button onclick="toggleAccordion(${idx})" class="w-full text-left p-4 font-bold text-slate-800 text-sm flex justify-between items-center hover:bg-slate-100 transition">
+                        <span>${item.q}</span>
+                        <i id="acc-icon-${idx}" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                    </button>
+                    <div id="acc-body-${idx}" class="hidden p-4 text-xs text-slate-700 bg-white border-t border-slate-200 leading-relaxed">
+                        ${item.a}
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function toggleAccordion(idx) {
+            playSound('click');
+            const body = document.getElementById(`acc-body-${idx}`);
+            const icon = document.getElementById(`acc-icon-${idx}`);
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                body.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // CUSTOM NOTES
+        function addCustomNote(e) {
+            e.preventDefault();
+            playSound('click');
+
+            const title = document.getElementById('note-title').value;
+            const category = document.getElementById('note-category').value || 'Allgemein';
+            const content = document.getElementById('note-content').value;
+
+            userProgress.customNotes.push({ id: Date.now(), title, category, content });
+            localStorage.setItem('indien_geo_progress', JSON.stringify(userProgress));
+
+            document.getElementById('note-form').reset();
+            renderCustomNotes();
+        }
+
+        function deleteCustomNote(id) {
+            playSound('click');
+            userProgress.customNotes = userProgress.customNotes.filter(n => n.id !== id);
+            localStorage.setItem('indien_geo_progress', JSON.stringify(userProgress));
+            renderCustomNotes();
+        }
+
+        function renderCustomNotes() {
+            const container = document.getElementById('custom-notes-list');
+            container.innerHTML = '';
+
+            if (userProgress.customNotes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-2 italic">Noch keine Notizen vorhanden.</p>`;
+                return;
+            }
+
+            userProgress.customNotes.forEach(note => {
+                const card = document.createElement('div');
+                card.className = "bg-indigo-50/50 border border-indigo-100 p-4 rounded-2xl space-y-2 relative group";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="bg-indigo-100 text-indigo-800 text-[10px] font-black uppercase px-2 py-0.5 rounded-md">${note.category}</span>
+                        <button onclick="deleteCustomNote(${note.id})" class="text-slate-400 hover:text-red-500 transition text-xs">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <h5 class="font-bold text-slate-800 text-sm">${note.title}</h5>
+                    <p class="text-xs text-slate-600 whitespace-pre-line">${note.content}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
 </body>
 </html>
