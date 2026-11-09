@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Erdkunde 8: Mega-Klausur-Coach Indien</title>
+  <style>
+    :root {
+      --primary: #FF7043;
+      --primary-dark: #D84315;
+      --primary-light: #FF9E80;
+      --secondary: #26A69A;
+      --secondary-dark: #00796B;
+      --accent: #FFCA28;
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --card-hover: #334155;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #4ADE80;
+      --danger: #F87171;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 50px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #C2410C, #EA580C, #D97706);
+      padding: 22px 16px 16px 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #FFFFFF;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      font-size: 0.88rem;
+      color: #FFEDD5;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .progress-wrapper {
+      margin-top: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 20px;
+      padding: 4px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .progress-bar {
+      height: 10px;
+      width: 0%;
+      background: linear-gradient(90deg, #FBBF24, #4ADE80);
+      border-radius: 20px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-text {
+      font-size: 0.75rem;
+      color: #FFF;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+
+    nav {
+      display: flex;
+      overflow-x: auto;
+      background: #182234;
+      padding: 10px 8px;
+      gap: 8px;
+      position: sticky;
+      top: 96px;
+      z-index: 99;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-btn {
+      flex: 0 0 auto;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 25px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      background: var(--card-hover);
+      color: var(--text);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(255, 112, 67, 0.4);
+    }
+
+    main {
+      max-width: 860px;
+      margin: 20px auto;
+      padding: 0 14px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .roadmap-map {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .roadmap-node {
+      background: var(--card-bg);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .roadmap-node:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .roadmap-node.completed {
+      border-color: var(--success);
+      background: linear-gradient(145deg, #1E293B, #142334);
+    }
+
+    .roadmap-node .node-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: rgba(255,112,67,0.2);
+      color: var(--primary-light);
+      margin-bottom: 8px;
+    }
+
+    .roadmap-node.completed .node-badge {
+      background: rgba(74, 222, 128, 0.2);
+      color: var(--success);
+    }
+
+    .roadmap-node h3 {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .roadmap-node p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 12px;
+    }
+
+    .card h2 {
+      color: var(--accent);
+      font-size: 1.3rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card h3 {
+      color: var(--secondary);
+      font-size: 1.05rem;
+      margin: 18px 0 8px 0;
+      font-weight: 700;
+    }
+
+    .badge {
+      background: rgba(255,112,67,0.2);
+      color: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: bold;
+    }
+
+    p, li {
+      font-size: 0.94rem;
+      color: #CBD5E1;
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    @media (min-width: 620px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .info-box {
+      background: rgba(255, 202, 40, 0.08);
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+    }
+
+    .info-box strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* VIDEO PLAYER EMBED CONTAINER (RESPONSIVE 16:9) */
+    .video-section {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255,255,255,0.15);
+    }
+
+    .video-section-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 20px;
+      touch-action: manipulation;
+      box-shadow: 0 4px 14px rgba(216, 67, 21, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--card-hover);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary.active {
+      background: var(--secondary-dark);
+      border-color: var(--secondary);
+      color: white;
+    }
+
+    .visual-card {
+      background: #0F172A;
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin: 16px 0;
+    }
+
+    .pyramid-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 16px 0;
+    }
+
+    .pyramid-row {
+      display: flex;
+      align-items: center;
+      height: 26px;
+      font-size: 0.78rem;
+    }
+
+    .pyramid-label {
+      width: 70px;
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .pyramid-bars {
+      flex: 1;
+      display: flex;
+      height: 100%;
+      background: rgba(255,255,255,0.03);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-m, .bar-w {
+      height: 100%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .bar-m {
+      background: linear-gradient(90deg, #2563EB, #3B82F6);
+      margin-left: auto;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .bar-w {
+      background: linear-gradient(90deg, #EC4899, #F43F5E);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .caste-pyramid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 16px 0;
+    }
+
+    .caste-level {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 0.88rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .caste-level:hover {
+      transform: scale(1.01);
+    }
+
+    .caste-1 { background: linear-gradient(90deg, #991B1B, #DC2626); color: white; width: 60%; margin: 0 auto; }
+    .caste-2 { background: linear-gradient(90deg, #9A3412, #EA580C); color: white; width: 70%; margin: 0 auto; }
+    .caste-3 { background: linear-gradient(90deg, #854D0E, #CA8A04); color: white; width: 80%; margin: 0 auto; }
+    .caste-4 { background: linear-gradient(90deg, #166534, #16A34A); color: white; width: 90%; margin: 0 auto; }
+    .caste-5 { background: linear-gradient(90deg, #374151, #4B5563); color: white; width: 100%; }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    @media (min-width: 500px) {
+      .match-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .match-card {
+      background: var(--card-hover);
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      min-height: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border: 2px solid transparent;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+
+    .match-card:active {
+      transform: scale(0.97);
+    }
+
+    .match-card.selected {
+      border-color: var(--accent);
+      background: rgba(255,202,40,0.15);
+      color: var(--accent);
+    }
+
+    .match-card.correct {
+      border-color: var(--success);
+      background: rgba(74,222,128,0.15);
+      color: var(--success);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #0F172A;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: white;
+      padding: 12px;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-top: 8px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .svg-container {
+      width: 100%;
+      height: auto;
+      max-height: 240px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌍 Erdkunde 8: Indien-Coach</h1>
+    <p>Interaktive Lern-Roadmap mit Simpleclub & Studyflix Videos</p>
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">0 von 6 Level absolviert</div>
+  </header>
+
+  <nav id="navbar">
+    <button class="nav-btn active" onclick="switchTab('overview')">🗺️ Roadmap</button>
+    <button class="nav-btn" onclick="switchTab('lvl1')">1. Gegensätze</button>
+    <button class="nav-btn" onclick="switchTab('lvl2')">2. Monsun & Wetter</button>
+    <button class="nav-btn" onclick="switchTab('lvl3')">3. Wirtschaft</button>
+    <button class="nav-btn" onclick="switchTab('lvl4')">4. Bevölkerung</button>
+    <button class="nav-btn" onclick="switchTab('lvl5')">5. Mumbai Slums</button>
+    <button class="nav-btn" onclick="switchTab('lvl6')">6. High-Tech</button>
+    <button class="nav-btn" onclick="switchTab('visual')">📊 Visuelles Labor</button>
+    <button class="nav-btn" onclick="switchTab('game')">🧩 Match-Game</button>
+  </nav>
+
+  <main>
+    <!-- OVERVIEW ROADMAP -->
+    <div id="overview" class="tab-content active">
+      <div class="card">
+        <div class="card-header">
+          <h2>🎯 Deine Lern-Roadmap</h2>
+          <span class="badge">Checkliste Geo-KA</span>
+        </div>
+        <p>Wähle ein Level aus oder klicke dich Schritt für Schritt durch alle Themen der Klausur. Nach jedem Level schaust du das Erklärvideo und schaltest deinen Fortschritt frei!</p>
+        
+        <div class="roadmap-map" id="roadmapMap">
+          <div class="roadmap-node" id="node-1" onclick="switchTab('lvl1')">
+            <span class="node-badge">Level 1</span>
+            <h3>Land der Gegensätze</h3>
+            <p>Naturräume, Arm vs. Reich, Klimate & Kontraste (Buch S. 172/173)</p>
+          </div>
+          <div class="roadmap-node" id="node-2" onclick="switchTab('lvl2')">
+            <span class="node-badge">Level 2</span>
+            <h3>Monsun & Wetterphysik</h3>
+            <p>Sommer- vs. Wintermonsun, ITC, Luv & Lee, Regenbringer (Buch S. 174/175)</p>
+          </div>
+          <div class="roadmap-node" id="node-3" onclick="switchTab('lvl3')">
+            <span class="node-badge">Level 3</span>
+            <h3>Wirtschaft & Fachbegriffe</h3>
+            <p>Sektoren 1-3, Informeller Sektor, Infrastruktur & Tertiarisierung (S. 184/185)</p>
+          </div>
+          <div class="roadmap-node" id="node-4" onclick="switchTab('lvl4')">
+            <span class="node-badge">Level 4</span>
+            <h3>Bevölkerung & Kastenwesen</h3>
+            <p>Pyramiden, Push/Pull Landflucht, 5 Kastenstufen & Dalits (S. 176-179)</p>
+          </div>
+          <div class="roadmap-node" id="node-5" onclick="switchTab('lvl5')">
+            <span class="node-badge">Level 5</span>
+            <h3>Megastadt & Slum Dharavi</h3>
+            <p>Site-and-Service, Slumsanierung vs. Umsiedlung (S. 182/183)</p>
+          </div>
+          <div class="roadmap-node" id="node-6" onclick="switchTab('lvl6')">
+            <span class="node-badge">Level 6</span>
+            <h3>High-Tech & Barefoot</h3>
+            <p>Bangalore, IT-Boom, SWZ, Barefoot College & Grüne Revolution (S. 186-189)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 1 -->
+    <div id="lvl1" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 1</span> Land der Gegensätze</h2>
+          <span>Buch S. 172 - 173</span>
+        </div>
+        <p>Indien ist das reichste Land der Region an Fläche & Bevölkerung, aber voller extremer Unterschiede!</p>
+
+        <h3>1. Die 3 großen Naturräume</h3>
+        <ul>
+          <li><strong>Himalaya-Gebirge (Norden):</strong> Höchstes Gebirge der Welt, schneebedeckt. Schützt vor kalten Winden aus Zentralasien und spendet Schmelzwasser für große Flüsse (Ganges, Indus, Brahmaputra).</li>
+          <li><strong>Ganges-Tiefland (Mitte):</strong> Extrem fruchtbares Schwemmland durch Flusssedimente, die bevölkerungsreichste Region.</li>
+          <li><strong>Dekkan-Hochland (Süden):</strong> Trockenes Plateau, von den <em>Westghats</em> und <em>Ostghats</em> (Gebirgsketten) eingerahmt.</li>
+        </ul>
+
+        <h3>2. Gesellschaftliche & Wirtschaftliche Gegensätze</h3>
+        <ul>
+          <li><strong>High-Tech vs. Armut:</strong> Moderne IT-Wolkenkratzer & Raumfahrtprogramm stehen Wellblechhütten in Slums ohne Abwasser gegenüber.</li>
+          <li><strong>Glaube & Tradition:</strong> Über 80 % Hindus, daneben Muslime, Sikhs, Christen. Das Kastenwesen prägt das Zusammenleben trotz Verbot.</li>
+        </ul>
+
+        <div class="info-box">
+          <strong>📝 Formulierungshilfe für die Klausur:</strong>
+          Wenn gefragt wird: <em>„Erkläre, warum Indien ein Land der Gegensätze ist“</em> → Antworte strukturiert mit <strong>Natur</strong> (Himalaya vs. Wüste Thar) UND <strong>Gesellschaft/Wirtschaft</strong> (IT-Millionäre vs. Dalits im Slum).
+        </div>
+
+        <!-- VIDEO SECTION (EXAKT WIE AUF IMAGE_2.PNG GEWÜNSCHT) -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Erklärvideo zum Thema: Indien im Überblick</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/-11YmhRbCYA" title="Erklärvideo Indien Gegensätze" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(1)">Level 1 abschließen & weiter zu Level 2 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div id="lvl2" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 2</span> Der Monsun & Das Wetter</h2>
+          <span>Buch S. 174 - 175</span>
+        </div>
+        <p>Der Monsun ist ein halbjährlich wechselnder Wind im tropisch/subtropischen Asien.</p>
+
+        <div class="grid-2">
+          <div style="background:rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); padding:14px; border-radius:12px;">
+            <h3 style="color:#60A5FA; margin-top:0;">🌧️ Sommermonsun (Juni - Sept)</h3>
+            <ul>
+              <li>Sonneneinstrahlung erwärmt Zentralasien extrem → Land-Tiefdruckgebiet.</li>
+              <li>Südwest-Wind weht feuchte Ozeanluft vom Indischen Ozean übers Land.</li>
+              <li>Bringt <strong>Starkregen</strong> („Regenbringer“). Unverzichtbar für die Landwirtschaft, verursacht aber oft Überschwemmungen.</li>
+            </ul>
+          </div>
+          <div style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3); padding:14px; border-radius:12px;">
+            <h3 style="color:#FBBF24; margin-top:0;">☀️ Wintermonsun (Okt - Mai)</h3>
+            <ul>
+              <li>Das Innere Asiens kühlt stark ab → Hochdruckgebiet entsteht.</li>
+              <li>Nordost-Wind weht vom trockenen Festland in Richtung Meer.</li>
+              <li>Bringt <strong>trockenes Wetter</strong> („Hungerwind“). Führt oft zu Dürre & Dürreschäden.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Wichtige Wetterbegriffe:</h3>
+        <ul>
+          <li><strong>ITC (Innertropische Konvergenzzone):</strong> Eine Tiefdruckrinne um den Äquator, wo die Passatwinde aufeinandertreffen. Sie wandert mit dem Höchststand der Sonne und treibt den Monsun an!</li>
+          <li><strong>Luv & Lee:</strong> <em>Luv</em> ist die dem Wind zugewandte Regenseite (z. B. Westküste/Westghats mit über 2000 mm Regen). <em>Lee</em> ist die windabgewandte, trockene Seite (Dekkan-Hochland im Regenschatten).</li>
+          <li><strong>Luftfeuchtigkeit & Verdunstung:</strong> Je wärmer die Ozeanluft ist, desto mehr Wasserdampf nimmt sie auf, der beim Aufsteigen an Gebirgen kondensiert und abregnet.</li>
+        </ul>
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Simpleclub Video: Monsun einfach erklärt</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/y2dFvvNieMs" title="Monsun einfach erklärt - Simpleclub" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(2)">Level 2 abschließen & weiter zu Level 3 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div id="lvl3" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 3</span> Wirtschaft & Glossar</h2>
+          <span>Buch S. 184 - 185</span>
+        </div>
+        
+        <h3>Die 3 Wirtschaftssektoren</h3>
+        <div style="display:flex; flex-direction:column; gap:10px; margin:14px 0;">
+          <div style="background:#0F172A; padding:12px 16px; border-radius:10px; border-left:4px solid #3B82F6;">
+            <strong style="color:#60A5FA;">1. Primärer Sektor (Urproduktion):</strong> Landwirtschaft, Forstwirtschaft, Fischerei, Bergbau. Erzeugt Rohstoffe. In Indien arbeiten über 40% der Menschen hier.
+          </div>
+          <div style="background:#0F172A; padding:12px 16px; border-radius:10px; border-left:4px solid #F59E0B;">
+            <strong style="color:#FBBF24;">2. Sekundärer Sektor (Industrie):</strong> Verarbeitung von Rohstoffen in Fabriken (Textilien, Maschinen, Chemie).
+          </div>
+          <div style="background:#0F172A; padding:12px 16px; border-radius:10px; border-left:4px solid #10B981;">
+            <strong style="color:#34D399;">3. Tertiärer Sektor (Dienstleistungen):</strong> Handel, Banken, IT, Pflege, Ärtze, Tourismus.
+          </div>
+        </div>
+
+        <h3>Die wichtigsten Klausur-Begriffe:</h3>
+        <ul>
+          <li><strong>Informeller Sektor:</strong> Wichtige Versorgungsquelle für Ärmere. Arbeiten ohne offiziellen Vertrag, Steuern oder Sozialversicherung (z.B. Straßenverkäufer, Rikschafahrer, Müllsammler). Über 80% der Arbeitsplätze in Indien!</li>
+          <li><strong>Infrastruktur:</strong> Grundlegende Einrichtungen eines Landes: Straßen, Schienennetz, Strom- & Wasserleitungen, Schulen, Krankenhäuser.</li>
+          <li><strong>Tertiarisierung:</strong> Der Wandel der Wirtschaft hin zu mehr Dienstleistungsberufen (z.B. IT-Boom in Bangalore).</li>
+          <li><strong>Strukturwandel:</strong> Verringerung der Bedeutung eines Wirtschaftssektors zugunsten eines anderen.</li>
+        </ul>
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Simpleclub Video: Die 3 Wirtschaftssektoren</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/TIJ4Wz2FFS0" title="Wirtschaftssektoren Erklärvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(3)">Level 3 abschließen & weiter zu Level 4 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 4 -->
+    <div id="lvl4" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 4</span> Bevölkerung & Kastenwesen</h2>
+          <span>Buch S. 176 - 179</span>
+        </div>
+
+        <h3>1. Das hinduistische Kastenwesen</h3>
+        <p>Traditionelle Gesellschaftsstruktur nach Geburt (obwohl gesetzlich 1949 verboten, im Alltag noch spürbar):</p>
+        
+        <div class="caste-pyramid">
+          <div class="caste-level caste-1"><span>1. Brahmanen</span> <span>Priester & Gelehrte</span></div>
+          <div class="caste-level caste-2"><span>2. Kshatriyas</span> <span>Krieger & Herrscher</span></div>
+          <div class="caste-level caste-3"><span>3. Vaishyas</span> <span>Händler & Hinderer/Bauern</span></div>
+          <div class="caste-level caste-4"><span>4. Shudras</span> <span>Handwerker & Dienstleister</span></div>
+          <div class="caste-level caste-5"><span>Dalits ("Kastenlose / Unberührbare")</span> <span>Schmutzige Arbeit, oft Diskriminierung</span></div>
+        </div>
+
+        <h3>2. Landflucht: Push- & Pull-Faktoren</h3>
+        <p>Warum ziehen Millionen Menschen vom Land in Megastädte?</p>
+
+        <div class="grid-2">
+          <div style="background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.3); padding:14px; border-radius:12px;">
+            <strong style="color:var(--danger); display:block; margin-bottom:6px;">Push-Faktoren (Abstoßend auf dem Land):</strong>
+            <ul>
+              <li>Armut & geringer Lohn</li>
+              <li>Dürren & Ernteausfälle durch Monsun-Schwankungen</li>
+              <li>Mangelhafte Schulen & medizinische Versorgung</li>
+              <li>Kastensystem-Unterdrückung</li>
+            </ul>
+          </div>
+          <div style="background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); padding:14px; border-radius:12px;">
+            <strong style="color:var(--success); display:block; margin-bottom:6px;">Pull-Faktoren (Anziehend in der Stadt):</strong>
+            <ul>
+              <li>Hoffnung auf bezahlte Arbeit (auch im informellen Sektor)</li>
+              <li>Bessere Bildung für Kinder</li>
+              <li>Anonymität der Großstadt (weniger Kattendruck)</li>
+              <li>Bessere medizinische Versorgung</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Erklärvideo: Bevölkerungswachstum & Kastenwesen</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/557d_g1XnGw" title="Bevölkerungswachstum Indien" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(4)">Level 4 abschließen & weiter zu Level 5 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 5 -->
+    <div id="lvl5" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 5</span> Mumbai & Dharavi Slum</h2>
+          <span>Buch S. 182 - 183</span>
+        </div>
+
+        <p>Mumbai ist Indiens Wirtschaftszentrum (~20 Mio. Einwohner). Über die Hälfte lebt in Behelfssiedlungen (Slums). Der größte ist <strong>Dharavi</strong> (1 Mio. Menschen auf 2 km²).</p>
+
+        <h3>Die 3 Lösungskonzepte zur Verbesserung (Klausur-Kernthema!):</h3>
+        
+        <div style="display:flex; flex-direction:column; gap:12px; margin:16px 0;">
+          <div style="background:#0F172A; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+            <h4 style="color:var(--accent);">1. Site-and-Service-Projekte ("Hilfe zur Selbsthilfe")</h4>
+            <p style="font-size:0.88rem; margin:4px 0;">Der Staat erschließt Grundstücke (Wasser-, Abwasser- & Stromanschlüsse). Die Bewohner bauen mit Kleinkrediten ihre Häuser in Eigeninitiative selbst.</p>
+            <span style="font-size:0.8rem; color:var(--success);">+ Günstig, stärkt Gemeinschaft & Verantwortung.</span>
+          </div>
+          <div style="background:#0F172A; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+            <h4 style="color:var(--accent);">2. Slumsanierung</h4>
+            <p style="font-size:0.88rem; margin:4px 0;">Bestehende Slums werden nicht abgerissen, sondern aufgewertet: Fußwege pflastern, Müllabfuhr installieren, Gemeinschaftstoiletten & Wasserhähne aufstellen.</p>
+            <span style="font-size:0.8rem; color:var(--success);">+ Bewohner bleiben in Arbeitsplatznähe.</span>
+          </div>
+          <div style="background:#0F172A; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+            <h4 style="color:var(--accent);">3. Umsiedlung</h4>
+            <p style="font-size:0.88rem; margin:4px 0;">Abriss des Slums mit Bagger. Bewohner ziehen in neu gebaute Mehrfamilienhäuser am Stadtrand.</p>
+            <span style="font-size:0.8rem; color:var(--danger);">- Hohe Mieten, teure lange Anfahrtswege zur Arbeit in der Innenstadt.</span>
+          </div>
+        </div>
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Doku-Video: Leben & Arbeiten im Slum Dharavi</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/McV51R2x2nA" title="Dharavi Slum Megastadt" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(5)">Level 5 abschließen & weiter zu Level 6 →</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 6 -->
+    <div id="lvl6" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="badge">Level 6</span> High-Tech & Zukunft</h2>
+          <span>Buch S. 186 - 189</span>
+        </div>
+
+        <h3>1. IT-Metropole Bangalore (High-Tech-Standort)</h3>
+        <p>Bangalore gilt als das <em>„Silicon Valley Indiens“</em>. Über 300.000 IT-Experten arbeiten hier für weltweite Großkonzerne.</p>
+        <ul>
+          <li><strong>Standortvorteile:</strong> Gut ausgebildete Hochschulabsolventen, gute Englischkenntnisse (Kolonialgeschichte), deutlich niedrigere Löhne als in USA/Europa.</li>
+          <li><strong>Sonderwirtschaftszonen (SWZ):</strong> Gebiete mit Steuervergünstigungen und vereinfachten Gesetzen, um ausländische Investoren anzulocken.</li>
+          <li><strong>Joint Venture:</strong> Gemeinsames Wagnis/Kooperation zwischen ausländischen und einheimischen Unternehmen.</li>
+        </ul>
+
+        <h3>2. Barefoot College & Grüne Revolution</h3>
+        <ul>
+          <li><strong>Barefoot College (S. 188):</strong> Bildet Frauen aus armen Dörfern ohne Lesen/Schreiben-Pflicht zu Solar-Ingenieurinnen aus. Sie bringen Solarstrom & Licht in abgelegene Dörfer.</li>
+          <li><strong>Grüne Revolution (S. 191):</strong> Modernisierung der Landwirtschaft durch ertragreiches Saatgut, Kunstdünger, Pestizide und künstliche Bewässerung. Hat Erträge gesteigert, aber auch zu Schulden & Umweltproblemen geführt.</li>
+        </ul>
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+          <div class="video-section-title">🎬 Erklärvideo: Grüne Revolution & High-Tech in Indien</div>
+          <div class="video-container">
+            <iframe src="https://www.youtube-nocookie.com/embed/gprfz8ZDIfM" title="Grüne Revolution & Fortschritt" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeLevel(6)">🎉 Alle 6 Level geschafft! Zum Visuellen Labor →</button>
+      </div>
+    </div>
+
+    <!-- VISUELLES LABOR -->
+    <div id="visual" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2>📊 Visuelles Geo-Labor</h2>
+          <span class="badge">Diagramme & Karten</span>
+        </div>
+        <p>Lerne hier genau die Grafiken und Diagramme aus deinen Schulbuchseiten (S. 174-187) auszuwerten!</p>
+
+        <h3>1. Bevölkerungspyramiden-Analysator (S. 179 M3)</h3>
+        <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+          <button class="btn btn-secondary active" id="btn-indien" onclick="updatePyramid('indien')">Indien 2018 (Dreieck)</button>
+          <button class="btn btn-secondary" id="btn-de" onclick="updatePyramid('de')">Deutschland 2018 (Urne)</button>
+          <button class="btn btn-secondary" id="btn-prognose" onclick="updatePyramid('prognose')">Indien 2050 (Prognose)</button>
+        </div>
+
+        <div class="visual-card">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:bold; color:var(--text-muted); margin-bottom:6px;">
+            <span style="color:#3B82F6;">◄ Männer (%)</span>
+            <span style="color:#EC4899;">Frauen (%) ►</span>
+          </div>
+          <div class="pyramid-chart" id="pyramidContainer">
+          </div>
+          <p id="pyramidDesc" style="font-size:0.86rem; color:var(--accent); margin-top:8px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px;"></p>
+        </div>
+
+        <h3>2. Klimadiagramm Mumbai (S. 174 M2)</h3>
+        <div class="visual-card">
+          <svg class="svg-container" viewBox="0 0 320 160">
+            <line x1="30" y1="20" x2="290" y2="20" stroke="rgba(255,255,255,0.1)" stroke-dasharray="2"/>
+            <line x1="30" y1="60" x2="290" y2="60" stroke="rgba(255,255,255,0.1)" stroke-dasharray="2"/>
+            <line x1="30" y1="100" x2="290" y2="100" stroke="rgba(255,255,255,0.1)" stroke-dasharray="2"/>
+            <line x1="30" y1="130" x2="290" y2="130" stroke="rgba(255,255,255,0.3)"/>
+            
+            <rect x="150" y="30" width="16" height="100" fill="#3B82F6" opacity="0.85"/>
+            <rect x="170" y="10" width="16" height="120" fill="#2563EB"/>
+            <rect x="190" y="40" width="16" height="90" fill="#3B82F6" opacity="0.85"/>
+            <rect x="210" y="75" width="16" height="55" fill="#60A5FA" opacity="0.7"/>
+
+            <path d="M 35 68 Q 160 55 285 70" stroke="#EF4444" stroke-width="3.5" fill="none"/>
+            <circle cx="178" cy="58" r="4" fill="#EF4444"/>
+
+            <text x="35" y="145" fill="#94A3B8" font-size="9">J</text>
+            <text x="75" y="145" fill="#94A3B8" font-size="9">M</text>
+            <text x="115" y="145" fill="#94A3B8" font-size="9">M</text>
+            <text x="155" y="145" fill="#60A5FA" font-weight="bold" font-size="9">J</text>
+            <text x="175" y="145" fill="#60A5FA" font-weight="bold" font-size="9">J</text>
+            <text x="195" y="145" fill="#60A5FA" font-weight="bold" font-size="9">A</text>
+            <text x="215" y="145" fill="#60A5FA" font-weight="bold" font-size="9">S</text>
+            <text x="255" y="145" fill="#94A3B8" font-size="9">N</text>
+            <text x="280" y="145" fill="#94A3B8" font-size="9">D</text>
+
+            <text x="178" y="50" fill="#F87171" font-size="10" font-weight="bold" text-anchor="middle">~29°C Temp</text>
+            <text x="178" y="22" fill="#60A5FA" font-size="9" text-anchor="middle">Sommermonsun Starkregen</text>
+          </svg>
+          <p style="font-size:0.84rem; color:#CBD5E1; margin-top:6px;">
+            <strong>Interpretation:</strong> Juni bis September über 800 mm Regen pro Monat durch den feuchten Sommermonsun. Die Temperatur bleibt das ganze Jahr konstant warm bei ca. 27–30 °C.
+          </p>
+        </div>
+
+        <button class="btn" onclick="switchTab('game')">Weiter zum Match-Game ➔</button>
+      </div>
+    </div>
+
+    <!-- MATCH GAME -->
+    <div id="game" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2>🧩 Match-Game: Begriffe verbinden</h2>
+          <span class="badge" id="scoreBadge">Punkte: 0/5</span>
+        </div>
+        <p>Tippe erst auf einen Fachbegriff und dann auf die dazu passende Definition!</p>
+
+        <div class="match-grid" id="matchGrid">
+        </div>
+
+        <div style="margin-top:20px;">
+          <h3>📝 Deine persönlichen Klausur-Notizen</h3>
+          <p style="font-size:0.82rem; color:var(--text-muted);">Schreibe hier extra Notizen oder Fragen auf, die dir der Lehrer gesagt hat. Sie bleiben auf deinem Handy/iPad gespeichert!</p>
+          <textarea id="userNotes" placeholder="Z.B. Lehrer hat gesagt: 'Vergleich Mumbai Dharavi kommt auf jeden Fall dran!'" oninput="saveNotes()"></textarea>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetTab = document.getElementById(tabId);
+      if(targetTab) targetTab.classList.add('active');
+
+      const navBtns = document.querySelectorAll('.nav-btn');
+      navBtns.forEach(btn => {
+        if(btn.getAttribute('onclick').includes(tabId)) {
+          btn.classList.add('active');
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    let completedLevels = new Set();
+    function completeLevel(lvl) {
+      completedLevels.add(lvl);
+      
+      const node = document.getElementById('node-' + lvl);
+      if(node) node.classList.add('completed');
+
+      const count = completedLevels.size;
+      const pct = Math.round((count / 6) * 100);
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressText').innerText = `${count} von 6 Level absolviert (${pct}%)`;
+
+      playBeep();
+
+      if(lvl < 6) {
+        switchTab('lvl' + (lvl + 1));
+      } else {
+        switchTab('visual');
+      }
+    }
+
+    function playBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } catch(e){}
+    }
+
+    const pyramidData = {
+      indien: {
+        desc: "🔹 Dreiecksform (Indien 2018): Sehr breite Basis = Hohe Geburtenrate (viele Kinder). Nach oben hin steil schmaler = Geringere Lebenserwartung & hohe Sterberate.",
+        rows: [
+          {age: "75+", m: 12, w: 14},
+          {age: "60-74", m: 28, w: 30},
+          {age: "45-59", m: 48, w: 46},
+          {age: "30-44", m: 68, w: 65},
+          {age: "15-29", m: 88, w: 84},
+          {age: "0-14", m: 98, w: 92}
+        ]
+      },
+      de: {
+        desc: "🔹 Urnen-/Pilzform (Deutschland 2018): Schmale Basis = Wenig Kinder. Breiter Bauch (45-60 J.) = Sehr viele ältere Menschen (Überalterung).",
+        rows: [
+          {age: "75+", m: 38, w: 48},
+          {age: "60-74", m: 70, w: 75},
+          {age: "45-59", m: 96, w: 94},
+          {age: "30-44", m: 62, w: 60},
+          {age: "15-29", m: 48, w: 45},
+          {age: "0-14", m: 38, w: 35}
+        ]
+      },
+      prognose: {
+        desc: "🔹 Bienenkorb-Prognose (Indien 2050): Geburtenrate sinkt durch Bildung & Aufklärung, Lebenserwartung steigt → Stabile Altersstruktur.",
+        rows: [
+          {age: "75+", m: 28, w: 32},
+          {age: "60-74", m: 55, w: 58},
+          {age: "45-59", m: 75, w: 74},
+          {age: "30-44", m: 78, w: 76},
+          {age: "15-29", m: 72, w: 70},
+          {age: "0-14", m: 65, w: 62}
+        ]
+      }
+    };
+
+    function updatePyramid(type) {
+      document.querySelectorAll('#visual .btn-secondary').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-' + type);
+      if(activeBtn) activeBtn.classList.add('active');
+
+      const data = pyramidData[type];
+      document.getElementById('pyramidDesc').innerText = data.desc;
+
+      const container = document.getElementById('pyramidContainer');
+      let html = '';
+      data.rows.forEach(r => {
+        html += `
+          <div class="pyramid-row">
+            <div class="pyramid-bars"><div class="bar-m" style="width:${r.m}%"></div></div>
+            <div class="pyramid-label">${r.age}</div>
+            <div class="pyramid-bars"><div class="bar-w" style="width:${r.w}%"></div></div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    const pairs = [
+      { id: 1, term: "Sommermonsun", def: "Bringt feuchte Meeresluft & Starkregen (Juni-Sept)" },
+      { id: 2, term: "Push-Faktor", def: "Dürre & Armut drückt Menschen vom Land weg" },
+      { id: 3, term: "Informeller Sektor", def: "Arbeit ohne Vertrag & Steuern (z.B. Straßenverkäufer)" },
+      { id: 4, term: "Dalits", def: "Kastenlose, früher benachteiligte Bevölkerungsgruppe" },
+      { id: 5, term: "Bangalore", def: "Indiens IT-Hauptstadt mit vielen Software-Firmen" }
+    ];
+
+    let selectedCard = null;
+    let score = 0;
+
+    function initMatchGame() {
+      const grid = document.getElementById('matchGrid');
+      let terms = pairs.map(p => ({ id: p.id, text: p.term, type: 'term' }));
+      let defs = pairs.map(p => ({ id: p.id, text: p.def, type: 'def' }));
+
+      terms.sort(() => Math.random() - 0.5);
+      defs.sort(() => Math.random() - 0.5);
+
+      let html = '';
+      for(let i=0; i<pairs.length; i++) {
+        html += `<div class="match-card" data-id="${terms[i].id}" data-type="term" onclick="clickMatchCard(this)">${terms[i].text}</div>`;
+        html += `<div class="match-card" data-id="${defs[i].id}" data-type="def" onclick="clickMatchCard(this)">${defs[i].text}</div>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function clickMatchCard(card) {
+      if(card.classList.contains('correct')) return;
+
+      if(!selectedCard) {
+        document.querySelectorAll('.match-card').forEach(c => c.classList.remove('selected'));
+        selectedCard = card;
+        card.classList.add('selected');
+      } else {
+        if(selectedCard === card) {
+          card.classList.remove('selected');
+          selectedCard = null;
+          return;
+        }
+
+        if(selectedCard.dataset.type !== card.dataset.type && selectedCard.dataset.id === card.dataset.id) {
+          selectedCard.classList.remove('selected');
+          selectedCard.classList.add('correct');
+          card.classList.add('correct');
+          selectedCard = null;
+          score++;
+          document.getElementById('scoreBadge').innerText = `Punkte: ${score}/5`;
+          playBeep();
+        } else {
+          selectedCard.classList.remove('selected');
+          selectedCard = card;
+          card.classList.add('selected');
+        }
+      }
+    }
+
+    function saveNotes() {
+      const txt = document.getElementById('userNotes').value;
+      localStorage.setItem('geo_indien_notes', txt);
+    }
+
+    function loadNotes() {
+      const saved = localStorage.getItem('geo_indien_notes');
+      if(saved) document.getElementById('userNotes').value = saved;
+    }
+
+    updatePyramid('indien');
+    initMatchGame();
+    loadNotes();
+  </script>
+</body>
+</html>
