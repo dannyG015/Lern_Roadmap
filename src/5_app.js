@@ -198,7 +198,7 @@
 
         function updateHeaderStars() {
             const t = totalStats();
-            $('total-stars').textContent = `${t.stars} / ${t.maxStars}`;
+            $('total-stars').innerHTML = `${t.stars}<span class="stars-max"> / ${t.maxStars}</span>`;
         }
 
         // ==========================================

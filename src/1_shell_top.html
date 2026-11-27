@@ -276,19 +276,19 @@
         .video-card.is-playing .video-thumb { display: none; }
 
         /* Feedback */
-        .feedback-fab {
-            position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 45;
-            display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-radius: 999px;
-            font-weight: 800; font-size: .85rem; color: #fff; background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            box-shadow: 0 14px 30px -12px rgba(139, 92, 246, .7); transition: transform .2s ease;
+        .fb-head-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .45rem; white-space: nowrap;
+            min-width: 40px; padding: .5rem .8rem; border-radius: 12px; font-weight: 800; font-size: .8rem; color: #fff;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 8px 18px -10px rgba(139, 92, 246, .8);
+            transition: filter .15s ease, transform .15s ease;
         }
-        .feedback-fab:hover { transform: translateY(-2px); }
-        body.modal-open .feedback-fab { display: none; }
+        .fb-head-btn:hover { filter: brightness(1.06); }
+        .fb-head-btn:active { transform: scale(.97); }
         .fb-kind { text-align: left; padding: .7rem .8rem; border-radius: 14px; font-size: .82rem; font-weight: 700; color: var(--ink-2); background: #fff; border: 1.5px solid rgba(15, 23, 42, .1); transition: all .15s ease; }
         .fb-kind:hover { border-color: #ec4899; }
         .fb-kind.active { border-color: #ec4899; background: #fdf2f8; color: #9d174d; box-shadow: 0 0 0 3px #fbcfe8; }
         .fb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; }
-        @media (max-width: 639px) { .feedback-fab span { display: none; } .feedback-fab { padding: .85rem; } }
+        @media (max-width: 420px) { .stars-max { display: none; } .stars-pill { padding: .45rem .6rem; } }
 
         /* Quiz */
         .question-card { padding: 1.15rem; border-radius: 20px; background: rgba(255, 255, 255, .88); border: 1px solid var(--line); }
@@ -450,6 +450,9 @@
                     <span class="hidden lg:inline">Dashboard</span>
                 </button>
                 <div id="subject-switch" class="segmented hidden"></div>
+                <button type="button" id="feedback-btn" onclick="openFeedback()" class="fb-head-btn" title="Feedback geben" aria-label="Feedback geben">
+                    <i class="fa-solid fa-comment-dots"></i><span class="hidden md:inline">Feedback</span>
+                </button>
                 <button type="button" onclick="openCodeModal()" class="icon-btn hide-sm-subject" title="Fortschritt sichern oder wiederherstellen" aria-label="Fortschritts-Code">
                     <i class="fa-solid fa-key"></i><span class="hidden xl:inline">Code</span>
                 </button>
@@ -742,11 +745,7 @@
     </div>
 
 
-    <!-- FEEDBACK -->
-    <button type="button" id="feedback-fab" class="feedback-fab" onclick="openFeedback()" aria-label="Feedback geben">
-        <i class="fa-solid fa-comment-dots"></i><span>Feedback</span>
-    </button>
-
+    <!-- FEEDBACK (Knopf sitzt oben in der Kopfzeile) -->
     <div id="feedback-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="fb-title" onclick="if (event.target === this) closeFeedback()">
         <div class="modal-sheet !max-w-lg">
             <div class="modal-head" style="background: linear-gradient(135deg,#ec4899,#8b5cf6)">
