@@ -1,1 +1,86 @@
-# Lern_Roadmap
+# EduMaster
+
+Lern-App für die 8. Klasse (Erdkunde · Deutsch · Chemie) – gelernt wird **auf dem iPad**, online über **GitHub Pages**.
+Gepflegt wird sie mit der **Werkbank** (`D:\Apps\Werkbank`, App-Kennung `edumaster`).
+
+## Aufbau
+
+```
+EduMaster\
+├── index.html              die fertige App (wird gebaut – nicht von Hand bearbeiten)
+├── src\                    Quelle in fester Reihenfolge (siehe tools/build.py)
+│   ├── 1_shell_top.html    Kopf, Design, Sicherheitsregeln (CSP), Oberfläche
+│   ├── 2_data_original.js  Erdkunde & Deutsch (Inhalte nicht umschreiben)
+│   ├── 3_data_chemie.js    Chemie: 7 Level, 20 Übungen, Puzzle, Spickzettel (Buch S. 52–65)
+│   ├── 3b_chemie_labor.js  Chemie-Labor (Teilchenbilder, Simulationen, Piktogramme …)
+│   ├── 4_labor_original.js Geo-Labor, DIN-5008-Trainer, Unterlagen-Analyse
+│   ├── 5_app.js            Navigation, Roadmap, Quiz, Videos, Fortschritts-Code
+│   ├── 5b_feedback.js      Feedback-Dialog
+│   └── 6_shell_bottom.html
+├── tools\build.py          baut index.html aus src\
+├── tools\check_app.py      Prüfung vor jeder Veröffentlichung (auch Test der Werkbank)
+├── edumaster.config.json   Einstellungen (GitHub-Repo für Feedback-Issues, Version)
+├── .github\ISSUE_TEMPLATE\feedback.yml   Feedback-Formular im GitHub-Repo
+└── veroeffentlichen.bat    prüfen, committen, zu GitHub hochladen
+```
+
+## Bauen und prüfen
+
+```
+python tools\build.py        # nur bauen
+python tools\check_app.py    # bauen + 31 Prüfungen (Daten, Syntax, Sicherheit, iPad)
+```
+
+## Veröffentlichen (GitHub Pages)
+
+Repo: **[dannyG015/Lern_Roadmap](https://github.com/dannyG015/Lern_Roadmap)** – online unter
+**https://dannyg015.github.io/Lern_Roadmap/**. Dieser Ordner ist bereits damit verbunden (`origin`, Branch `main`).
+
+Bei jedem Update: **`veroeffentlichen.bat`** doppelklicken. Das Skript prüft die App, und nur wenn alles grün ist,
+committet es und lädt hoch (`git push`). Nach 1–2 Minuten ist die neue Version online.
+
+## Updates mit der Werkbank
+
+1. Werkbank starten (`D:\Apps\Werkbank\start-werkbank-windows.bat`), links die App **EduMaster** wählen.
+2. Ticket öffnen → Auftrag / Prompt-Paket → Änderung im Staging (`staging/edumaster`).
+3. **Tests** starten. War `index.html` noch nicht neu gebaut, ist der erste Lauf rot („bitte noch einmal starten“) –
+   der zweite Lauf ist dann grün.
+4. **Deployment** – die Werkbank kopiert den geprüften Stand hierher.
+5. `veroeffentlichen.bat` – damit geht das Update online aufs iPad.
+
+## Feedback → Tickets in der Werkbank
+
+Die App hat unten rechts einen **Feedback-Knopf**. Die App selbst schickt nichts übers Netz und enthält keine
+Zugangsdaten – es gibt zwei Wege:
+
+| Weg | So geht's auf dem iPad | So kommt es in die Werkbank |
+|---|---|---|
+| **Feedback senden** (Hauptweg) | Öffnet das fertig ausgefüllte Formular im Repo in einem neuen Tab → „Submit new issue“ tippen. Braucht ein in Safari angemeldetes GitHub-Konto; das Issue ist **öffentlich sichtbar**. | **Automatisch:** Läuft die Werkbank, holt sie alle 5 Minuten neue Feedback-Issues als Tickets ab (Fenster „EduMaster-Feedback“, minimiert). Sofort: `edumaster-feedback.bat` → **2**. Keine doppelten Tickets. |
+| **Per Nachricht** (ohne GitHub-Konto) | „Per Nachricht senden“ öffnet das Teilen-Menü (iMessage, WhatsApp …). Die Nachricht enthält einen Code `EMFB1.…`. | `edumaster-feedback.bat` → **1**, Nachricht einfügen → je Code ein Ticket |
+
+Eingerichtet ist: `"feedback_github_repo": "dannyG015/Lern_Roadmap"` in `edumaster.config.json` und
+`EDUMASTER_GITHUB_REPO=dannyG015/Lern_Roadmap` in `D:\Apps\Werkbank\workbench\.env`. Das Formular liegt unter
+`.github/ISSUE_TEMPLATE/feedback.yml` und gilt erst, wenn es mit `veroeffentlichen.bat` im Repo liegt.
+
+Optional: Im Repo ein Label **`feedback`** anlegen (*Issues → Labels → New label*) – dann bekommen die Issues es automatisch.
+Die Werkbank erkennt Feedback aber auch ohne Label (Titel „[Feedback] …“ bzw. Code im Text).
+
+Auf dem iPad einmalig: In Safari auf github.com mit einem GitHub-Konto anmelden (Mindestalter bei GitHub: 13 Jahre).
+Erledigte Issues schließt du auf GitHub – die Werkbank liest dort nur, sie ändert nichts.
+
+## iPad
+
+- **Videos** laufen direkt in der App (datensparsamer Player von youtube-nocookie.com). Alternativ „In neuem Tab“ –
+  EduMaster bleibt im eigenen Tab offen. Als lokale Datei geöffnet spielt YouTube oft nicht ab, online schon.
+- **Als App auf den Home-Bildschirm:** in Safari *Teilen → Zum Home-Bildschirm*. EduMaster startet dann wie eine App.
+- Eingabefelder haben 16 px Schrift (kein ungewolltes Hineinzoomen), Knöpfe sind mindestens 44 px groß.
+- **Fortschritt sichern:** Safari kann gespeicherte Daten von Websites löschen, die länger nicht geöffnet wurden.
+  Darum ab und zu über den 🔑-Knopf einen **Fortschritts-Code** erzeugen und aufheben.
+
+## Sicherheit (online)
+
+- Content-Security-Policy: Skripte nur von den festen CDNs, Videos nur von YouTube, **keine Verbindungen** zu fremden
+  Servern (`connect-src 'self'`), keine Formulare, keine Plugins.
+- CDN-Dateien mit fester Version und Prüfsumme (Subresource Integrity), wo möglich.
+- Eingaben (Notizen, Codes, Feedback) werden nie als HTML eingesetzt; gespeichert wird nur im Browser des iPads.
+- `tools/check_app.py` bricht ab, wenn Schlüssel/Tokens, `fetch`, `eval` oder `window.open` im Code auftauchen.

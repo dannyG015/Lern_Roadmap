@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>EduMaster – Klassenarbeit-Trainer</title>
+    <meta name="theme-color" content="#f4f6fb">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://img.youtube.com https://i.ytimg.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; connect-src 'self'; worker-src 'self' blob:; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- iPad: als App auf dem Home-Bildschirm nutzbar -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="EduMaster">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" integrity="sha384-HAH79XdRvHr6axVGh4xQWVCp14kcd32bNk4Xu0sHDHtFQ42n6BAM8ykvB47dGz6D" crossorigin="anonymous"></script>
+    <!-- Chart.js (für das Geo-Labor) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================
+           DESIGN-SYSTEM: helles Glassmorphism
+           ========================================== */
+        :root {
+            --ink: #0f172a;
+            --ink-2: #334155;
+            --muted: #64748b;
+            --line: rgba(15, 23, 42, 0.08);
+            --glass: rgba(255, 255, 255, 0.64);
+            --glass-strong: rgba(255, 255, 255, 0.86);
+            --glass-border: rgba(255, 255, 255, 0.78);
+            --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 14px 36px -16px rgba(15, 23, 42, 0.16);
+            --shadow-lift: 0 1px 2px rgba(15, 23, 42, 0.04), 0 26px 50px -22px rgba(15, 23, 42, 0.28);
+        }
+        /* Fach-Farben (werden über Klassen gesetzt, z. B. <body class="t-erdkunde">) */
+        .t-home, .t-deutsch {
+            --ac: #4f46e5; --ac-strong: #4338ca; --ac-soft: #eef2ff; --ac-soft-2: #e0e7ff;
+            --ac-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .t-erdkunde {
+            --ac: #d97706; --ac-strong: #b45309; --ac-soft: #fffbeb; --ac-soft-2: #fde68a;
+            --ac-grad: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        }
+        .t-chemie {
+            --ac: #0d9488; --ac-strong: #0f766e; --ac-soft: #f0fdfa; --ac-soft-2: #99f6e4;
+            --ac-grad: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%);
+        }
+
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            color: var(--ink);
+            background: #f4f6fb;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        body.modal-open { overflow: hidden; }
+        h1, h2, h3, h4, h5, .font-heading { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; letter-spacing: -0.015em; }
+        .font-mono-letter { font-family: 'Fira Code', ui-monospace, monospace; }
+        ::selection { background: var(--ac-soft-2); color: var(--ink); }
+        :focus-visible { outline: 3px solid var(--ac-soft-2); outline-offset: 2px; border-radius: 12px; }
+
+        /* Weiche Farb-Kugeln im Hintergrund – dadurch wirkt das Glas echt */
+        .bg-orbs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 9999px; filter: blur(90px); }
+        .orb-1 { width: 560px; height: 560px; background: #c7d2fe; top: -200px; left: -160px; opacity: .65; }
+        .orb-2 { width: 480px; height: 480px; background: #fde68a; top: 18%; right: -200px; opacity: .5; }
+        .orb-3 { width: 560px; height: 560px; background: #99f6e4; bottom: -240px; left: 28%; opacity: .42; }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, .28); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, .45); }
+
+        /* Glas-Flächen */
+        .glass, .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(170%);
+            -webkit-backdrop-filter: blur(20px) saturate(170%);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+        .panel { background: rgba(255, 255, 255, .78); border: 1px solid var(--line); border-radius: 18px; }
+
+        /* Kopfzeile */
+        .topbar {
+            position: sticky; top: 0; z-index: 40;
+            background: rgba(255, 255, 255, .62);
+            backdrop-filter: blur(22px) saturate(180%);
+            -webkit-backdrop-filter: blur(22px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, .8);
+            box-shadow: 0 1px 0 rgba(15, 23, 42, .04), 0 10px 30px -24px rgba(15, 23, 42, .3);
+        }
+        .brand-mark {
+            width: 40px; height: 40px; border-radius: 13px; flex: 0 0 40px;
+            display: grid; place-items: center; color: #fff; font-size: 1.05rem;
+            background: var(--ac-grad); box-shadow: 0 8px 18px -8px var(--ac);
+            transition: background .3s ease;
+        }
+        .stars-pill {
+            display: inline-flex; align-items: center; gap: .4rem; white-space: nowrap;
+            padding: .45rem .8rem; border-radius: 999px; font-weight: 800; font-size: .8rem;
+            color: #92400e; background: rgba(255, 251, 235, .9); border: 1px solid #fde68a;
+        }
+        .stars-pill i { color: #f59e0b; }
+        .segmented { display: flex; gap: 2px; padding: 3px; border-radius: 14px; background: rgba(241, 245, 249, .85); border: 1px solid var(--line); }
+        .seg-btn {
+            display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap;
+            padding: .4rem .65rem; border-radius: 11px; font-weight: 700; font-size: .78rem; color: var(--muted);
+            transition: all .2s ease;
+        }
+        .seg-btn:hover { color: var(--ink); background: rgba(255, 255, 255, .7); }
+        .seg-btn.active { background: #fff; color: var(--ac-strong); box-shadow: 0 2px 8px -3px rgba(15, 23, 42, .2); }
+        .seg-btn.is-locked { opacity: .55; }
+        .icon-btn {
+            display: inline-flex; align-items: center; gap: .45rem; white-space: nowrap;
+            padding: .5rem .75rem; border-radius: 12px; font-weight: 700; font-size: .8rem; color: var(--ink-2);
+            background: rgba(255, 255, 255, .75); border: 1px solid var(--line); transition: all .2s ease;
+        }
+        .icon-btn:hover { background: #fff; color: var(--ink); }
+
+        /* Reiter-Leiste */
+        .tabbar {
+            display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+            padding: 4px; border-radius: 16px; background: rgba(241, 245, 249, .7); border: 1px solid var(--line);
+        }
+        .tabbar::-webkit-scrollbar { display: none; }
+        .tab {
+            display: inline-flex; align-items: center; gap: .45rem; white-space: nowrap; flex: 0 0 auto;
+            padding: .55rem .9rem; border-radius: 12px; font-weight: 700; font-size: .82rem; color: var(--muted);
+            transition: all .2s ease;
+        }
+        .tab:hover { color: var(--ink); background: rgba(255, 255, 255, .6); }
+        .tab.active { background: #fff; color: var(--ac-strong); box-shadow: 0 2px 10px -3px rgba(15, 23, 42, .18); }
+        .tab i { font-size: .85em; }
+
+        /* Buttons, Chips, Balken */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+            font-weight: 700; font-size: .875rem; line-height: 1.2; border-radius: 14px; padding: .75rem 1.15rem;
+            transition: transform .15s ease, filter .15s ease, background .15s ease, box-shadow .15s ease; cursor: pointer;
+        }
+        .btn:active { transform: scale(.98); }
+        .btn-sm { padding: .55rem .9rem; font-size: .8rem; border-radius: 12px; }
+        .btn-primary { background: var(--ac-grad); color: #fff; box-shadow: 0 10px 22px -12px var(--ac); }
+        .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+        .btn-soft { background: var(--ac-soft); color: var(--ac-strong); border: 1px solid var(--ac-soft-2); }
+        .btn-soft:hover { filter: brightness(.98); }
+        .btn-ghost { background: rgba(255, 255, 255, .8); color: var(--ink-2); border: 1px solid var(--line); }
+        .btn-ghost:hover { background: #fff; color: var(--ink); }
+        .btn-yt { background: #ef4444; color: #fff; }
+        .btn-yt:hover { background: #dc2626; }
+        .btn[disabled], .btn.is-disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
+        .chip {
+            display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap;
+            font-size: .7rem; font-weight: 800; letter-spacing: .02em; padding: .3rem .7rem; border-radius: 999px;
+            background: var(--ac-soft); color: var(--ac-strong); border: 1px solid var(--ac-soft-2);
+        }
+        .chip-neutral { background: rgba(241, 245, 249, .9); color: var(--ink-2); border-color: var(--line); }
+        .eyebrow { font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ac); }
+        .accent-text { color: var(--ac-strong); }
+        .bar { height: 8px; background: rgba(15, 23, 42, .07); border-radius: 999px; overflow: hidden; }
+        .bar > span { display: block; height: 100%; width: 0; background: var(--ac-grad); border-radius: inherit; transition: width .6s cubic-bezier(.2, .8, .2, 1); }
+
+        /* Dashboard */
+        .ring-track { stroke: rgba(15, 23, 42, .07); }
+        #ring-progress { transition: stroke-dashoffset 1s cubic-bezier(.2, .8, .2, 1); }
+        .subject-card {
+            position: relative; overflow: hidden; display: flex; flex-direction: column; text-align: left;
+            border-radius: 26px; padding: 1.5rem; cursor: pointer;
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .subject-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--ac-grad); }
+        .subject-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+        .subject-card.is-locked { cursor: default; }
+        .subject-card.is-locked:hover { transform: none; box-shadow: var(--shadow); }
+        .icon-tile {
+            width: 52px; height: 52px; border-radius: 16px; flex: 0 0 52px; display: grid; place-items: center;
+            color: #fff; font-size: 1.35rem; background: var(--ac-grad); box-shadow: 0 12px 22px -12px var(--ac);
+        }
+        .next-up { font-size: .78rem; color: var(--muted); font-weight: 600; background: rgba(255, 255, 255, .6); border: 1px solid var(--line); border-radius: 12px; padding: .55rem .75rem; }
+        .next-up strong { color: var(--ink-2); }
+        .locked-box {
+            display: flex; align-items: center; gap: .6rem; font-size: .8rem; font-weight: 700; color: var(--ac-strong);
+            background: var(--ac-soft); border: 1.5px dashed var(--ac-soft-2); border-radius: 14px; padding: .75rem .9rem;
+        }
+
+        /* Roadmap im Zickzack (Desktop) bzw. als Zeitleiste (Handy) */
+        .timeline { position: relative; }
+        .timeline::before {
+            content: ""; position: absolute; left: 27px; top: 30px; bottom: 30px; width: 0;
+            border-left: 3px dashed rgba(148, 163, 184, .45);
+        }
+        .zz-item { position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 1rem; align-items: center; }
+        .zz-node { grid-column: 1; grid-row: 1; justify-self: center; }
+        .zz-card { grid-column: 2; grid-row: 1; }
+        @media (min-width: 768px) {
+            .timeline::before { left: 50%; transform: translateX(-50%); }
+            .timeline > .zz-item + .zz-item { margin-top: -1.25rem; }
+            .zz-item { grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr); gap: 2rem; }
+            .zz-node { grid-column: 2; width: 64px; height: 64px; flex-basis: 64px; font-size: 1.45rem; border-radius: 20px; }
+            .zz-left .zz-card { grid-column: 1; }
+            .zz-right .zz-card { grid-column: 3; }
+        }
+        .tl-item { position: relative; display: flex; gap: 1rem; align-items: flex-start; }
+        .tl-node {
+            position: relative; z-index: 1; flex: 0 0 56px; width: 56px; height: 56px; border-radius: 18px;
+            display: grid; place-items: center; color: #fff; font-size: 1.3rem; border: 3px solid #fff;
+            box-shadow: 0 12px 24px -12px rgba(15, 23, 42, .45); transition: transform .2s ease;
+        }
+        .tl-node:hover { transform: scale(1.06); }
+        .tl-node.is-done::after {
+            content: ""; position: absolute; inset: -6px; border-radius: 22px; border: 2px solid #fcd34d;
+            box-shadow: 0 0 18px rgba(245, 158, 11, .35);
+        }
+        .level-card { border-radius: 22px; padding: 1.1rem 1.25rem; flex: 1; min-width: 0; transition: box-shadow .2s ease, transform .2s ease; }
+        .level-card:hover { box-shadow: var(--shadow-lift); }
+        .stars-row { color: #f59e0b; font-size: .85rem; display: inline-flex; gap: 2px; }
+        .status-done { font-size: .68rem; font-weight: 800; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; padding: .2rem .55rem; border-radius: 999px; }
+
+        /* Level-Fenster */
+        .modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 12px; background: rgba(15, 23, 42, .38); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .modal.hidden { display: none; }
+        .modal-sheet {
+            width: 100%; max-width: 780px; max-height: 92vh; max-height: 92dvh; display: flex; flex-direction: column; overflow: hidden;
+            background: rgba(255, 255, 255, .9); backdrop-filter: blur(26px) saturate(170%); -webkit-backdrop-filter: blur(26px) saturate(170%);
+            border: 1px solid #fff; border-radius: 28px; box-shadow: 0 40px 90px -30px rgba(15, 23, 42, .45);
+            animation: sheetIn .28s cubic-bezier(.2, .8, .2, 1) both;
+        }
+        .modal-head { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.25rem; color: #fff; }
+        .modal-icon { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 15px; display: grid; place-items: center; font-size: 1.2rem; background: rgba(255, 255, 255, .22); border: 1px solid rgba(255, 255, 255, .35); }
+        .modal-badge { display: inline-block; font-size: .62rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; background: rgba(0, 0, 0, .18); padding: .15rem .55rem; border-radius: 999px; }
+        .modal-close { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 999px; display: grid; place-items: center; background: rgba(0, 0, 0, .18); color: #fff; transition: background .2s; }
+        .modal-close:hover { background: rgba(0, 0, 0, .32); }
+        .modal-foot { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .8rem 1.25rem; border-top: 1px solid var(--line); background: rgba(248, 250, 252, .8); }
+        .seg-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 15px; background: rgba(241, 245, 249, .9); border: 1px solid var(--line); }
+        .seg-tab { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .6rem .75rem; border-radius: 11px; font-weight: 700; font-size: .82rem; color: var(--muted); transition: all .2s ease; }
+        .seg-tab.active { background: #fff; color: var(--ac-strong); box-shadow: 0 2px 10px -3px rgba(15, 23, 42, .18); }
+
+        /* Lern-Inhalte */
+        .lesson { border-radius: 18px; padding: 1rem 1.1rem; }
+        .lesson-title { display: flex; align-items: center; gap: .5rem; margin-bottom: .45rem; font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ac-strong); }
+        .lesson-text { font-size: .92rem; line-height: 1.65; color: var(--ink-2); }
+        .lesson-simple { background: var(--ac-soft); border: 1px solid var(--ac-soft-2); }
+        .lesson-merke { background: #fefce8; border: 1px solid #fde68a; }
+        .lesson-merke .lesson-title { color: #a16207; }
+        .lesson-plain { background: rgba(255, 255, 255, .85); border: 1px solid var(--line); }
+        .lesson-example { background: rgba(248, 250, 252, .9); border: 1px solid var(--line); border-left: 4px solid var(--ac); }
+        .lesson-rich { color: var(--ink-2); }
+        .lesson-rich .text-xs { font-size: .9rem !important; line-height: 1.65 !important; }
+        .lesson-rich li { margin-top: .25rem; }
+
+        /* Video-Karte */
+        .video-card { display: flex; flex-direction: column; gap: 1rem; padding: 1rem; border-radius: 18px; background: rgba(255, 255, 255, .88); border: 1px solid var(--line); }
+        @media (min-width: 640px) { .video-card { flex-direction: row; align-items: center; } }
+        .video-thumb { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #0f172a; flex-shrink: 0; }
+        @media (min-width: 640px) { .video-thumb { width: 190px; } }
+        .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
+        .video-thumb:hover img { transform: scale(1.05); }
+        .video-thumb .play { position: absolute; inset: 0; margin: auto; width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center; background: rgba(239, 68, 68, .95); color: #fff; box-shadow: 0 10px 20px -6px rgba(0, 0, 0, .5); }
+        .yt-chip { display: inline-flex; align-items: center; gap: .35rem; font-size: .65rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #dc2626; background: #fef2f2; padding: .2rem .55rem; border-radius: 8px; }
+
+        .video-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #0f172a; }
+        .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .video-card.is-playing { flex-direction: column; align-items: stretch; }
+        .video-card.is-playing .video-thumb { display: none; }
+
+        /* Feedback */
+        .feedback-fab {
+            position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 45;
+            display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; border-radius: 999px;
+            font-weight: 800; font-size: .85rem; color: #fff; background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            box-shadow: 0 14px 30px -12px rgba(139, 92, 246, .7); transition: transform .2s ease;
+        }
+        .feedback-fab:hover { transform: translateY(-2px); }
+        body.modal-open .feedback-fab { display: none; }
+        .fb-kind { text-align: left; padding: .7rem .8rem; border-radius: 14px; font-size: .82rem; font-weight: 700; color: var(--ink-2); background: #fff; border: 1.5px solid rgba(15, 23, 42, .1); transition: all .15s ease; }
+        .fb-kind:hover { border-color: #ec4899; }
+        .fb-kind.active { border-color: #ec4899; background: #fdf2f8; color: #9d174d; box-shadow: 0 0 0 3px #fbcfe8; }
+        .fb-hp { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; }
+        @media (max-width: 639px) { .feedback-fab span { display: none; } .feedback-fab { padding: .85rem; } }
+
+        /* Quiz */
+        .question-card { padding: 1.15rem; border-radius: 20px; background: rgba(255, 255, 255, .88); border: 1px solid var(--line); }
+        .opt {
+            width: 100%; text-align: left; display: flex; align-items: center; gap: .75rem;
+            padding: .8rem .9rem; border-radius: 14px; background: #fff; border: 1.5px solid rgba(15, 23, 42, .1);
+            font-weight: 600; font-size: .9rem; color: var(--ink-2); transition: all .15s ease;
+        }
+        .opt:hover:not(:disabled) { border-color: var(--ac); background: var(--ac-soft); }
+        .opt .key { flex: 0 0 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; background: #f1f5f9; font-weight: 800; font-size: .75rem; color: var(--muted); }
+        .opt:disabled { cursor: default; }
+        .opt.correct { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+        .opt.correct .key { background: #10b981; color: #fff; }
+        .opt.wrong { border-color: #f43f5e; background: #fff1f2; color: #9f1239; }
+        .opt.wrong .key { background: #f43f5e; color: #fff; }
+        .opt.dim { opacity: .55; }
+        .feedback { margin-top: 1rem; padding: .85rem 1rem; border-radius: 14px; font-size: .88rem; line-height: 1.55; animation: fadeUp .25s ease both; }
+        .feedback.ok { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        .feedback.bad { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; }
+        .qdots { display: flex; flex-wrap: wrap; gap: 6px; }
+        .qdot { width: 30px; height: 30px; border-radius: 10px; font-size: .72rem; font-weight: 800; background: #f1f5f9; color: var(--muted); border: 1px solid transparent; transition: all .15s ease; }
+        .qdot:hover { border-color: var(--ac-soft-2); }
+        .qdot.current { border-color: var(--ac); color: var(--ac-strong); background: #fff; }
+        .qdot.ok { background: #d1fae5; color: #047857; }
+        .qdot.bad { background: #ffe4e6; color: #be123c; }
+        .qdot.current.ok, .qdot.current.bad { border-color: var(--ac); }
+        .result-stars { font-size: 2.2rem; color: #f59e0b; display: flex; justify-content: center; gap: .4rem; }
+
+        /* Übungen */
+        .ex-card { padding: 1.15rem 1.25rem; border-radius: 20px; background: rgba(255, 255, 255, .86); border: 1px solid var(--line); transition: border-color .2s ease; }
+        .ex-card.is-done { border-color: #a7f3d0; }
+        .task-box { margin: .75rem 0 .9rem; padding: .85rem 1rem; border-radius: 14px; background: rgba(248, 250, 252, .95); border: 1px solid var(--line); font-size: .9rem; line-height: 1.6; color: var(--ink-2); }
+        .solution { margin-top: .9rem; padding: 1rem 1.1rem; border-radius: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; font-size: .9rem; line-height: 1.6; animation: fadeUp .25s ease both; }
+        .done-toggle { display: inline-flex; align-items: center; gap: .4rem; font-size: .75rem; font-weight: 700; color: var(--muted); padding: .3rem .6rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; transition: all .2s ease; }
+        .done-toggle:hover { color: var(--ink); }
+        .done-toggle.on { color: #047857; background: #ecfdf5; border-color: #a7f3d0; }
+        .diff { font-size: .68rem; font-weight: 800; padding: .25rem .6rem; border-radius: 999px; border: 1px solid; }
+        .diff-grundlagen { color: #047857; background: #ecfdf5; border-color: #a7f3d0; }
+        .diff-anwenden { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+        .diff-transfer { color: #7c3aed; background: #f5f3ff; border-color: #ddd6fe; }
+        .diff-klausur { color: #be123c; background: #fff1f2; border-color: #fecdd3; }
+        .steps { display: flex; flex-direction: column; gap: .6rem; }
+        .step { display: flex; gap: .7rem; align-items: flex-start; animation: fadeUp .25s ease both; }
+        .step.hidden { display: none; }
+        .step-n { flex: 0 0 26px; height: 26px; border-radius: 9px; display: grid; place-items: center; font-size: .75rem; font-weight: 800; color: #fff; background: #16a34a; }
+
+        /* Match-Puzzle */
+        .col-head { font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+        .pz {
+            width: 100%; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+            padding: .8rem .9rem; border-radius: 14px; background: rgba(255, 255, 255, .9); border: 1.5px solid rgba(15, 23, 42, .1);
+            font-size: .85rem; color: var(--ink-2); transition: all .15s ease;
+        }
+        .pz-term { font-weight: 800; color: var(--ink); }
+        .pz-exp { font-weight: 600; }
+        .pz i { color: #cbd5e1; flex-shrink: 0; }
+        .pz:hover:not(:disabled) { border-color: var(--ac); }
+        .pz.pz-sel { border-color: var(--ac); background: var(--ac-soft); box-shadow: 0 0 0 3px var(--ac-soft-2); }
+        .pz.pz-sel i { color: var(--ac); }
+        .pz.pz-wrong { border-color: #f43f5e; background: #fff1f2; animation: shake .4s ease; }
+        .pz.pz-done { border-color: #a7f3d0; background: #ecfdf5; color: #065f46; opacity: .7; cursor: default; }
+        .pz.pz-done i { color: #10b981; }
+        .arrow-card { display: flex; align-items: center; gap: .75rem; padding: .7rem .85rem; border-radius: 14px; background: #ecfdf5; border: 1px solid #a7f3d0; font-size: .85rem; color: #065f46; animation: fadeUp .3s ease both; }
+        .arrow-term { background: #a7f3d0; color: #064e3b; font-weight: 800; padding: .3rem .65rem; border-radius: 10px; white-space: nowrap; }
+        .arrow { color: #059669; font-weight: 900; font-size: 1.1rem; }
+        .arrow-exp { flex: 1; font-weight: 600; }
+
+        /* Spickzettel */
+        .acc { border-radius: 18px; background: rgba(255, 255, 255, .86); border: 1px solid var(--line); overflow: hidden; }
+        .acc summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; font-weight: 800; font-size: .92rem; color: var(--ink); }
+        .acc summary::-webkit-details-marker { display: none; }
+        .acc summary:hover { background: rgba(248, 250, 252, .9); }
+        .acc summary i { color: #94a3b8; transition: transform .25s ease; flex-shrink: 0; }
+        .acc[open] summary i { transform: rotate(180deg); color: var(--ac); }
+        .acc[open] summary { border-bottom: 1px solid var(--line); }
+        .acc-body { padding: 1rem 1.1rem; font-size: .9rem; line-height: 1.7; color: var(--ink-2); background: rgba(248, 250, 252, .6); }
+
+        /* Notizen */
+        .notes-area { width: 100%; padding: 1rem 1.1rem; border-radius: 18px; border: 1.5px solid rgba(15, 23, 42, .1); background: rgba(255, 255, 255, .9); font-size: .95rem; line-height: 1.7; color: var(--ink); resize: vertical; min-height: 260px; transition: border-color .2s, box-shadow .2s; }
+        .notes-area:focus { outline: none; border-color: var(--ac); box-shadow: 0 0 0 4px var(--ac-soft-2); }
+
+        /* Hinweis-Toast */
+        .toast {
+            position: fixed; left: 50%; bottom: 24px; z-index: 60; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+            width: max-content; max-width: min(480px, calc(100vw - 32px)); text-align: center; padding: .8rem 1.1rem; border-radius: 16px; font-size: .85rem; font-weight: 700; color: var(--ink);
+            background: rgba(255, 255, 255, .92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid #fff; box-shadow: 0 20px 40px -16px rgba(15, 23, 42, .35); transition: all .3s ease;
+        }
+        .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+        /* Bestehende Labor-/Analyse-Bausteine */
+        .zone-highlight { transition: all 0.2s ease-in-out; }
+        .zone-highlight:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15); }
+        .badge-glow { box-shadow: 0 0 18px rgba(245, 158, 11, 0.4); }
+
+        /* Handy-Anpassungen */
+        @media (max-width: 639px) {
+            body.in-subject #brand-text, body.in-subject .hide-sm-subject { display: none; }
+            .timeline::before { left: 21px; }
+            .tl-item { gap: .75rem; }
+            .zz-item { grid-template-columns: 44px minmax(0, 1fr); gap: .75rem; }
+            .tl-node { flex-basis: 44px; width: 44px; height: 44px; border-radius: 15px; font-size: 1.05rem; }
+            .tl-node.is-done::after { inset: -5px; border-radius: 19px; }
+            .level-card { padding: 1rem; }
+            .modal { padding: 0; align-items: flex-end; }
+            .modal-sheet { max-height: 94dvh; border-radius: 26px 26px 0 0; }
+            .arrow-card { flex-wrap: wrap; }
+            .qdots { gap: 5px; }
+            .qdot { width: 27px; height: 27px; border-radius: 9px; }
+        }
+
+        /* iPad / Touch: größere Tippflächen, kein Zoomen beim Tippen in Felder, kein grauer Tipp-Blitz */
+        html { -webkit-tap-highlight-color: transparent; }
+        button, a, [role="button"], input, select, textarea, summary { touch-action: manipulation; }
+        #modal-body, .modal-sheet > .overflow-y-auto { -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+        @media (pointer: coarse) {
+            input, select, textarea { font-size: 16px !important; }
+            .btn-sm { min-height: 44px; padding: .6rem 1rem; font-size: .85rem; }
+            .tab, .seg-btn, .icon-btn { min-height: 44px; }
+            .qdot { width: 36px; height: 36px; }
+            .opt, .pz { min-height: 48px; }
+            .done-toggle { min-height: 40px; padding: .4rem .8rem; }
+            input[type="range"] { height: 32px; }
+            .level-card:hover, .subject-card:hover { transform: none; }
+        }
+
+        /* Animationen */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        @keyframes sheetIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .view-anim { animation: fadeUp .35s ease both; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body class="t-home">
+
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- KOPFZEILE -->
+    <header class="topbar">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+            <button type="button" class="flex items-center gap-3 min-w-0" onclick="showDashboard()" aria-label="Zum Dashboard">
+                <span class="brand-mark"><i id="brand-icon" class="fa-solid fa-graduation-cap"></i></span>
+                <span id="brand-text" class="min-w-0 text-left">
+                    <span id="brand-title" class="block font-extrabold text-[15px] md:text-lg leading-tight truncate">EduMaster</span>
+                    <span class="hidden sm:block text-xs text-slate-500 font-semibold">Klassenarbeit-Trainer • 8. Klasse</span>
+                </span>
+            </button>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="btn-back-dashboard" type="button" onclick="showDashboard()" class="icon-btn hidden" aria-label="Zurück zum Dashboard">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden lg:inline">Dashboard</span>
+                </button>
+                <div id="subject-switch" class="segmented hidden"></div>
+                <button type="button" onclick="openCodeModal()" class="icon-btn hide-sm-subject" title="Fortschritt sichern oder wiederherstellen" aria-label="Fortschritts-Code">
+                    <i class="fa-solid fa-key"></i><span class="hidden xl:inline">Code</span>
+                </button>
+                <div class="stars-pill" title="Gesammelte Sterne">
+                    <i class="fa-solid fa-star"></i>
+                    <span id="total-stars">0 / 120</span>
+                </div>
+            </div>
+        </div>
+        <div id="nav-tabs-wrap" class="hidden max-w-5xl mx-auto px-4 pb-3">
+            <nav id="nav-tabs-container" class="tabbar" role="tablist"></nav>
+        </div>
+    </header>
+
+    <!-- HAUPTBEREICH -->
+    <main class="max-w-5xl mx-auto px-4 pt-6 pb-16 w-full">
+
+        <!-- ========================================== -->
+        <!-- ANSICHT 1: DASHBOARD                       -->
+        <!-- ========================================== -->
+        <section id="view-dashboard" class="space-y-8">
+            <div class="glass rounded-[28px] p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-3 max-w-xl">
+                    <span class="chip chip-neutral">Lern-Dashboard • Klasse 8</span>
+                    <h2 id="dash-greeting" class="text-3xl md:text-4xl font-extrabold">Willkommen bei EduMaster 👋</h2>
+                    <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+                        Wähle ein Fach und lerne Schritt für Schritt für deine nächste Klassenarbeit – mit Roadmap, Erklärvideos, Quiz, Übungen und Spickzettel.
+                    </p>
+                </div>
+                <div class="panel !rounded-3xl p-5 flex items-center gap-5 shrink-0 md:w-72">
+                    <div class="relative w-[108px] h-[108px] shrink-0">
+                        <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+                            <defs>
+                                <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#6366f1"/>
+                                    <stop offset="55%" stop-color="#f59e0b"/>
+                                    <stop offset="100%" stop-color="#14b8a6"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="52" fill="none" stroke-width="11" class="ring-track"/>
+                            <circle id="ring-progress" cx="60" cy="60" r="52" fill="none" stroke="url(#ringGrad)" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                        </svg>
+                        <div class="absolute inset-0 grid place-items-center">
+                            <span id="dash-total-pct" class="text-2xl font-extrabold">0%</span>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="eyebrow !text-slate-400">Gesamtfortschritt</div>
+                        <p id="dash-total-levels" class="text-sm font-bold text-slate-700">0 von 12 Level gemeistert</p>
+                        <p class="text-xs font-semibold text-slate-500"><i class="fa-solid fa-star text-amber-400"></i> <span id="dash-total-stars">0 / 120</span> Sterne</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-end justify-between mb-4 px-1">
+                    <h3 class="text-lg font-extrabold">Deine Fächer</h3>
+                    <span class="text-xs text-slate-500 font-semibold hidden sm:block">Tippe auf ein Fach, um zu starten</span>
+                </div>
+                <div id="subject-cards" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+            </div>
+
+            <div class="glass rounded-[24px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <span class="w-12 h-12 rounded-2xl grid place-items-center text-white text-lg shrink-0" style="background: linear-gradient(135deg,#0ea5e9,#6366f1)"><i class="fa-solid fa-key"></i></span>
+                    <div>
+                        <h3 class="font-extrabold">Fortschritt sichern & wiederherstellen</h3>
+                        <p class="text-sm text-slate-600">Erzeuge einen Code mit all deinen Sternen und Levels. Mit dem Code holst du deinen Fortschritt zurück – auch auf einem anderen Gerät.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="openCodeModal()" class="btn btn-primary shrink-0"><i class="fa-solid fa-key"></i> Code öffnen</button>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- ANSICHT 2: FACH                            -->
+        <!-- ========================================== -->
+        <div id="view-subject" class="hidden space-y-6">
+
+            <!-- REITER 1: ROADMAP -->
+            <section id="sec-roadmap" class="space-y-6">
+                <div class="glass rounded-[28px] p-6 md:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="space-y-2 max-w-xl">
+                        <span id="hero-badge" class="chip">Klassenarbeit-Vorbereitung</span>
+                        <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold">Roadmap</h2>
+                        <p id="hero-desc" class="text-slate-600 text-sm leading-relaxed"></p>
+                    </div>
+                    <div class="panel p-4 w-full md:w-64 shrink-0 space-y-2">
+                        <div class="eyebrow !text-slate-400">Fortschritt im Fach</div>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="overall-progress-pct" class="text-2xl font-extrabold text-slate-900">0%</span>
+                            <span class="text-xs font-bold text-slate-500">abgeschlossen</span>
+                        </div>
+                        <div class="bar"><span id="overall-progress-bar"></span></div>
+                        <p id="overall-progress-meta" class="text-xs font-semibold text-slate-500"></p>
+                    </div>
+                </div>
+                <div id="levels-container" class="timeline space-y-4"></div>
+            </section>
+
+            <!-- REITER 2: LABOR / TRAINER -->
+            <section id="sec-visuals" class="hidden space-y-6">
+                <div id="visuals-tab-content"></div>
+            </section>
+
+            <!-- REITER 3: UNTERLAGEN-ANALYSE (NUR DEUTSCH) -->
+            <section id="sec-analysis" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-6">
+                    <div>
+                        <span class="chip">Azubiyo & P.A.U.L. D. 8 Analyse</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-3 flex items-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass-chart accent-text"></i> Unterlagen-Analyse & Praxis-Vergleich
+                        </h2>
+                        <p class="text-slate-600 text-sm mt-1">
+                            Hier findest du die detaillierte Analyse aller Bewerbungsunterlagen aus deinen Azubiyo-Arbeitsblättern. Vergleiche Negativbeispiele mit Philipp Schulz und Lena Meier!
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 border-b border-slate-200/80 pb-3" id="analysis-subtabs-nav">
+                        <button type="button" onclick="renderAnalysisTab('elias')" id="atab-elias" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow">❌ Negativbeispiel 1: Elias Klein</button>
+                        <button type="button" onclick="renderAnalysisTab('magdalena')" id="atab-magdalena" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">❌ Negativbeispiel 2: Magdalena Klein</button>
+                        <button type="button" onclick="renderAnalysisTab('philipp')" id="atab-philipp" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">✅ Vorbild: Philipp Schulz</button>
+                        <button type="button" onclick="renderAnalysisTab('lena')" id="atab-lena" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">🌟 Praxisbeispiel: Lena Meier</button>
+                        <button type="button" onclick="renderAnalysisTab('normen')" id="atab-normen" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200">📐 DIN 5008 Normen-Matrix</button>
+                    </div>
+                    <div id="analysis-tab-body" class="pt-2"></div>
+                </div>
+            </section>
+
+            <!-- REITER 4: ÜBUNGEN (verdeckte Musterlösungen) -->
+            <section id="sec-exercises" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div>
+                            <span id="ex-badge" class="chip">Klausur-Vorbereitung</span>
+                            <h2 class="text-2xl font-extrabold text-slate-800 mt-3 flex items-center gap-2">
+                                <i class="fa-solid fa-pen-ruler accent-text"></i> <span id="ex-title-text">Praxis-Übungen</span>
+                            </h2>
+                            <p id="ex-desc" class="text-slate-600 text-sm mt-1"></p>
+                        </div>
+                        <span id="ex-counter" class="chip chip-neutral shrink-0 self-start md:self-auto">0 erledigt</span>
+                    </div>
+                    <div class="space-y-4" id="exercises-container"></div>
+                </div>
+            </section>
+
+            <!-- REITER 5: MATCH-PUZZLE -->
+            <section id="sec-puzzle" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-puzzle-piece accent-text"></i> Fachbegriffe Match-Game
+                            </h2>
+                            <p class="text-slate-600 text-sm mt-1">Verbinde den Begriff links mit der passenden Erklärung rechts. Gelöste Paare werden unten als Pfeil-Karte angezeigt!</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="chip">Matches: <span id="match-score">0</span> / <span id="match-total">10</span></span>
+                            <button type="button" onclick="initPuzzleGame()" class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-rotate-right"></i> Neu mischen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="puzzle-board"></div>
+
+                    <div class="pt-4 border-t border-slate-200/80 space-y-3">
+                        <h4 class="font-extrabold text-slate-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-link text-emerald-600"></i> Gelöste Paare (Visuelle Pfeil-Verbindung):
+                        </h4>
+                        <div id="puzzle-arrow-cards" class="space-y-2"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REITER 6: SPICKZETTEL & METHODIK -->
+            <section id="sec-cheatsheet" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice text-emerald-600"></i> Ausführlicher Klausur-Spickzettel & Methodik
+                            </h2>
+                            <p class="text-slate-600 text-sm mt-1">Die wichtigsten Regeln, Prüffragen und Formeln auf einen Blick.</p>
+                        </div>
+                        <button type="button" id="cheat-toggle-all" onclick="toggleAllCheats()" class="btn btn-ghost btn-sm shrink-0 self-start md:self-auto">
+                            <i class="fa-solid fa-expand"></i> Alle öffnen
+                        </button>
+                    </div>
+                    <div class="space-y-3" id="cheatsheet-accordion"></div>
+                </div>
+            </section>
+
+            <!-- REITER 7: EIGENE NOTIZEN -->
+            <section id="sec-notes" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-5">
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square accent-text"></i> Eigene Notizen & Formulierungen
+                        </h2>
+                        <p class="text-slate-600 text-sm mt-1">Notiere dir eigene Sätze oder Tipps deines Lehrers. Sie werden automatisch im Browser gespeichert – für <strong id="notes-subject-label">jedes Fach</strong> getrennt.</p>
+                    </div>
+                    <textarea id="custom-notes-text" oninput="saveCustomNotes()" rows="12" placeholder="Schreibe hier deine Notizen auf …" class="notes-area"></textarea>
+                    <div class="flex justify-between items-center text-xs font-semibold text-slate-500">
+                        <span><span id="notes-status-msg"><i class="fa-solid fa-floppy-disk mr-1"></i> Automatisch gespeichert</span> · <span id="notes-count">0 Wörter</span></span>
+                        <button type="button" onclick="clearCustomNotes()" class="text-rose-600 hover:underline font-bold">Notizen löschen</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- LEVEL-FENSTER -->
+    <div id="level-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if (event.target === this) closeLevelModal()">
+        <div class="modal-sheet">
+            <div id="modal-header" class="modal-head bg-gradient-to-br from-amber-500 to-orange-500">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="modal-icon"><i id="modal-icon" class="fa-solid fa-mountain"></i></div>
+                    <div class="min-w-0">
+                        <span id="modal-badge" class="modal-badge">Level 1</span>
+                        <h3 id="modal-title" class="text-lg md:text-xl font-extrabold leading-tight mt-1">Titel</h3>
+                        <p id="modal-subtitle" class="text-white/85 text-xs font-semibold truncate"></p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeLevelModal()" class="modal-close" aria-label="Schließen">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="px-5 pt-4">
+                <div class="seg-tabs">
+                    <button type="button" id="modal-tab-learn" onclick="switchModalSubTab('learn')" class="seg-tab active">
+                        <i class="fa-solid fa-book-open"></i> <span class="sm:hidden">Lernen</span><span class="hidden sm:inline">1. Verstehen & Lernen</span>
+                    </button>
+                    <button type="button" id="modal-tab-quiz" onclick="switchModalSubTab('quiz')" class="seg-tab">
+                        <i class="fa-solid fa-circle-question"></i> <span class="sm:hidden">Quiz</span><span id="modal-tab-quiz-label" class="hidden sm:inline">2. Quiz</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-5 overflow-y-auto flex-1" id="modal-body">
+                <div id="modal-content-learn"></div>
+                <div id="modal-content-quiz" class="hidden"></div>
+            </div>
+
+            <div class="modal-foot">
+                <span id="modal-foot-hint" class="text-xs text-slate-500 font-semibold hidden sm:block">Tipp: Lies zuerst den Lern-Teil vor dem Quiz!</span>
+                <div class="flex gap-2 ml-auto">
+                    <button type="button" onclick="closeLevelModal()" class="btn btn-ghost btn-sm">Schließen</button>
+                    <button type="button" id="modal-foot-btn" class="btn btn-primary btn-sm">Weiter zum Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORTSCHRITTS-CODE -->
+    <div id="code-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="code-title" onclick="if (event.target === this) closeCodeModal()">
+        <div class="modal-sheet !max-w-lg">
+            <div class="modal-head" style="background: linear-gradient(135deg,#0ea5e9,#6366f1)">
+                <div class="flex items-center gap-3">
+                    <div class="modal-icon"><i class="fa-solid fa-key"></i></div>
+                    <div>
+                        <span class="modal-badge">Fortschritt</span>
+                        <h3 id="code-title" class="text-lg font-extrabold leading-tight mt-1">Sichern & wiederherstellen</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCodeModal()" class="modal-close" aria-label="Schließen"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-5">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-sm">1. Dein Fortschritts-Code</h4>
+                        <span id="code-summary" class="chip chip-neutral"></span>
+                    </div>
+                    <div class="flex gap-2">
+                        <input id="code-out" readonly class="notes-area !min-h-0 !py-2.5 !px-3 font-mono-letter text-sm" onclick="this.select()">
+                        <button type="button" class="btn btn-primary btn-sm shrink-0" onclick="copyProgressCode(this)"><i class="fa-regular fa-copy"></i> Kopieren</button>
+                    </div>
+                    <p class="text-xs text-slate-500">Schreib dir den Code auf oder speichere ihn. Er enthält Sterne, geschaffte Level und erledigte Übungen – deine Notizen sind nicht enthalten.</p>
+                </div>
+                <div class="space-y-2 pt-4 border-t border-slate-200/80">
+                    <h4 class="font-extrabold text-sm">2. Code einfügen & Fortschritt zurückholen</h4>
+                    <div class="flex gap-2">
+                        <input id="code-in" placeholder="EDU-1-…" autocomplete="off" spellcheck="false" class="notes-area !min-h-0 !py-2.5 !px-3 font-mono-letter text-sm">
+                        <button type="button" class="btn btn-soft btn-sm shrink-0" onclick="restoreProgressCode()"><i class="fa-solid fa-rotate-left"></i> Laden</button>
+                    </div>
+                    <div id="code-msg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FEEDBACK -->
+    <button type="button" id="feedback-fab" class="feedback-fab" onclick="openFeedback()" aria-label="Feedback geben">
+        <i class="fa-solid fa-comment-dots"></i><span>Feedback</span>
+    </button>
+
+    <div id="feedback-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="fb-title" onclick="if (event.target === this) closeFeedback()">
+        <div class="modal-sheet !max-w-lg">
+            <div class="modal-head" style="background: linear-gradient(135deg,#ec4899,#8b5cf6)">
+                <div class="flex items-center gap-3">
+                    <div class="modal-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                    <div>
+                        <span class="modal-badge">Feedback</span>
+                        <h3 id="fb-title" class="text-lg font-extrabold leading-tight mt-1">Was können wir besser machen?</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeFeedback()" class="modal-close" aria-label="Schließen"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4" id="fb-body">
+                <div id="fb-form" class="space-y-4">
+                    <div>
+                        <div class="text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">Worum geht es?</div>
+                        <div class="grid grid-cols-2 gap-2" id="fb-kinds">
+                            <button type="button" class="fb-kind active" data-kind="bug" data-label="Fehler" onclick="pickFeedbackKind(this)">🐞 Etwas funktioniert nicht</button>
+                            <button type="button" class="fb-kind" data-kind="bug" data-label="Inhalt" onclick="pickFeedbackKind(this)">📝 Inhalt stimmt nicht</button>
+                            <button type="button" class="fb-kind" data-kind="wish" data-label="Wunsch" onclick="pickFeedbackKind(this)">💡 Idee / Wunsch</button>
+                            <button type="button" class="fb-kind" data-kind="question" data-label="Frage" onclick="pickFeedbackKind(this)">❓ Frage</button>
+                        </div>
+                    </div>
+                    <div>
+                        <textarea id="fb-text" rows="5" maxlength="1000" class="notes-area !min-h-[140px]" placeholder="Beschreibe kurz, was dir aufgefallen ist …" oninput="updateFeedbackCount()"></textarea>
+                        <div class="flex justify-between text-[11px] font-semibold text-slate-500 mt-1">
+                            <span><i class="fa-solid fa-lock"></i> Bitte keine Namen, Adressen, Telefonnummern oder Passwörter.</span>
+                            <span id="fb-count">0 / 1000</span>
+                        </div>
+                    </div>
+                    <label class="flex items-start gap-2 text-xs text-slate-600 font-semibold cursor-pointer">
+                        <input type="checkbox" id="fb-context" checked class="mt-0.5 accent-pink-500">
+                        <span>Ort in der App mitschicken: <span id="fb-context-text" class="text-slate-500"></span></span>
+                    </label>
+                    <input type="text" id="fb-website" tabindex="-1" autocomplete="off" class="fb-hp" aria-hidden="true">
+                    <div id="fb-msg"></div>
+                    <div class="space-y-2">
+                        <a id="fb-github" class="btn btn-primary w-full hidden" href="https://github.com/" target="_blank" rel="noopener noreferrer" onclick="return prepareFeedbackIssue(this)"><i class="fa-solid fa-paper-plane"></i> Feedback senden</a>
+                        <div class="flex gap-2">
+                            <button type="button" id="fb-share" class="btn btn-primary flex-1" onclick="shareFeedback()"><i class="fa-solid fa-share-from-square"></i> Per Nachricht senden</button>
+                            <button type="button" class="btn btn-ghost flex-1" onclick="copyFeedback()"><i class="fa-regular fa-copy"></i> Kopieren</button>
+                        </div>
+                        <p id="fb-hint" class="text-[11px] text-slate-500 leading-snug"></p>
+                    </div>
+                </div>
+                <div id="fb-done" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HINWEIS-TOAST -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <!-- APP-LOGIK & DATEN -->
+    <script>

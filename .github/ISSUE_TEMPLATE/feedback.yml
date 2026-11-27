@@ -1,0 +1,35 @@
+name: EduMaster-Feedback
+description: Fehler, Hinweis zum Inhalt, Idee oder Frage zur Lern-App
+title: "[Feedback] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für dein Feedback! **Bitte keine Namen, Adressen, Telefonnummern oder Passwörter eintragen** – Issues sind öffentlich sichtbar.
+        Wenn du über den Feedback-Knopf in EduMaster hierher gekommen bist, ist alles schon ausgefüllt. Tippe einfach auf „Submit new issue“.
+  - type: input
+    id: art
+    attributes:
+      label: Art
+      description: "Etwas funktioniert nicht · Inhalt stimmt nicht · Idee / Wunsch · Frage"
+    validations:
+      required: true
+  - type: textarea
+    id: beschreibung
+    attributes:
+      label: Beschreibung
+      description: Was ist dir aufgefallen?
+    validations:
+      required: true
+  - type: input
+    id: ort
+    attributes:
+      label: Ort in der App
+      description: "z. B. Chemie · Roadmap · Level 4"
+  - type: textarea
+    id: code
+    attributes:
+      label: Code für die Werkbank
+      description: Wird von EduMaster automatisch ausgefüllt – bitte nicht ändern.
+      render: text
