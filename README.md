@@ -55,12 +55,12 @@ Zugangsdaten – es gibt zwei Wege:
 
 | Weg | So geht's auf dem iPad | So kommt es in die Werkbank |
 |---|---|---|
-| **Feedback senden** (Hauptweg) | Öffnet das fertig ausgefüllte Formular im Repo in einem neuen Tab → „Submit new issue“ tippen. Braucht ein in Safari angemeldetes GitHub-Konto; das Issue ist **öffentlich sichtbar**. | **Automatisch:** Läuft die Werkbank, holt sie alle 5 Minuten neue Feedback-Issues als Tickets ab (Fenster „EduMaster-Feedback“, minimiert). Sofort: `edumaster-feedback.bat` → **2**. Keine doppelten Tickets. |
-| **Per Nachricht** (ohne GitHub-Konto) | „Per Nachricht senden“ öffnet das Teilen-Menü (iMessage, WhatsApp …). Die Nachricht enthält einen Code `EMFB1.…`. | `edumaster-feedback.bat` → **1**, Nachricht einfügen → je Code ein Ticket |
+| **Feedback senden** (Hauptweg) | Knopf „Feedback“ oben in der Kopfzeile → öffnet das fertig ausgefüllte Formular im Repo in einem neuen Tab → „Submit new issue“ tippen. Braucht ein in Safari angemeldetes GitHub-Konto; das Issue ist **öffentlich sichtbar**. | **Automatisch** über den Ticket-Eingang der Werkbank: beim Start, alle 5 Minuten und beim Öffnen der Oberfläche; sofort mit „Jetzt abholen“ im Reiter Tickets. Jedes Issue wird genau einmal übernommen. |
+| **Per Nachricht** (ohne GitHub-Konto) | „Per Nachricht senden“ öffnet das Teilen-Menü (iMessage, WhatsApp …). Die Nachricht enthält einen Code `EMFB1.…`. | In der Werkbank: Reiter Tickets → „Feedback-Code aus einer Nachricht einfügen“ (oder `edumaster-feedback.bat`) → je Code ein Ticket |
 
-Eingerichtet ist: `"feedback_github_repo": "dannyG015/Lern_Roadmap"` in `edumaster.config.json` und
-`EDUMASTER_GITHUB_REPO=dannyG015/Lern_Roadmap` in `D:\Apps\Werkbank\workbench\.env`. Das Formular liegt unter
-`.github/ISSUE_TEMPLATE/feedback.yml` und gilt erst, wenn es mit `veroeffentlichen.bat` im Repo liegt.
+Eingerichtet ist: `"feedback_github_repo": "dannyG015/Lern_Roadmap"` in `edumaster.config.json` und in der Werkbank
+`apps.json → edumaster → inbox` (`github_issues`, Repo `dannyG015/Lern_Roadmap`, Code-Präfix `EMFB1`). Das Formular liegt
+unter `.github/ISSUE_TEMPLATE/feedback.yml` im Repo.
 
 Optional: Im Repo ein Label **`feedback`** anlegen (*Issues → Labels → New label*) – dann bekommen die Issues es automatisch.
 Die Werkbank erkennt Feedback aber auch ohne Label (Titel „[Feedback] …“ bzw. Code im Text).
