@@ -1,6 +1,6 @@
 # EduMaster
 
-Lern-App für die 8. Klasse (Erdkunde · Deutsch · Chemie) – gelernt wird **auf dem iPad**, online über **GitHub Pages**.
+Lern-App für die 8. Klasse (Erdkunde · Deutsch · Chemie · Mathe) – gelernt wird **auf dem iPad**, online über **GitHub Pages**.
 Gepflegt wird sie mit der **Werkbank** (`D:\Apps\Werkbank`, App-Kennung `edumaster`).
 
 ## Aufbau
@@ -13,6 +13,8 @@ EduMaster\
 │   ├── 2_data_original.js  Erdkunde & Deutsch (Inhalte nicht umschreiben)
 │   ├── 3_data_chemie.js    Chemie: 7 Level, 20 Übungen, Puzzle, Spickzettel (Buch S. 52–65)
 │   ├── 3b_chemie_labor.js  Chemie-Labor (Teilchenbilder, Simulationen, Piktogramme …)
+│   ├── 3c_data_mathe.js    Mathe: 7 Level, 20 Übungen, Puzzle, Spickzettel (Buch S. 18–19, 26–33 + Checkliste)
+│   ├── 3d_mathe_labor.js   Mathe-Labor (Graph-Detektiv, Knack die Box, Gleichungs-/Term-Trainer, Dreiecke, Trapez)
 │   ├── 4_labor_original.js Geo-Labor, DIN-5008-Trainer, Unterlagen-Analyse
 │   ├── 5_app.js            Navigation, Roadmap, Quiz, Videos, Fortschritts-Code
 │   ├── 5b_feedback.js      Feedback-Dialog
@@ -28,7 +30,7 @@ EduMaster\
 
 ```
 python tools\build.py        # nur bauen
-python tools\check_app.py    # bauen + 31 Prüfungen (Daten, Syntax, Sicherheit, iPad)
+python tools\check_app.py    # bauen + 36 Prüfungen (Daten, Syntax, Sicherheit, iPad)
 ```
 
 ## Veröffentlichen (GitHub Pages)
@@ -50,7 +52,7 @@ committet es und lädt hoch (`git push`). Nach 1–2 Minuten ist die neue Versio
 
 ## Feedback → Tickets in der Werkbank
 
-Die App hat unten rechts einen **Feedback-Knopf**. Die App selbst schickt nichts übers Netz und enthält keine
+Die App hat oben in der Kopfzeile einen **Feedback-Knopf**. Die App selbst schickt nichts übers Netz und enthält keine
 Zugangsdaten – es gibt zwei Wege:
 
 | Weg | So geht's auf dem iPad | So kommt es in die Werkbank |
@@ -74,6 +76,8 @@ Erledigte Issues schließt du auf GitHub – die Werkbank liest dort nur, sie ä
   EduMaster bleibt im eigenen Tab offen. Als lokale Datei geöffnet spielt YouTube oft nicht ab, online schon.
 - **Als App auf den Home-Bildschirm:** in Safari *Teilen → Zum Home-Bildschirm*. EduMaster startet dann wie eine App.
 - Eingabefelder haben 16 px Schrift (kein ungewolltes Hineinzoomen), Knöpfe sind mindestens 44 px groß.
+- **Neues Fach anhängen:** in `SUBJECT_ORDER` (src/5_app.js) immer nur hinten anfügen – dann bleiben alte
+  Fortschritts-Codes gültig (fehlende Fächer werden beim Wiederherstellen nicht angefasst).
 - **Fortschritt sichern:** Safari kann gespeicherte Daten von Websites löschen, die länger nicht geöffnet wurden.
   Darum ab und zu über den 🔑-Knopf einen **Fortschritts-Code** erzeugen und aufheben.
 

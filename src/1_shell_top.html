@@ -54,6 +54,10 @@
             --ac: #0d9488; --ac-strong: #0f766e; --ac-soft: #f0fdfa; --ac-soft-2: #99f6e4;
             --ac-grad: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 100%);
         }
+        .t-mathe {
+            --ac: #2563eb; --ac-strong: #1d4ed8; --ac-soft: #eff6ff; --ac-soft-2: #bfdbfe;
+            --ac-grad: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
 
         html { -webkit-text-size-adjust: 100%; }
         body {
@@ -384,6 +388,11 @@
         .zone-highlight:hover { transform: scale(1.01); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15); }
         .badge-glow { box-shadow: 0 0 18px rgba(245, 158, 11, 0.4); }
 
+        /* iPad hochkant: im Fach nur der Fachname in der Kopfzeile (Platz für vier Fächer) */
+        @media (max-width: 1023px) {
+            body.in-subject #brand-sub { display: none; }
+        }
+
         /* Handy-Anpassungen */
         @media (max-width: 639px) {
             body.in-subject #brand-text, body.in-subject .hide-sm-subject { display: none; }
@@ -440,7 +449,7 @@
                 <span class="brand-mark"><i id="brand-icon" class="fa-solid fa-graduation-cap"></i></span>
                 <span id="brand-text" class="min-w-0 text-left">
                     <span id="brand-title" class="block font-extrabold text-[15px] md:text-lg leading-tight truncate">EduMaster</span>
-                    <span class="hidden sm:block text-xs text-slate-500 font-semibold">Klassenarbeit-Trainer • 8. Klasse</span>
+                    <span id="brand-sub" class="hidden sm:block text-xs text-slate-500 font-semibold">Klassenarbeit-Trainer • 8. Klasse</span>
                 </span>
             </button>
 
@@ -512,7 +521,7 @@
                     <h3 class="text-lg font-extrabold">Deine Fächer</h3>
                     <span class="text-xs text-slate-500 font-semibold hidden sm:block">Tippe auf ein Fach, um zu starten</span>
                 </div>
-                <div id="subject-cards" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+                <div id="subject-cards" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5"></div>
             </div>
 
             <div class="glass rounded-[24px] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -23,6 +23,8 @@ ORDER = [
     "2_data_original.js",
     "3_data_chemie.js",
     "3b_chemie_labor.js",
+    "3c_data_mathe.js",
+    "3d_mathe_labor.js",
     "4_labor_original.js",
     "5_app.js",
     "5b_feedback.js",

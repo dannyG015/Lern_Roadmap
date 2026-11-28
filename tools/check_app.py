@@ -100,16 +100,16 @@ def main() -> int:
             r = subprocess.run([node, "--check", str(js)], capture_output=True, text=True, encoding="utf-8", errors="replace")
             check(r.returncode == 0, "JavaScript-Syntax fehlerfrei" + (f": {r.stderr.strip()[:300]}" if r.returncode else ""))
 
-            data_js = "".join((ROOT / "src" / n).read_text(encoding="utf-8") for n in ("2_data_original.js", "3_data_chemie.js"))
+            data_js = "".join((ROOT / "src" / n).read_text(encoding="utf-8") for n in ("2_data_original.js", "3_data_chemie.js", "3c_data_mathe.js"))
             harness = Path(tmp) / "data.cjs"
-            harness.write_text(data_js + "\nmodule.exports = { erdkundeLevels, deutschLevels, chemieLevels, deutschExercises, chemieExercises, puzzleData, chemiePuzzle, cheatsheetData, chemieCheatsheet };\n"
+            harness.write_text(data_js + "\nmodule.exports = { erdkundeLevels, deutschLevels, chemieLevels, matheLevels, deutschExercises, chemieExercises, matheExercises, puzzleData, chemiePuzzle, mathePuzzle, cheatsheetData, chemieCheatsheet, matheCheatsheet };\n"
                                "if (require.main === module) process.stdout.write(JSON.stringify(module.exports));\n", encoding="utf-8")
             r = subprocess.run([node, str(harness)], capture_output=True, text=True, encoding="utf-8", errors="replace")
             if r.returncode != 0:
                 check(False, f"Lerndaten lesbar: {r.stderr.strip()[:300]}")
             else:
                 d = json.loads(r.stdout)
-                for key, min_q in (("erdkundeLevels", 10), ("deutschLevels", 10), ("chemieLevels", 10)):
+                for key, min_q in (("erdkundeLevels", 10), ("deutschLevels", 10), ("chemieLevels", 10), ("matheLevels", 10)):
                     problems = []
                     for lv in d[key]:
                         qs = lv.get("questions", [])
@@ -124,14 +124,17 @@ def main() -> int:
                             if not str(lv.get(f, "")).strip():
                                 problems.append(f"Level {lv.get('id')}: Feld {f} leer")
                     check(not problems, f"{key}: {len(d[key])} Level vollständig" + (f" – {problems[:5]}" if problems else ""))
-                for key in ("deutschExercises", "chemieExercises"):
+                levels_ok = {"Grundlagen", "Anwenden", "Transfer", "Klausur"}
+                for key in ("deutschExercises", "chemieExercises", "matheExercises"):
                     ex = d[key]
                     ids_ok = [e["id"] for e in ex] == list(range(1, len(ex) + 1))
                     sol_ok = all(e.get("sol") or e.get("steps") for e in ex)
                     check(ids_ok and sol_ok, f"{key}: {len(ex)} Übungen lückenlos mit Musterlösung")
-                check(len(d["chemieExercises"]) >= 15, "Chemie: mindestens 15 Übungen")
-                check(all(p["term"] and p["exp"] for p in d["chemiePuzzle"]), f"Chemie-Puzzle: {len(d['chemiePuzzle'])} Paare")
-                check(len(d["chemieCheatsheet"]) >= 5, f"Chemie-Spickzettel: {len(d['chemieCheatsheet'])} Karten")
+                for name, pre in (("Chemie", "chemie"), ("Mathe", "mathe")):
+                    ex = d[pre + "Exercises"]
+                    check(15 <= len(ex) <= 20 and all(e.get("level") in levels_ok for e in ex), f"{name}: 15–20 Übungen mit Schwierigkeitsgrad")
+                    check(all(p["term"] and p["exp"] for p in d[pre + "Puzzle"]), f"{name}-Puzzle: {len(d[pre + 'Puzzle'])} Paare")
+                    check(len(d[pre + "Cheatsheet"]) >= 5, f"{name}-Spickzettel: {len(d[pre + 'Cheatsheet'])} Karten")
 
     width = max(len(t) for _, t in results)
     for ok, text in results:

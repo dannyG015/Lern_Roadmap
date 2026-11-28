@@ -3,7 +3,8 @@
         // FACH-KONFIGURATION
         // Neue Fächer werden nur hier eingetragen.
         // ==========================================
-        const SUBJECT_ORDER = ['erdkunde', 'deutsch', 'chemie'];
+        // Reihenfolge nie ändern – neue Fächer nur hinten anhängen (der Fortschritts-Code hängt davon ab).
+        const SUBJECT_ORDER = ['erdkunde', 'deutsch', 'chemie', 'mathe'];
         const SECTION_IDS = ['roadmap', 'visuals', 'analysis', 'exercises', 'puzzle', 'cheatsheet', 'notes'];
 
         const SUBJECTS = {
@@ -85,6 +86,34 @@
                     ['notes', 'fa-pen-to-square', 'Notizen']
                 ],
                 renderVisuals: () => renderChemieLabor(0)
+            },
+            mathe: {
+                ready: matheLevels.length > 0,
+                name: 'Mathe', short: 'Mathe', emoji: '📐',
+                icon: 'fa-square-root-variable', headerIcon: 'fa-calculator',
+                title: 'Mathe 📐', subtitle: 'Graphen • Terme & Gleichungen • Linien im Dreieck',
+                chip: `${matheLevels.length} Level • ${matheLevels.reduce((s, l) => s + l.questions.length, 0)} Fragen`,
+                exam: MATHE_EXAM,
+                desc: 'Graphen lesen & zuordnen, Terme vereinfachen, Gleichungen lösen (Knack die Box), Terme aufstellen, Umkreis, Inkreis, Höhen & Seitenhalbierende – plus Trapeze als Zusatz.',
+                cta: 'Mathe-Roadmap öffnen',
+                heroTitle: 'Deine Mathe-Roadmap 🚀',
+                heroDesc: 'Sieben Level nach deinem Buch (S. 18–19, 26–33) und deiner Checkliste: einfache Erklärung, Fachwissen, Beispiel, Erklärvideo und ein Quiz mit Verständnisfragen. Level 7 (Trapeze) ist Zusatz.',
+                levels: matheLevels,
+                exercises: matheExercises,
+                exercisesBadge: 'Klausur-Vorbereitung Mathe',
+                exercisesTitle: '20 Übungen: von Grundlagen bis Klausur',
+                exercisesDesc: 'Rechne jede Aufgabe zuerst selbst im Heft. Die Musterlösung deckst du danach Schritt für Schritt auf. Die Farbe zeigt den Schwierigkeitsgrad: Grundlagen → Anwenden → Transfer → Klausur.',
+                puzzle: mathePuzzle,
+                cheatsheet: matheCheatsheet,
+                tabs: [
+                    ['roadmap', 'fa-map', 'Roadmap'],
+                    ['visuals', 'fa-shapes', 'Mathe-Labor'],
+                    ['exercises', 'fa-pen-ruler', '20 Übungen'],
+                    ['puzzle', 'fa-puzzle-piece', 'Match-Puzzle'],
+                    ['cheatsheet', 'fa-file-invoice', 'Spickzettel'],
+                    ['notes', 'fa-pen-to-square', 'Notizen']
+                ],
+                renderVisuals: () => renderMatheLabor(0)
             }
         };
 
@@ -178,7 +207,7 @@
         }
 
         function applyTheme(key) {
-            document.body.classList.remove('t-home', 't-erdkunde', 't-deutsch', 't-chemie');
+            document.body.classList.remove('t-home', ...SUBJECT_ORDER.map(k => 't-' + k));
             document.body.classList.add(key ? 't-' + key : 't-home');
         }
         function replayAnimation(el) {
@@ -295,7 +324,7 @@
             const s = SUBJECTS[key];
             if (!s) return;
             if (!s.ready) {
-                showToast('🧪 Chemie wird gerade vorbereitet – sobald deine Unterlagen da sind, geht es hier los!');
+                showToast(`${s.emoji} ${s.name} wird gerade vorbereitet – sobald deine Unterlagen da sind, geht es hier los!`);
                 return;
             }
             currentSubject = key;
@@ -331,7 +360,7 @@
                 return `
                     <button type="button" class="seg-btn t-${k} ${active ? 'active' : ''} ${s.ready ? '' : 'is-locked'}"
                             onclick="switchSubject('${k}')" title="${s.name}${s.ready ? '' : ' (in Vorbereitung)'}" aria-pressed="${active}">
-                        <span>${s.emoji}</span><span class="hidden md:inline">${s.short}</span>
+                        <span>${s.emoji}</span><span class="hidden lg:inline">${s.short}</span>
                         ${s.ready ? '' : '<i class="fa-solid fa-lock text-[9px]"></i>'}
                     </button>
                 `;
@@ -440,6 +469,7 @@
             $('modal-tab-quiz-label').textContent = `2. Quiz (${activeLevel.questions.length} Fragen)`;
             $('modal-content-learn').innerHTML = renderLearnContent(activeLevel);
             if (typeof afterLearnRender === 'function') afterLearnRender($('modal-content-learn'));
+            if (typeof matheAfterRender === 'function') matheAfterRender($('modal-content-learn'));
 
             buildModalQuiz();
             switchModalSubTab('learn');
@@ -1007,8 +1037,9 @@
 
         // ==========================================
         // FORTSCHRITTS-CODE (sichern & wiederherstellen)
-        // Aufbau: EDU-1-<Level Geo>-<Level Deutsch>-<Level Chemie>-<Übungen Geo>-<Übungen Deutsch>-<Übungen Chemie>-<Prüfzeichen>
+        // Aufbau: EDU-1-<Level je Fach …>-<Übungen je Fach …>-<Prüfzeichen>, Fächer in SUBJECT_ORDER-Reihenfolge.
         // Level-Zeichen: 0 = offen, sonst (Bestwert + 1) zur Basis 36. Übungen: Bitmaske zur Basis 36.
+        // Ältere Codes mit weniger Fächern (z. B. ohne Mathe) bleiben gültig – fehlende Fächer werden nicht angefasst.
         // ==========================================
         const CODE_VERSION = '1';
 
@@ -1039,13 +1070,15 @@
         function parseProgressCode(raw) {
             const code = String(raw || '').trim().toUpperCase().replace(/\s+/g, '');
             const parts = code.split('-');
-            if (parts.length !== 2 + SUBJECT_ORDER.length * 2 + 1 || !['EDU', 'EM8'].includes(parts[0])) return { error: 'Das sieht nicht wie ein EduMaster-Code aus. Er beginnt mit „EDU-“.' };
+            const nSub = (parts.length - 3) / 2;
+            if (!['EDU', 'EM8'].includes(parts[0]) || !Number.isInteger(nSub) || nSub < 3 || nSub > SUBJECT_ORDER.length) return { error: 'Das sieht nicht wie ein EduMaster-Code aus. Er beginnt mit „EDU-“.' };
             const payload = parts.slice(1, -1).join('-');
             if (codeChecksum(payload) !== parts[parts.length - 1]) return { error: 'Der Code ist unvollständig oder hat einen Tippfehler (Prüfzeichen stimmt nicht).' };
             if (parts[1] !== CODE_VERSION) return { error: 'Dieser Code stammt aus einer anderen Version.' };
             const progress = {};
             const done = {};
             SUBJECT_ORDER.forEach((k, si) => {
+                if (si >= nSub) return; // Fach gab es beim Erstellen des Codes noch nicht
                 const levels = SUBJECTS[k].levels || [];
                 const chars = parts[2 + si] === 'X' ? '' : parts[2 + si];
                 progress[k] = { completed: [], stars: {} };
@@ -1054,7 +1087,7 @@
                     if (v > 0) { progress[k].completed.push(l.id); progress[k].stars[l.id] = v - 1; }
                 });
                 const list = SUBJECTS[k].exercises || [];
-                let mask = parseInt(parts[2 + SUBJECT_ORDER.length + si], 36) || 0;
+                let mask = parseInt(parts[2 + nSub + si], 36) || 0;
                 done[k] = [];
                 list.forEach((ex, i) => { if (i < 30 && Math.floor(mask / Math.pow(2, i)) % 2 === 1) done[k].push(ex.id); });
             });
@@ -1094,7 +1127,7 @@
             }
             if (!window.confirm('Fortschritt wiederherstellen? Dein aktueller Fortschritt (Sterne, Level, erledigte Übungen) wird dabei ersetzt.')) return;
             userProgress = Object.assign(loadProgress(), res.progress);
-            exDone = res.done;
+            exDone = Object.assign({}, exDone, res.done);
             saveProgress();
             writeJSON(EX_DONE_KEY, exDone);
             $('code-out').value = buildProgressCode();
