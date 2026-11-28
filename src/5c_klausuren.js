@@ -2,17 +2,21 @@
         // ==========================================
         // PROBEKLAUSUREN (ab dem Mathe-Kapitel; ein Fach bekommt sie über SUBJECTS[fach].exams)
         // Antworten: Zahl eintippen ("num"), Antwort antippen ("choice") oder Lücke auswählen ("select").
-        // Lösungsweg erst nach dem Antworten (Prüfen) bzw. nach dem Abgeben. Timer mit Countdown und „Stift weg!“.
+        // - Abgeben jederzeit (auch mit leeren oder falschen Antworten), eigener Dialog statt Systemfenster.
+        // - Timer mit Countdown, Pause/Weiter, Neu starten und „Stift weg!“ am Ende.
+        // - Lösungsweg jederzeit aufklappbar; vor dem Antworten wird das als „Lösung angesehen“ (👀) vermerkt.
+        // - 💡 Tipps zu schwierigen Teilaufgaben.
         // Eingaben werden nie als HTML eingesetzt; gespeichert wird nur der Bestwert im Browser.
         // ==========================================
         const EXAM_STORE = 'edumaster_exam_best';
         let examState = null;     // aktuell geöffnete Klausur
-        let examTimer = null;     // { examKey, end, total, handle, warned5, warned1 }
+        let examTimer = null;     // { examKey, subj, start, end, total, remaining, paused, pausedMs, pausedAt, handle, warned5, warned1 }
 
         function examList() { return (currentSubject && SUBJECTS[currentSubject].exams) || []; }
         function examKey(subj, id) { return `${subj}:${id}`; }
         function examBest() { return readJSON(EXAM_STORE, {}) || {}; }
         function examTotal(ex) { return ex.tasks.reduce((s, t) => s + t.points, 0); }
+        function timerOfState() { return !!(examTimer && examState && examTimer.examKey === examState.key); }
 
         // Notenschlüssel (übliche Orientierung, Prozent der Punkte)
         function examGrade(pct) {
@@ -22,6 +26,38 @@
             if (pct >= 50) return { note: '4', text: 'ausreichend', cls: 'text-amber-600' };
             if (pct >= 30) return { note: '5', text: 'mangelhaft', cls: 'text-rose-600' };
             return { note: '6', text: 'ungenügend', cls: 'text-rose-700' };
+        }
+
+        // ---------- Eigener Bestätigungs-Dialog (iPad-freundlich) ----------
+        function examAsk(opts) {
+            const old = $('exam-ask');
+            if (old) old.remove();
+            const wrap = document.createElement('div');
+            wrap.id = 'exam-ask';
+            wrap.className = 'exam-ask-backdrop';
+            wrap.setAttribute('role', 'dialog');
+            wrap.setAttribute('aria-modal', 'true');
+            wrap.innerHTML = `
+                <div class="exam-ask">
+                    <div class="exam-ask-icon">${opts.icon || '🏁'}</div>
+                    <h3 class="text-lg font-extrabold text-slate-900 text-center"></h3>
+                    <p class="text-sm text-slate-600 text-center mt-1"></p>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-5">
+                        <button type="button" class="btn btn-ghost flex-1" data-act="no"></button>
+                        <button type="button" class="btn btn-primary flex-1" data-act="yes"></button>
+                    </div>
+                </div>`;
+            wrap.querySelector('h3').textContent = opts.title;
+            wrap.querySelector('p').textContent = opts.text || '';
+            wrap.querySelector('[data-act="no"]').textContent = opts.cancel || 'Abbrechen';
+            wrap.querySelector('[data-act="yes"]').textContent = opts.ok || 'OK';
+            const close = () => wrap.remove();
+            const cancel = () => { close(); if (opts.onCancel) opts.onCancel(); };
+            wrap.addEventListener('click', e => { if (e.target === wrap) cancel(); });
+            wrap.querySelector('[data-act="no"]').onclick = cancel;
+            wrap.querySelector('[data-act="yes"]').onclick = () => { close(); opts.onOk(); };
+            document.body.appendChild(wrap);
+            wrap.querySelector('[data-act="yes"]').focus();
         }
 
         // ---------- Übersicht ----------
@@ -36,7 +72,7 @@
                     <div>
                         <span class="chip">Finale der Roadmap</span>
                         <h2 class="text-2xl font-extrabold text-slate-800 mt-3 flex items-center gap-2"><i class="fa-solid fa-stopwatch accent-text"></i> Probeklausuren</h2>
-                        <p class="text-slate-600 text-sm mt-1">Wie eine echte Klassenarbeit – und bewusst nicht ganz leicht. Wer eine Probe schafft, ist auf dem Weg zur Eins. Starte den Timer oder übe ohne Zeit. Zahlen tippst du ein, Terme und Gleichungen wählst du aus.</p>
+                        <p class="text-slate-600 text-sm mt-1">Wie eine echte Klassenarbeit – und bewusst nicht ganz leicht. Starte den Timer (mit Pause-Knopf) oder übe ohne Zeit. Zahlen tippst du ein, Terme und Gleichungen wählst du aus. Bei schweren Aufgaben hilft dir der 💡 Tipp.</p>
                     </div>
                     <div class="grid md:grid-cols-3 gap-4">
                         ${list.map((ex, i) => {
@@ -58,7 +94,7 @@
                                 </article>`;
                         }).join('')}
                     </div>
-                    <p class="text-[11px] text-slate-500">Notenschlüssel zur Orientierung: ab 92 % sehr gut · ab 81 % gut · ab 67 % befriedigend · ab 50 % ausreichend · ab 30 % mangelhaft. Deine Lehrkraft kann anders bewerten.</p>
+                    <p class="text-[11px] text-slate-500">Notenschlüssel zur Orientierung: ab 92 % sehr gut · ab 81 % gut · ab 67 % befriedigend · ab 50 % ausreichend · ab 30 % mangelhaft. Deine Lehrkraft kann anders bewerten. Als Bestwert zählt nur ein Durchgang ohne vorher angesehene Lösungen.</p>
                 </div>
             `;
         }
@@ -78,29 +114,30 @@
         function newExamState(ex) {
             examState = {
                 subj: currentSubject, id: ex.id, key: examKey(currentSubject, ex.id), ex,
-                answers: {}, checked: {}, submitted: false, result: null, openSol: {},
+                answers: {}, checked: {}, submitted: false, result: null, openSol: {}, peeked: {}, hints: {},
                 orders: ex.tasks.map(t => t.parts.map(p => (p.options && !p.keepOrder) ? shuffle(p.options.map((_, i) => i)) : (p.options || []).map((_, i) => i)))
             };
         }
 
         function closeExam() {
-            if (examTimer) { showToast('⏱ Der Timer läuft noch – gib die Klausur zuerst ab.'); return; }
+            if (timerOfState()) { showToast('⏱ Der Timer läuft noch – pausiere oder gib die Klausur zuerst ab.'); return; }
             examState = null;
             renderExams();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartExam() {
-            if (examTimer) return;
-            if (!window.confirm('Klausur neu beginnen? Deine Antworten werden gelöscht.')) return;
-            newExamState(examState.ex);
-            renderExam();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (timerOfState()) return;
+            examAsk({
+                icon: '🔄', title: 'Klausur neu beginnen?', text: 'Alle Antworten, Tipps und Lösungsblicke dieses Durchgangs werden gelöscht.',
+                ok: 'Neu beginnen', cancel: 'Abbrechen',
+                onOk: () => { newExamState(examState.ex); renderExam(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            });
         }
 
         // ---------- Bewertung ----------
         function parseNum(raw) {
-            let s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(/[−–]/g, '-').replace(',', '.');
+            const s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(/[−–]/g, '-').replace(',', '.');
             const m = s.match(/^([+-]?\d*\.?\d+)(?:\/(\d*\.?\d+))?/);
             if (!m) return NaN;
             const v = m[2] !== undefined ? +m[1] / +m[2] : +m[1];
@@ -117,19 +154,18 @@
             if (part.type === 'num') return Math.abs(parseNum(v) - part.answer) <= (part.tol != null ? part.tol : 0.005);
             return +v === part.correct;
         }
-        function taskScore(t) {
-            return examState.ex.tasks[t].parts.reduce((s, p, i) => s + (partCorrect(t, i) ? p.points : 0), 0);
-        }
+        function taskScore(t) { return examState.ex.tasks[t].parts.reduce((s, p, i) => s + (partCorrect(t, i) ? p.points : 0), 0); }
         function taskComplete(t) { return examState.ex.tasks[t].parts.every((_, i) => partAnswered(t, i)); }
         function isLocked(t) { return examState.submitted || !!examState.checked[t]; }
+        function answeredCount() { return examState.ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0); }
+        function partsCount() { return examState.ex.tasks.reduce((s, t) => s + t.parts.length, 0); }
 
         // ---------- Ansicht einer Klausur ----------
         function renderExam() {
             const st = examState, ex = st.ex;
             const total = examTotal(ex);
-            const running = !!(examTimer && examTimer.examKey === st.key);
-            const answeredParts = ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0);
-            const allParts = ex.tasks.reduce((s, t) => s + t.parts.length, 0);
+            const running = timerOfState();
+            const paused = running && examTimer.paused;
             $('exams-content').innerHTML = `
                 <div class="space-y-5">
                     <div class="glass-card p-6 rounded-3xl space-y-4">
@@ -146,18 +182,27 @@
                         <div class="exam-start-row">
                             ${running ? `
                                 <div class="flex items-center gap-3 flex-wrap">
-                                    <span class="exam-live"><span class="dot"></span> Timer läuft</span>
-                                    <span class="text-sm text-slate-600">${answeredParts} von ${allParts} Antworten eingetragen</span>
+                                    <span class="exam-live ${paused ? 'paused' : ''}"><span class="dot"></span> ${paused ? 'Pausiert' : 'Timer läuft'}</span>
+                                    <span class="font-mono-letter text-xl font-extrabold" id="exam-head-clock">${fmtClock(timerLeft())}</span>
+                                    <span class="text-sm text-slate-600" id="exam-head-count">${answeredCount()} von ${partsCount()} Antworten</span>
                                 </div>
-                                <button type="button" class="btn btn-primary" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="toggleExamPause()">${paused ? '<i class="fa-solid fa-play"></i> Weiter' : '<i class="fa-solid fa-pause"></i> Pause'}</button>
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="restartExamTimer()"><i class="fa-solid fa-rotate-left"></i> Timer neu starten</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                </div>
                             ` : `
                                 <button type="button" class="exam-start-btn" onclick="startExamTimer()">
                                     <span class="exam-start-icon"><i class="fa-solid fa-stopwatch"></i></span>
-                                    <span class="text-left"><span class="block font-extrabold text-base">Timer starten</span><span class="block text-xs opacity-90">${ex.minutes}:00 Minuten wie in der echten Arbeit</span></span>
+                                    <span class="text-left"><span class="block font-extrabold text-base">Timer starten</span><span class="block text-xs opacity-90">${ex.minutes}:00 Minuten · mit Pause-Knopf</span></span>
                                 </button>
-                                <span class="text-xs text-slate-500">…oder ohne Zeit üben: Jede Aufgabe kannst du prüfen, sobald alles ausgefüllt ist.</span>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-xs text-slate-500">…oder ohne Zeit üben.</span>
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                </div>
                             `}
-                        </div>`}
+                        </div>
+                        ${paused ? '<div class="exam-pause-note"><i class="fa-solid fa-mug-hot"></i> Pause – die Zeit ist angehalten. Tippe auf „Weiter“, wenn du bereit bist.</div>' : ''}`}
                     </div>
                     ${ex.tasks.map((_, ti) => `<div id="exam-task-${ti}">${examTaskHTML(ti)}</div>`).join('')}
                     <div class="glass-card p-5 rounded-3xl flex flex-wrap items-center justify-between gap-3">
@@ -167,7 +212,7 @@
                                 <button type="button" class="btn btn-ghost" onclick="restartExam()"><i class="fa-solid fa-arrows-rotate"></i> Neu versuchen</button>
                                 <button type="button" class="btn btn-primary" onclick="closeExam()">Zur Übersicht</button>
                             </div>` : `
-                            <span class="text-sm text-slate-600">${answeredParts} von ${allParts} Antworten eingetragen</span>
+                            <span class="text-sm text-slate-600"><span id="exam-foot-count">${answeredCount()} von ${partsCount()}</span> Antworten eingetragen – du kannst jederzeit abgeben.</span>
                             <button type="button" class="btn btn-primary" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Klausur abgeben</button>`}
                     </div>
                 </div>
@@ -176,9 +221,13 @@
         }
 
         function examResultHTML() {
-            const r = examState.result, total = examTotal(examState.ex);
+            const st = examState, r = st.result, total = examTotal(st.ex);
             const pct = Math.round(r.points / total * 100);
             const g = examGrade(r.points / total * 100);
+            const notes = [];
+            if (r.timeText) notes.push(`Bearbeitungszeit: ${r.timeText}`);
+            if (r.hints) notes.push(`💡 ${r.hints} Tipp${r.hints === 1 ? '' : 's'} genutzt`);
+            if (r.peeks) notes.push(`👀 bei ${r.peeks} Aufgabe${r.peeks === 1 ? '' : 'n'} vorher die Lösung angesehen – zählt nicht als Bestwert`);
             return `
                 <div class="exam-result">
                     <div class="flex flex-wrap items-center gap-5">
@@ -186,11 +235,11 @@
                         <div class="flex-1 min-w-[12rem] space-y-2">
                             <div class="text-lg font-extrabold">${r.points} von ${total} Punkten · ${pct} % · ${g.text}</div>
                             <div class="bar"><span style="width:${pct}%"></span></div>
-                            <div class="text-xs text-slate-500">${r.timeText ? `Bearbeitungszeit: ${r.timeText} · ` : ''}Öffne bei jeder Aufgabe den ausführlichen Lösungsweg.</div>
+                            <div class="text-xs text-slate-500">${notes.join(' · ')}${notes.length ? ' · ' : ''}Öffne bei jeder Aufgabe den ausführlichen Lösungsweg.</div>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
-                        ${examState.ex.tasks.map((t, ti) => `<div class="exam-mini ${taskScore(ti) === t.points ? 'ok' : taskScore(ti) === 0 ? 'bad' : ''}"><span>Aufgabe ${ti + 1}</span><strong>${taskScore(ti)} / ${t.points}</strong></div>`).join('')}
+                        ${st.ex.tasks.map((t, ti) => `<div class="exam-mini ${taskScore(ti) === t.points ? 'ok' : taskScore(ti) === 0 ? 'bad' : ''}"><span>Aufgabe ${ti + 1}${st.peeked[ti] ? ' 👀' : ''}</span><strong>${taskScore(ti)} / ${t.points}</strong></div>`).join('')}
                     </div>
                 </div>`;
         }
@@ -198,15 +247,16 @@
         function examTaskHTML(ti) {
             const st = examState, t = st.ex.tasks[ti];
             const locked = isLocked(ti);
-            const running = !!(examTimer && examTimer.examKey === st.key);
             const score = locked ? taskScore(ti) : null;
             const complete = taskComplete(ti);
+            const solOpen = !!st.openSol[ti];
             return `
                 <article class="ex-card space-y-4">
                     <div class="flex items-center justify-between gap-2 flex-wrap">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="chip">Aufgabe ${ti + 1}</span>
                             <span class="text-xs font-bold text-slate-500">${t.topic}</span>
+                            ${st.peeked[ti] ? '<span class="exam-peek">👀 Lösung angesehen</span>' : ''}
                         </div>
                         <span class="exam-points ${locked ? (score === t.points ? 'ok' : score === 0 ? 'bad' : 'mid') : ''}">${locked ? `${score} / ${t.points} P.` : `${t.points} P.`}</span>
                     </div>
@@ -215,16 +265,11 @@
                     ${t.fig ? examFigure(t.fig) : ''}
                     <div class="space-y-4">${t.parts.map((p, pi) => examPartHTML(ti, pi)).join('')}</div>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
-                        ${locked ? `
-                            <button type="button" class="btn btn-soft btn-sm" onclick="toggleExamSolution(${ti})">${st.openSol[ti] ? '🔍 Lösungsweg ausblenden' : '🔍 Ausführlichen Lösungsweg anzeigen'}</button>
-                        ` : running ? `
-                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-lock"></i> Lösungen gibt es nach dem Abgeben.</span>
-                        ` : `
-                            <button type="button" class="btn btn-primary btn-sm" onclick="checkExamTask(${ti})" ${complete ? '' : 'disabled'}><i class="fa-solid fa-check-double"></i> Antworten prüfen</button>
-                            <span class="text-xs text-slate-500">${complete ? 'Danach siehst du den ausführlichen Lösungsweg.' : 'Erst alle Teilaufgaben beantworten – dann kannst du prüfen.'}</span>
-                        `}
+                        ${locked ? '' : `<button type="button" class="btn btn-primary btn-sm" onclick="checkExamTask(${ti})" ${complete ? '' : 'disabled'}><i class="fa-solid fa-check-double"></i> Antworten prüfen</button>`}
+                        <button type="button" class="btn btn-soft btn-sm" onclick="toggleExamSolution(${ti})">${solOpen ? '🔍 Lösungsweg ausblenden' : '🔍 Lösungsweg anzeigen'}</button>
+                        ${locked ? '' : `<span class="text-xs text-slate-500" data-role="hint-line">${complete ? 'Fertig? Prüfe deine Antworten.' : 'Prüfen geht, sobald alle Teilaufgaben beantwortet sind.'}</span>`}
                     </div>
-                    ${locked && st.openSol[ti] ? `
+                    ${solOpen ? `
                         <div class="solution">
                             <div class="font-extrabold mb-3">Ausführlicher Lösungsweg:</div>
                             <ol class="steps">${t.solution.map((s, i) => `<li class="step"><span class="step-n">${i + 1}</span><div class="flex-1">${s}</div></li>`).join('')}</ol>
@@ -238,6 +283,7 @@
             const locked = isLocked(ti);
             const ok = locked ? partCorrect(ti, pi) : null;
             const mark = locked ? `<span class="exam-mark ${ok ? 'ok' : 'bad'}"><i class="fa-solid ${ok ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${ok ? `+${p.points}` : '0'} P.</span>` : `<span class="text-[11px] font-bold text-slate-400">${p.points} P.</span>`;
+            const hintBtn = p.hint ? `<button type="button" class="exam-hint-btn ${st.hints[key] ? 'on' : ''}" onclick="toggleExamHint('${key}')" aria-expanded="${st.hints[key] ? 'true' : 'false'}">💡 ${st.hints[key] ? 'Tipp ausblenden' : 'Tipp'}</button>` : '';
             let control = '';
             if (p.type === 'num') {
                 control = `
@@ -272,8 +318,9 @@
                 <div class="exam-part">
                     <div class="flex items-start justify-between gap-3 mb-2">
                         <div class="text-sm font-bold text-slate-800">${p.label}</div>
-                        ${mark}
+                        <div class="flex items-center gap-2 shrink-0">${hintBtn}${mark}</div>
                     </div>
+                    ${p.hint && st.hints[key] ? `<div class="exam-hint">💡 ${p.hint}</div>` : ''}
                     ${control}
                 </div>`;
         }
@@ -291,6 +338,15 @@
             if (!box) return;
             box.innerHTML = examTaskHTML(ti);
             examFillInputs(box);
+            updateExamCounts();
+        }
+
+        function updateExamCounts() {
+            if (!examState) return;
+            const a = answeredCount(), n = partsCount();
+            const head = $('exam-head-count'), foot = $('exam-foot-count');
+            if (head) head.textContent = `${a} von ${n} Antworten`;
+            if (foot) foot.textContent = `${a} von ${n}`;
         }
 
         function examInput(el) {
@@ -301,12 +357,11 @@
             // nur Prüfen-Knopf und Zähler aktualisieren – das Feld behält den Fokus
             const box = $('exam-task-' + ti);
             const btn = box && box.querySelector('button[onclick^="checkExamTask"]');
-            if (btn) {
-                const complete = taskComplete(ti);
-                btn.disabled = !complete;
-                const hint = btn.nextElementSibling;
-                if (hint) hint.textContent = complete ? 'Danach siehst du den ausführlichen Lösungsweg.' : 'Erst alle Teilaufgaben beantworten – dann kannst du prüfen.';
-            }
+            const complete = taskComplete(ti);
+            if (btn) btn.disabled = !complete;
+            const line = box && box.querySelector('[data-role="hint-line"]');
+            if (line) line.textContent = complete ? 'Fertig? Prüfe deine Antworten.' : 'Prüfen geht, sobald alle Teilaufgaben beantwortet sind.';
+            updateExamCounts();
         }
 
         function examPick(ti, pi, oi) {
@@ -316,7 +371,7 @@
         }
 
         function checkExamTask(ti) {
-            if (!examState || examTimer || !taskComplete(ti)) return;
+            if (!examState || isLocked(ti) || !taskComplete(ti)) return;
             examState.checked[ti] = true;
             examState.openSol[ti] = true;
             rerenderExamTask(ti);
@@ -324,9 +379,19 @@
             if (taskScore(ti) === t.points && typeof confetti === 'function') confetti({ particleCount: 40, spread: 55, origin: { y: 0.7 }, zIndex: 9999 });
         }
 
+        // Lösungsweg jederzeit – vor dem Prüfen/Abgeben wird es als „Lösung angesehen“ vermerkt
         function toggleExamSolution(ti) {
+            if (!examState) return;
+            if (!examState.openSol[ti] && !isLocked(ti)) examState.peeked[ti] = true;
             examState.openSol[ti] = !examState.openSol[ti];
             rerenderExamTask(ti);
+        }
+
+        function toggleExamHint(key) {
+            if (!examState) return;
+            examState.hints[key] = !examState.hints[key];
+            if (examState.hints[key]) examState.hintsUsed = Object.assign(examState.hintsUsed || {}, { [key]: true });
+            rerenderExamTask(+key.split('-')[0]);
         }
 
         // ---------- Abbildungen ----------
@@ -368,30 +433,9 @@
             const s = Math.max(0, Math.ceil(ms / 1000));
             return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
         }
-
-        function startExamTimer() {
-            if (!examState || examState.submitted || examTimer) return;
-            const st = examState;
-            // Countdown-Animation: Bereit? 3 – 2 – 1 – Los!
-            const ov = examOverlay('<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-ready">Bereit?</div></div>');
-            const steps = ['3', '2', '1'];
-            steps.forEach((n, i) => setTimeout(() => {
-                ov.innerHTML = `<div class="exam-ov-box"><div class="exam-ring" key="${n}"></div><div class="exam-count">${n}</div></div>`;
-            }, 700 + i * 850));
-            setTimeout(() => {
-                ov.innerHTML = '<div class="exam-ov-box"><div class="exam-go">Los geht\'s! <span class="inline-block exam-pen-wiggle">✍️</span></div><div class="exam-ov-sub">Viel Erfolg!</div></div>';
-                if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 80, origin: { y: 0.55 }, zIndex: 10000 });
-            }, 700 + steps.length * 850);
-            setTimeout(() => {
-                ov.classList.add('out');
-                setTimeout(() => ov.remove(), 350);
-                const total = st.ex.minutes * 60000;
-                examTimer = { examKey: st.key, subj: st.subj, start: Date.now(), end: Date.now() + total, total, warned5: false, warned1: false, handle: null };
-                examTimer.handle = setInterval(tickExamTimer, 250);
-                ensureTimerPill();
-                tickExamTimer();
-                if (currentSubject === st.subj && activeTab === 'exams') renderExam();
-            }, 700 + steps.length * 850 + 1100);
+        function timerLeft() {
+            if (!examTimer) return 0;
+            return examTimer.paused ? examTimer.remaining : examTimer.end - Date.now();
         }
 
         function examOverlay(inner) {
@@ -401,6 +445,75 @@
             ov.innerHTML = inner;
             document.body.appendChild(ov);
             return ov;
+        }
+
+        // Countdown-Animation: Bereit? 3 – 2 – 1 – Los! (startet bzw. startet den Timer neu)
+        function startExamTimer() {
+            if (!examState || examState.submitted || examTimer) return;
+            const st = examState;
+            const ov = examOverlay('<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-ready">Bereit?</div></div>');
+            const steps = ['3', '2', '1'];
+            steps.forEach((n, i) => setTimeout(() => {
+                ov.innerHTML = `<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-count">${n}</div></div>`;
+            }, 700 + i * 850));
+            setTimeout(() => {
+                ov.innerHTML = '<div class="exam-ov-box"><div class="exam-go">Los geht\'s! <span class="inline-block exam-pen-wiggle">✍️</span></div><div class="exam-ov-sub">Viel Erfolg!</div></div>';
+                if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 80, origin: { y: 0.55 }, zIndex: 10000 });
+            }, 700 + steps.length * 850);
+            setTimeout(() => {
+                ov.classList.add('out');
+                setTimeout(() => ov.remove(), 350);
+                const total = st.ex.minutes * 60000;
+                examTimer = { examKey: st.key, subj: st.subj, start: Date.now(), end: Date.now() + total, total, remaining: total, paused: false, pausedMs: 0, pausedAt: 0, warned5: false, warned1: false, handle: null };
+                examTimer.handle = setInterval(tickExamTimer, 250);
+                ensureTimerPill();
+                tickExamTimer();
+                if (currentSubject === st.subj && activeTab === 'exams') renderExam();
+            }, 700 + steps.length * 850 + 1100);
+        }
+
+        function toggleExamPause() {
+            if (!examTimer) return;
+            if (!examTimer.paused) {
+                examTimer.remaining = Math.max(0, examTimer.end - Date.now());
+                examTimer.paused = true;
+                examTimer.pausedAt = Date.now();
+                clearInterval(examTimer.handle);
+                examTimer.handle = null;
+                showToast('⏸ Pause – die Zeit ist angehalten.');
+            } else {
+                examTimer.pausedMs += Date.now() - examTimer.pausedAt;
+                examTimer.end = Date.now() + examTimer.remaining;
+                examTimer.paused = false;
+                examTimer.handle = setInterval(tickExamTimer, 250);
+                showToast('▶ Weiter geht\'s!');
+            }
+            tickExamTimer();
+            if (examState && currentSubject === examTimer.subj && activeTab === 'exams') renderExam();
+        }
+
+        function restartExamTimer() {
+            if (!examTimer || !examState) return;
+            const wasPaused = examTimer.paused;
+            if (!wasPaused) toggleExamPause();
+            examAsk({
+                icon: '🔄', title: 'Timer neu starten?', text: `Die Zeit beginnt wieder bei ${examState.ex.minutes}:00 Minuten. Deine Antworten bleiben erhalten.`,
+                ok: 'Neu starten', cancel: 'Abbrechen',
+                onOk: () => {
+                    stopExamTimer();
+                    renderExam();
+                    startExamTimer();
+                },
+                onCancel: () => { if (!wasPaused && examTimer && examTimer.paused) toggleExamPause(); }
+            });
+        }
+
+        function stopExamTimer() {
+            if (!examTimer) return;
+            clearInterval(examTimer.handle);
+            examTimer = null;
+            const pill = $('exam-timer-pill');
+            if (pill) pill.classList.add('hidden');
         }
 
         function ensureTimerPill() {
@@ -414,6 +527,7 @@
                         <svg viewBox="0 0 36 36" class="exam-timer-ring"><circle cx="18" cy="18" r="15.5" class="bg" /><circle cx="18" cy="18" r="15.5" class="fg" id="exam-timer-arc" /></svg>
                         <span id="exam-timer-text" class="font-mono-letter">00:00</span>
                     </button>
+                    <button type="button" class="exam-timer-pause" id="exam-timer-pause" onclick="toggleExamPause()" aria-label="Pause"><i class="fa-solid fa-pause"></i></button>
                     <button type="button" class="exam-timer-stop" onclick="finishExam(false)" aria-label="Klausur abgeben"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>`;
                 document.body.appendChild(pill);
             }
@@ -422,17 +536,21 @@
 
         function tickExamTimer() {
             if (!examTimer) return;
-            const left = examTimer.end - Date.now();
-            const txt = $('exam-timer-text'), arc = $('exam-timer-arc'), pill = $('exam-timer-pill');
+            const left = timerLeft();
+            const txt = $('exam-timer-text'), arc = $('exam-timer-arc'), pill = $('exam-timer-pill'), pb = $('exam-timer-pause'), head = $('exam-head-clock');
             if (txt) txt.textContent = fmtClock(left);
+            if (head) head.textContent = fmtClock(left);
             if (arc) { const C = 2 * Math.PI * 15.5; arc.style.strokeDasharray = C; arc.style.strokeDashoffset = C * (1 - Math.max(0, left) / examTimer.total); }
             if (pill) {
-                pill.classList.toggle('warn', left <= 5 * 60000 && left > 60000);
-                pill.classList.toggle('danger', left <= 60000);
+                pill.classList.toggle('paused', !!examTimer.paused);
+                pill.classList.toggle('warn', !examTimer.paused && left <= 5 * 60000 && left > 60000);
+                pill.classList.toggle('danger', !examTimer.paused && left <= 60000);
             }
+            if (pb) { pb.innerHTML = examTimer.paused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>'; pb.setAttribute('aria-label', examTimer.paused ? 'Weiter' : 'Pause'); }
+            if (examTimer.paused) return;
             if (left <= 5 * 60000 && !examTimer.warned5 && examTimer.total > 5 * 60000) { examTimer.warned5 = true; showToast('⏱ Noch 5 Minuten – kontrolliere deine Antworten!'); }
             if (left <= 60000 && !examTimer.warned1) { examTimer.warned1 = true; showToast('⏱ Noch 1 Minute!'); }
-            if (left <= 0) finishExam(true);
+            if (left <= 0) submitExamNow(true);
         }
 
         function goToRunningExam() {
@@ -442,43 +560,55 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ---------- Abgeben (jederzeit, auch mit leeren oder falschen Antworten) ----------
         function finishExam(auto) {
             if (!examState || examState.submitted) return;
-            const running = !!(examTimer && examTimer.examKey === examState.key);
-            if (!auto) {
-                const st = examState, allParts = st.ex.tasks.reduce((s, t) => s + t.parts.length, 0);
-                const answered = st.ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0);
-                const msg = answered < allParts
-                    ? `Klausur abgeben? ${allParts - answered} Antwort(en) sind noch leer und zählen dann 0 Punkte.`
-                    : 'Klausur jetzt abgeben und auswerten?';
-                if (!window.confirm(msg)) return;
-            }
+            if (auto) { submitExamNow(true); return; }
+            const empty = partsCount() - answeredCount();
+            examAsk({
+                icon: '🏁',
+                title: 'Klausur jetzt abgeben?',
+                text: empty > 0
+                    ? `${empty} Antwort${empty === 1 ? ' ist' : 'en sind'} noch leer – das ist okay, sie zählen dann 0 Punkte. Danach siehst du deine Note und alle Lösungswege.`
+                    : 'Danach siehst du deine Punkte, die Note und alle Lösungswege.',
+                ok: 'Ja, abgeben', cancel: 'Weiterschreiben',
+                onOk: () => submitExamNow(false)
+            });
+        }
+
+        function submitExamNow(auto) {
+            if (!examState || examState.submitted) return;
             let timeText = '';
-            if (running) {
-                const used = Math.min(Date.now(), examTimer.end) - examTimer.start;
+            if (timerOfState()) {
+                const t = examTimer;
+                const pausedNow = t.paused ? Date.now() - t.pausedAt : 0;
+                const used = Math.min(t.total, Date.now() - t.start - t.pausedMs - pausedNow);
                 timeText = fmtClock(used) + ' min';
-                clearInterval(examTimer.handle);
-                examTimer = null;
-                const pill = $('exam-timer-pill');
-                if (pill) pill.classList.add('hidden');
+                stopExamTimer();
             }
-            const doSubmit = () => {
-                const st = examState;
-                st.submitted = true;
-                st.ex.tasks.forEach((_, ti) => { st.checked[ti] = true; });
-                const points = st.ex.tasks.reduce((s, _, ti) => s + taskScore(ti), 0);
-                const total = examTotal(st.ex);
-                st.result = { points, timeText };
+            const ask = $('exam-ask');
+            if (ask) ask.remove();
+            // sofort auswerten und sperren, damit nichts doppelt abgegeben wird
+            const st = examState;
+            st.submitted = true;
+            st.ex.tasks.forEach((_, ti) => { st.checked[ti] = true; });
+            const points = st.ex.tasks.reduce((s, _, ti) => s + taskScore(ti), 0);
+            const total = examTotal(st.ex);
+            const peeks = Object.keys(st.peeked).length;
+            const hints = Object.keys(st.hintsUsed || {}).length;
+            st.result = { points, timeText, peeks, hints };
+            if (!peeks) {
                 const best = examBest();
                 const prev = best[st.key];
                 if (!prev || points > prev.points) { best[st.key] = { points, total, date: new Date().toISOString().slice(0, 10) }; writeJSON(EXAM_STORE, best); }
+            }
+            const doSubmit = () => {
                 if (currentSubject !== st.subj) selectSubject(st.subj);
                 if (activeTab !== 'exams') switchTab('exams'); else renderExam();
-                examFillInputs();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (points / total >= 0.81 && typeof confetti === 'function') setTimeout(() => confetti({ particleCount: 140, spread: 90, origin: { y: 0.5 }, zIndex: 9999 }), 300);
             };
-            // „Stift weg!“-Animation (bei Zeitablauf und beim Abgeben)
+            // „Stift weg!“-Animation
             const ov = examOverlay(`
                 <div class="exam-ov-box">
                     <div class="exam-pen-drop"><i class="fa-solid fa-pen"></i></div>

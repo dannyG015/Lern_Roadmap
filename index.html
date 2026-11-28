@@ -483,6 +483,24 @@
         .exam-timer.warn .exam-timer-main { color: #b45309; } .exam-timer.warn .fg { stroke: #f59e0b; }
         .exam-timer.danger .exam-timer-main { color: #be123c; animation: livePulse 1s ease-in-out infinite; } .exam-timer.danger .fg { stroke: #e11d48; }
         .exam-timer.hidden { display: none; }
+        .exam-timer-pause { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: var(--ink); background: #f1f5f9; }
+        .exam-timer.paused .exam-timer-main { color: #64748b; } .exam-timer.paused .fg { stroke: #94a3b8; }
+        .exam-timer.paused #exam-timer-text { animation: livePulse 1.6s ease-in-out infinite; }
+        .exam-timer.paused .exam-timer-pause { color: #fff; background: #2563eb; }
+        .exam-live.paused { color: #475569; background: #f1f5f9; border-color: #cbd5e1; }
+        .exam-live.paused .dot { background: #94a3b8; animation: none; }
+        .exam-pause-note { display: flex; align-items: center; gap: .6rem; padding: .75rem 1rem; border-radius: 14px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: .85rem; font-weight: 700; animation: fadeUp .3s ease both; }
+        /* Tipps & Lösungsblick */
+        .exam-hint-btn { min-height: 36px; padding: .3rem .75rem; border-radius: 999px; font-size: .75rem; font-weight: 800; color: #a16207; background: #fefce8; border: 1px solid #fde68a; white-space: nowrap; transition: transform .12s ease; }
+        .exam-hint-btn:active { transform: scale(.96); }
+        .exam-hint-btn.on { color: #fff; background: #f59e0b; border-color: #f59e0b; }
+        .exam-hint { margin: 0 0 .6rem; padding: .65rem .85rem; border-radius: 12px; background: #fefce8; border: 1px solid #fde68a; color: #713f12; font-size: .85rem; line-height: 1.5; animation: fadeUp .25s ease both; }
+        .exam-peek { font-size: .7rem; font-weight: 800; color: #6d28d9; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 999px; padding: .2rem .6rem; }
+        @media (pointer: coarse) { .exam-hint-btn { min-height: 44px; } }
+        /* Eigener Bestätigungs-Dialog */
+        .exam-ask-backdrop { position: fixed; inset: 0; z-index: 9500; display: grid; place-items: center; padding: 1rem; background: rgba(15, 23, 42, .45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: ovIn .2s ease both; }
+        .exam-ask { width: min(26rem, 100%); padding: 1.5rem; border-radius: 24px; background: rgba(255, 255, 255, .97); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lift); animation: sheetIn .25s ease both; }
+        .exam-ask-icon { font-size: 2.4rem; text-align: center; margin-bottom: .35rem; animation: gradePop .5s cubic-bezier(.2, .9, .3, 1.4) both; }
 
         /* Animationen */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -4678,9 +4696,9 @@
                         parts: [
                             { label: 'a) Wie weit ist Lena nach 40 Minuten von zu Hause entfernt?', type: 'num', answer: 9, unit: 'km', points: 1 },
                             { label: 'b) Wie lange dauert ihre erste Pause?', type: 'num', answer: 10, unit: 'min', points: 1 },
-                            { label: 'c) In welchem Abschnitt fährt Lena am schnellsten?', type: 'choice', options: ['Von 60 bis 90 Minuten', 'Von 0 bis 20 Minuten', 'Von 30 bis 50 Minuten', 'In allen Fahrabschnitten gleich schnell'], correct: 0, points: 2 },
+                            { label: 'c) In welchem Abschnitt fährt Lena am schnellsten?', hint: 'Vergleiche, wie viele Kilometer pro Minute sie in jedem Abschnitt schafft. Auch ein fallender Abschnitt kann der steilste sein.', type: 'choice', options: ['Von 60 bis 90 Minuten', 'Von 0 bis 20 Minuten', 'Von 30 bis 50 Minuten', 'In allen Fahrabschnitten gleich schnell'], correct: 0, points: 2 },
                             { label: 'd) Was passiert zwischen 60 und 90 Minuten?', type: 'choice', options: ['Sie fährt zurück nach Hause', 'Sie fährt einen Berg hinunter', 'Sie wird immer langsamer', 'Sie macht eine lange Pause'], correct: 0, points: 1 },
-                            { label: 'e) Wie viele Kilometer fährt Lena insgesamt?', type: 'num', answer: 24, unit: 'km', points: 2 },
+                            { label: 'e) Wie viele Kilometer fährt Lena insgesamt?', hint: 'Der höchste Punkt ist nur die größte Entfernung von zu Hause. Denk an Hinweg UND Rückweg.', type: 'num', answer: 24, unit: 'km', points: 2 },
                             { label: 'f) Ein Mitschüler zeichnet für seine Tour am Ende ein senkrechtes Stück nach oben. Was stimmt?', type: 'choice', options: ['Das ist unmöglich – er wäre ohne Zeit zu brauchen an einem anderen Ort', 'Das bedeutet, dass er sehr schnell fährt', 'Das bedeutet eine Pause', 'Das bedeutet, dass er umkehrt'], correct: 0, points: 1 }
                         ],
                         solution: [
@@ -4698,9 +4716,9 @@
                         prompt: 'Vereinfache so weit wie möglich und wähle das richtige Ergebnis.',
                         parts: [
                             { label: 'a) 2,5 · x · (−4) · y · x', type: 'choice', options: ['−10x²y', '10x²y', '−10xy²', '−1,5x²y'], correct: 0, points: 1 },
-                            { label: 'b) 6ab² − 2ba + 3b²a − 5ab', type: 'choice', options: ['9ab² − 7ab', '9ab² − 3ab', '2ab²', '9ab² + 7ab'], correct: 0, points: 2 },
+                            { label: 'b) 6ab² − 2ba + 3b²a − 5ab', hint: 'Erst alphabetisch ordnen: ba = ab und b²a = ab². Dann nur gleichartige Glieder zusammenfassen.', type: 'choice', options: ['9ab² − 7ab', '9ab² − 3ab', '2ab²', '9ab² + 7ab'], correct: 0, points: 2 },
                             { label: 'c) 4x − (3 − 2x) + (x − 5)', type: 'choice', options: ['7x − 8', '3x − 8', '7x − 2', '5x − 8'], correct: 0, points: 2 },
-                            { label: 'd) −3(2a − 5b) − 2(b − 4a)', type: 'choice', options: ['2a + 13b', '−14a + 13b', '2a + 17b', '−14a + 17b'], correct: 0, points: 3 }
+                            { label: 'd) −3(2a − 5b) − 2(b − 4a)', hint: 'Multipliziere jedes Glied mit dem Faktor davor – mit Vorzeichen. Minus mal minus ergibt plus!', type: 'choice', options: ['2a + 13b', '−14a + 13b', '2a + 17b', '−14a + 17b'], correct: 0, points: 3 }
                         ],
                         solution: [
                             '<strong>a)</strong> Zahlen: 2,5 · (−4) = −10. Variablen alphabetisch: x · x · y = x²y → <strong>−10x²y</strong>.',
@@ -4715,9 +4733,9 @@
                         prompt: 'Löse die Gleichungen im Heft und trage die Lösung für x ein.',
                         parts: [
                             { label: 'a) 7x − 9 = 3x + 15', type: 'num', answer: 6, prefix: 'x =', points: 2 },
-                            { label: 'b) 4(x − 2) − 3 = 2(x + 5) − 1', type: 'num', answer: 10, prefix: 'x =', points: 3 },
-                            { label: 'c) 3(2x + 5) = 2(x − 1) + 1', type: 'num', answer: -4, prefix: 'x =', points: 2 },
-                            { label: 'd) 0,5x + 9 = 2x − 3', type: 'num', answer: 8, prefix: 'x =', points: 2 }
+                            { label: 'b) 4(x − 2) − 3 = 2(x + 5) − 1', hint: 'Zuerst beide Klammern ausmultiplizieren und jede Seite für sich zusammenfassen. Dann die x-Glieder auf eine Seite.', type: 'num', answer: 10, prefix: 'x =', points: 3 },
+                            { label: 'c) 3(2x + 5) = 2(x − 1) + 1', hint: 'Vereinfache zuerst die rechte Seite: 2(x − 1) + 1 = 2x − 1. Die Lösung ist negativ.', type: 'num', answer: -4, prefix: 'x =', points: 2 },
+                            { label: 'd) 0,5x + 9 = 2x − 3', hint: 'Bring 0,5x auf die rechte Seite – dann steht dort 1,5x. Oder nimm zuerst alles mal 2.', type: 'num', answer: 8, prefix: 'x =', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> 7x − 9 = 3x + 15 &nbsp;| − 3x → 4x − 9 = 15 &nbsp;| + 9 → 4x = 24 &nbsp;| : 4 → <strong>x = 6</strong>. Probe: 33 = 33 ✓',
@@ -4747,9 +4765,9 @@
                         prompt: 'In Haus 2 wohnen dreimal so viele Personen wie in Haus 1. In Haus 3 wohnen 4 Personen weniger als in Haus 2. Insgesamt wohnen 66 Personen in den drei Häusern. <em>x = Anzahl Personen in Haus 1.</em>',
                         parts: [
                             { label: 'a) Welcher Term beschreibt Haus 3?', type: 'select', options: ['3x − 4', 'x − 4', '3(x − 4)', '4 − 3x'], correct: 0, points: 1 },
-                            { label: 'b) Welche Gleichung passt?', type: 'select', options: ['x + 3x + (3x − 4) = 66', 'x + 3x − 4 = 66', '3x + (x − 4) = 66', 'x · 3x · (3x − 4) = 66'], correct: 0, points: 2 },
+                            { label: 'b) Welche Gleichung passt?', hint: 'Alle drei Häuser zusammen ergeben 66 – also werden die drei Terme addiert.', type: 'select', options: ['x + 3x + (3x − 4) = 66', 'x + 3x − 4 = 66', '3x + (x − 4) = 66', 'x · 3x · (3x − 4) = 66'], correct: 0, points: 2 },
                             { label: 'c) Wie viele Personen wohnen in Haus 1?', type: 'num', answer: 10, unit: 'Personen', points: 1 },
-                            { label: 'd) Wie viele Personen wohnen in Haus 3?', type: 'num', answer: 26, unit: 'Personen', points: 2 }
+                            { label: 'd) Wie viele Personen wohnen in Haus 3?', hint: 'Rechne zuerst x (Haus 1) aus. Haus 2 = 3x, Haus 3 = Haus 2 − 4.', type: 'num', answer: 26, unit: 'Personen', points: 2 }
                         ],
                         solution: [
                             '<strong>Terme:</strong> Haus 1 = x · Haus 2 = 3x („dreimal so viele“) · Haus 3 = 3x − 4 („4 weniger als Haus 2“). <strong>a) 3x − 4</strong>',
@@ -4766,7 +4784,7 @@
                             { label: 'a) Der Punkt, der von allen drei Ecken gleich weit entfernt ist, ist der …', type: 'select', options: ['Schnittpunkt der Mittelsenkrechten', 'Schnittpunkt der Winkelhalbierenden', 'Schnittpunkt der Höhen', 'Schnittpunkt der Seitenhalbierenden'], correct: 0, points: 1 },
                             { label: 'b) Die Strecke von C zur Mitte der Seite c heißt …', type: 'select', options: ['Seitenhalbierende von c', 'Höhe auf c', 'Mittelsenkrechte von c', 'Winkelhalbierende von γ'], correct: 0, points: 1 },
                             { label: 'c) In einem Dreieck ist γ = 120°. Wo liegt der Mittelpunkt des Umkreises?', type: 'choice', options: ['Außerhalb des Dreiecks', 'Innerhalb des Dreiecks', 'Genau auf der Ecke C', 'Es gibt keinen Umkreis'], correct: 0, points: 1 },
-                            { label: 'd) Ein rechtwinkliges Dreieck hat die längste Seite 13 cm. Wie groß ist der Radius des Umkreises?', type: 'num', answer: 6.5, unit: 'cm', points: 2 }
+                            { label: 'd) Ein rechtwinkliges Dreieck hat die längste Seite 13 cm. Wie groß ist der Radius des Umkreises?', hint: 'Im rechtwinkligen Dreieck liegt der Umkreismittelpunkt genau in der Mitte der längsten Seite.', type: 'num', answer: 6.5, unit: 'cm', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Jeder Punkt einer Mittelsenkrechten ist von zwei Ecken gleich weit entfernt. Der Schnittpunkt aller drei ist von <em>allen</em> Ecken gleich weit entfernt → <strong>Schnittpunkt der Mittelsenkrechten</strong> (Umkreismittelpunkt).',
@@ -4799,11 +4817,11 @@
                             { label: 'D', xmax: 5.5, ymax: 15, segs: [[[0, 3], [5, 13]]] }
                         ] },
                         parts: [
-                            { label: 'a) Tabelle 1 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 3, keepOrder: true, points: 1 },
+                            { label: 'a) Tabelle 1 gehört zu Graph …', hint: 'Schau, wie sich y verändert: gleichmäßig, gar nicht oder immer weniger? Und beginnt die Linie bei 0 oder weiter oben?', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 3, keepOrder: true, points: 1 },
                             { label: 'b) Tabelle 2 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 1, keepOrder: true, points: 1 },
                             { label: 'c) Tabelle 3 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 0, keepOrder: true, points: 1 },
                             { label: 'd) Tabelle 4 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 2, keepOrder: true, points: 1 },
-                            { label: 'e) In Tabelle 2 gilt dieselbe Regel weiter. Welcher y-Wert gehört zu x = 16?', type: 'num', answer: 2.5, prefix: 'y =', points: 2 },
+                            { label: 'e) In Tabelle 2 gilt dieselbe Regel weiter. Welcher y-Wert gehört zu x = 16?', hint: 'Rechne in Tabelle 2 für jede Spalte x · y aus. Was fällt dir auf?', type: 'num', answer: 2.5, prefix: 'y =', points: 2 },
                             { label: 'f) Bei welcher Tabelle wird y kleiner, wenn x größer wird?', type: 'choice', options: ['Tabelle 2', 'Tabelle 1', 'Tabelle 3', 'Tabelle 4'], correct: 0, points: 1 }
                         ],
                         solution: [
@@ -4821,9 +4839,9 @@
                         prompt: 'Vereinfache und wähle das richtige Ergebnis.',
                         parts: [
                             { label: 'a) −0,5 · a · 8 · b · a · b', type: 'choice', options: ['−4a²b²', '4a²b²', '−4ab', '−8,5a²b²'], correct: 0, points: 1 },
-                            { label: 'b) 3x² − 5x + 2x · x − (x² − 4x)', type: 'choice', options: ['4x² − x', '4x² − 9x', '6x² − x', '2x² − x'], correct: 0, points: 3 },
+                            { label: 'b) 3x² − 5x + 2x · x − (x² − 4x)', hint: '2x · x = 2x². Bei der Minusklammer drehen sich beide Vorzeichen in der Klammer um.', type: 'choice', options: ['4x² − x', '4x² − 9x', '6x² − x', '2x² − x'], correct: 0, points: 3 },
                             { label: 'c) 2(3x − 4) − 3(x − 2) + x', type: 'choice', options: ['4x − 2', '4x − 14', '2x − 2', '4x + 2'], correct: 0, points: 2 },
-                            { label: 'd) Welcher Term ist NICHT gleichwertig zu 6x + 9?', type: 'choice', options: ['3(2x + 9)', '3(2x + 3)', '2(3x + 4,5)', '6(x + 1,5)'], correct: 0, points: 2 }
+                            { label: 'd) Welcher Term ist NICHT gleichwertig zu 6x + 9?', hint: 'Multipliziere jede Klammer aus und vergleiche das Ergebnis mit 6x + 9.', type: 'choice', options: ['3(2x + 9)', '3(2x + 3)', '2(3x + 4,5)', '6(x + 1,5)'], correct: 0, points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Zahlen: −0,5 · 8 = −4. Variablen: a · a · b · b = a²b² → <strong>−4a²b²</strong>.',
@@ -4837,9 +4855,9 @@
                         title: 'Gleichungen und Sonderfälle', topic: 'Gleichungen (LU 10)', points: 10,
                         prompt: 'Löse im Heft. Bei a) und b) trägst du x ein, bei c) und d) wählst du aus.',
                         parts: [
-                            { label: 'a) 5(x − 3) − 2(x − 6) = 3 + x', type: 'num', answer: 3, prefix: 'x =', points: 3 },
-                            { label: 'b) x : 4 + 5 = x − 1', type: 'num', answer: 8, prefix: 'x =', points: 3 },
-                            { label: 'c) Wie viele Lösungen hat 3(x + 2) = 3x + 6?', type: 'choice', options: ['Jede Zahl ist eine Lösung', 'Keine Lösung', 'Genau eine: x = 0', 'Genau eine: x = 2'], correct: 0, points: 2 },
+                            { label: 'a) 5(x − 3) − 2(x − 6) = 3 + x', hint: 'Achtung bei −2(x − 6): −2 · (−6) = +12.', type: 'num', answer: 3, prefix: 'x =', points: 3 },
+                            { label: 'b) x : 4 + 5 = x − 1', hint: 'Nimm beide Seiten zuerst mal 4 – dann ist die Division weg.', type: 'num', answer: 8, prefix: 'x =', points: 3 },
+                            { label: 'c) Wie viele Lösungen hat 3(x + 2) = 3x + 6?', hint: 'Multipliziere aus und ziehe auf beiden Seiten 3x ab. Was bleibt übrig – stimmt das immer, nie oder nur manchmal?', type: 'choice', options: ['Jede Zahl ist eine Lösung', 'Keine Lösung', 'Genau eine: x = 0', 'Genau eine: x = 2'], correct: 0, points: 2 },
                             { label: 'd) Wie viele Lösungen hat 4(x + 1) = 4x + 1?', type: 'choice', options: ['Keine Lösung', 'Jede Zahl ist eine Lösung', 'Genau eine: x = 1', 'Genau eine: x = −1'], correct: 0, points: 2 }
                         ],
                         solution: [
@@ -4853,7 +4871,7 @@
                         title: 'Fehler finden', topic: 'Gleichungen (LU 10)', points: 4,
                         prompt: 'Tim löst die Gleichung 2(x + 3) = 5x − 9 so:<div class="font-mono-letter mt-2 space-y-0.5"><div>Zeile 1: 2x + 3 = 5x − 9</div><div>Zeile 2: 3 = 3x − 9</div><div>Zeile 3: 12 = 3x</div><div>Zeile 4: x = 4</div></div>',
                         parts: [
-                            { label: 'a) In welcher Zeile steckt der erste Fehler?', type: 'select', options: ['Zeile 1', 'Zeile 2', 'Zeile 3', 'Zeile 4'], correct: 0, keepOrder: true, points: 2 },
+                            { label: 'a) In welcher Zeile steckt der erste Fehler?', hint: 'Prüfe Zeile 1: Wird die 2 mit BEIDEN Gliedern der Klammer multipliziert?', type: 'select', options: ['Zeile 1', 'Zeile 2', 'Zeile 3', 'Zeile 4'], correct: 0, keepOrder: true, points: 2 },
                             { label: 'b) Wie lautet die richtige Lösung?', type: 'num', answer: 5, prefix: 'x =', points: 2 }
                         ],
                         solution: [
@@ -4866,12 +4884,12 @@
                         title: 'Anwendung: drei Häuser', topic: 'Anwendung (LU 10)', points: 7,
                         prompt: 'In Haus 1 wohnen 5 Personen mehr als in Haus 2. In Haus 3 wohnen halb so viele Personen wie in Haus 1. Insgesamt wohnen 45 Personen in den drei Häusern.',
                         parts: [
-                            { label: 'a) x = Anzahl Personen in Haus 2. Welcher Term beschreibt dann Haus 3?', type: 'select', options: ['½(x + 5)', '½x + 5', '2(x + 5)', 'x − 5'], correct: 0, points: 1 },
-                            { label: 'b) Welche Wahl für x vermeidet Brüche?', type: 'select', options: ['x = Personen in Haus 3', 'x = Personen in Haus 1', 'x = Personen in Haus 2', 'Es gibt keine Wahl ohne Brüche'], correct: 0, points: 1 },
+                            { label: 'a) x = Anzahl Personen in Haus 2. Welcher Term beschreibt dann Haus 3?', hint: 'Haus 3 ist die Hälfte von Haus 1, und Haus 1 ist x + 5. Die Hälfte gilt für die ganze Klammer.', type: 'select', options: ['½(x + 5)', '½x + 5', '2(x + 5)', 'x − 5'], correct: 0, points: 1 },
+                            { label: 'b) Welche Wahl für x vermeidet Brüche?', hint: 'Mit welchem Haus werden die anderen verglichen? Haus 1 ist das Doppelte von Haus 3.', type: 'select', options: ['x = Personen in Haus 3', 'x = Personen in Haus 1', 'x = Personen in Haus 2', 'Es gibt keine Wahl ohne Brüche'], correct: 0, points: 1 },
                             { label: 'c) Personen in Haus 1', type: 'num', answer: 20, unit: 'Personen', points: 1 },
                             { label: 'd) Personen in Haus 2', type: 'num', answer: 15, unit: 'Personen', points: 1 },
                             { label: 'e) Personen in Haus 3', type: 'num', answer: 10, unit: 'Personen', points: 1 },
-                            { label: 'f) Gleiche Regeln – aber jetzt wohnen in Haus 3 genau 12 Personen. Wie viele Personen wohnen dann insgesamt?', type: 'num', answer: 55, unit: 'Personen', points: 2 }
+                            { label: 'f) Gleiche Regeln – aber jetzt wohnen in Haus 3 genau 12 Personen. Wie viele Personen wohnen dann insgesamt?', hint: 'Haus 3 = 12 → Haus 1 ist doppelt so groß → Haus 2 hat 5 weniger als Haus 1.', type: 'num', answer: 55, unit: 'Personen', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Haus 1 = x + 5, Haus 3 ist die Hälfte davon: <strong>½(x + 5)</strong>. (½x + 5 wäre falsch – dann würde nur x halbiert.)',
@@ -4888,7 +4906,7 @@
                             { label: 'a) „Jeder Punkt auf dieser Geraden hat von den Seiten b und c den gleichen Abstand.“ Das ist die …', type: 'select', options: ['Winkelhalbierende von α', 'Mittelsenkrechte von a', 'Winkelhalbierende von γ', 'Höhe auf a'], correct: 0, points: 1 },
                             { label: 'b) α = 64°. Wie groß sind die beiden Winkel, in die die Winkelhalbierende α teilt?', type: 'num', answer: 32, unit: '° (je)', points: 1 },
                             { label: 'c) Ein Dreieck hat die Fläche 30 cm². Wie groß ist die Fläche eines der beiden Teildreiecke, in die die Seitenhalbierende s<sub>a</sub> es teilt?', type: 'num', answer: 15, unit: 'cm²', points: 1 },
-                            { label: 'd) Ein Dreieck hat die Seiten 10 cm, 8 cm und 6 cm. Wie groß ist der Umfang seines Seitenmittendreiecks?', type: 'num', answer: 12, unit: 'cm', points: 1 }
+                            { label: 'd) Ein Dreieck hat die Seiten 10 cm, 8 cm und 6 cm. Wie groß ist der Umfang seines Seitenmittendreiecks?', hint: 'Die Seiten des Seitenmittendreiecks sind halb so lang wie die des großen Dreiecks.', type: 'num', answer: 12, unit: 'cm', points: 1 }
                         ],
                         solution: [
                             '<strong>a)</strong> Die Seiten b und c treffen sich in der Ecke A und bilden dort den Winkel α → <strong>Winkelhalbierende von α</strong>.',
@@ -4912,8 +4930,8 @@
                         fig: { type: 'graph', xLabel: 'Zeit in min', yLabel: 'Wasserstand in cm', xmax: 50, ymax: 60, xstep: 5, ystep: 10, segs: [[[0, 10], [10, 40], [25, 40], [35, 20], [50, 50]]] },
                         parts: [
                             { label: 'a) Wie hoch steht das Wasser zu Beginn?', type: 'num', answer: 10, unit: 'cm', points: 1 },
-                            { label: 'b) Um wie viele Zentimeter steigt das Wasser in den ersten 10 Minuten pro Minute?', type: 'num', answer: 3, unit: 'cm pro min', points: 2 },
-                            { label: 'c) Nach wie vielen Minuten steht das Wasser zum zweiten Mal bei 30 cm?', type: 'num', answer: 30, unit: 'min', points: 2 },
+                            { label: 'b) Um wie viele Zentimeter steigt das Wasser in den ersten 10 Minuten pro Minute?', hint: 'Wie viele Zentimeter steigt das Wasser von 0 bis 10 Minuten insgesamt? Teile durch 10.', type: 'num', answer: 3, unit: 'cm pro min', points: 2 },
+                            { label: 'c) Nach wie vielen Minuten steht das Wasser zum zweiten Mal bei 30 cm?', hint: 'Denk dir eine waagrechte Linie bei 30 cm. Zähle von links, wo sie den Graphen schneidet. Beim Sinken fällt der Stand um 2 cm pro Minute.', type: 'num', answer: 30, unit: 'min', points: 2 },
                             { label: 'd) Welche Aussage stimmt?', type: 'choice', options: ['Zwischen 25 und 35 Minuten wird Wasser abgelassen', 'Zwischen 10 und 25 Minuten ist das Becken leer', 'Am Ende ist weniger Wasser im Becken als am Anfang', 'Am Ende steigt das Wasser schneller als am Anfang'], correct: 0, points: 2 }
                         ],
                         solution: [
@@ -4928,10 +4946,10 @@
                         title: 'Terme vereinfachen', topic: 'Terme (LU 10)', points: 8,
                         prompt: 'Wähle jeweils das richtige Ergebnis.',
                         parts: [
-                            { label: 'a) 1,5a · 4b − 2ab + 3b · (−2a)', type: 'choice', options: ['−2ab', '10ab', '−14ab', '2ab'], correct: 0, points: 2 },
-                            { label: 'b) x(3x − 2) − 2(x² − x)', type: 'choice', options: ['x²', 'x² − 4x', '5x² − 4x', 'x² + 4x'], correct: 0, points: 3 },
+                            { label: 'a) 1,5a · 4b − 2ab + 3b · (−2a)', hint: 'Rechne zuerst die beiden Produkte aus: 1,5a · 4b und 3b · (−2a).', type: 'choice', options: ['−2ab', '10ab', '−14ab', '2ab'], correct: 0, points: 2 },
+                            { label: 'b) x(3x − 2) − 2(x² − x)', hint: 'x(3x − 2): x mal jedes Glied in der Klammer. Bei −2(x² − x) auf die Vorzeichen achten.', type: 'choice', options: ['x²', 'x² − 4x', '5x² − 4x', 'x² + 4x'], correct: 0, points: 3 },
                             { label: 'c) Ergänze: 4 · ( ? ) = 12x − 8', type: 'select', options: ['3x − 2', '3x − 8', '12x − 2', '8x − 4'], correct: 0, points: 1 },
-                            { label: 'd) Mia rechnet: −(2a − 3b) + 4a = −2a − 3b + 4a = 2a − 3b. Was ist das richtige Ergebnis?', type: 'choice', options: ['2a + 3b', '2a − 3b', '6a − 3b', '−6a + 3b'], correct: 0, points: 2 }
+                            { label: 'd) Mia rechnet: −(2a − 3b) + 4a = −2a − 3b + 4a = 2a − 3b. Was ist das richtige Ergebnis?', hint: 'Bei einer Minusklammer dreht sich JEDES Vorzeichen in der Klammer um.', type: 'choice', options: ['2a + 3b', '2a − 3b', '6a − 3b', '−6a + 3b'], correct: 0, points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Produkte: 1,5a · 4b = 6ab und 3b · (−2a) = −6ab. Zusammen: 6ab − 2ab − 6ab = <strong>−2ab</strong>.',
@@ -4945,10 +4963,10 @@
                         title: 'Gleichungen mit Klammern, Kommas und Brüchen', topic: 'Gleichungen (LU 10)', points: 10,
                         prompt: 'Löse im Heft und trage x ein.',
                         parts: [
-                            { label: 'a) 2(3x − 1) − (x + 4) = 3(x − 4)', type: 'num', answer: -3, prefix: 'x =', points: 3 },
-                            { label: 'b) 0,2x + 1,4 = 0,5x − 0,4', type: 'num', answer: 6, prefix: 'x =', points: 2 },
-                            { label: 'c) ½(4x + 10) = 3(x − 2)', type: 'num', answer: 11, prefix: 'x =', points: 3 },
-                            { label: 'd) x : 3 − 2 = x : 5 + 2', type: 'num', answer: 30, prefix: 'x =', points: 2 }
+                            { label: 'a) 2(3x − 1) − (x + 4) = 3(x − 4)', hint: 'Die Minusklammer −(x + 4) wird zu −x − 4. Die Lösung ist negativ.', type: 'num', answer: -3, prefix: 'x =', points: 3 },
+                            { label: 'b) 0,2x + 1,4 = 0,5x − 0,4', hint: 'Nimm beide Seiten mal 10 – dann verschwinden die Kommas.', type: 'num', answer: 6, prefix: 'x =', points: 2 },
+                            { label: 'c) ½(4x + 10) = 3(x − 2)', hint: '½(4x + 10) = 2x + 5.', type: 'num', answer: 11, prefix: 'x =', points: 3 },
+                            { label: 'd) x : 3 − 2 = x : 5 + 2', hint: 'Nimm beide Seiten mal 15 – das passt zu 3 und zu 5, dann sind beide Divisionen weg.', type: 'num', answer: 30, prefix: 'x =', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> 6x − 2 − x − 4 = 3x − 12 → 5x − 6 = 3x − 12 &nbsp;| − 3x → 2x − 6 = −12 &nbsp;| + 6 → 2x = −6 &nbsp;| : 2 → <strong>x = −3</strong>. Probe: 2 · (−10) − 1 = −21 und 3 · (−7) = −21 ✓',
@@ -4976,7 +4994,7 @@
                         title: 'Anwendung mit Vergleich', topic: 'Anwendung (LU 10)', points: 7,
                         prompt: 'In Haus 1 wohnen doppelt so viele Personen wie in Haus 3. In Haus 2 wohnen 7 Personen weniger als in Haus 1. In Haus 1 und Haus 2 zusammen wohnen genau 11 Personen mehr als in Haus 3. <em>x = Anzahl Personen in Haus 3.</em>',
                         parts: [
-                            { label: 'a) Welche Gleichung beschreibt die Situation?', type: 'select', options: ['2x + (2x − 7) = x + 11', '2x + 2x − 7 + 11 = x', '2x + (2x − 7) + x = 11', '2x + (x − 7) = x + 11'], correct: 0, points: 2 },
+                            { label: 'a) Welche Gleichung beschreibt die Situation?', hint: '„Haus 1 und Haus 2 zusammen“ ist die linke Seite, „11 mehr als Haus 3“ die rechte Seite.', type: 'select', options: ['2x + (2x − 7) = x + 11', '2x + 2x − 7 + 11 = x', '2x + (2x − 7) + x = 11', '2x + (x − 7) = x + 11'], correct: 0, points: 2 },
                             { label: 'b) Personen in Haus 3', type: 'num', answer: 6, unit: 'Personen', points: 1 },
                             { label: 'c) Personen in Haus 1', type: 'num', answer: 12, unit: 'Personen', points: 1 },
                             { label: 'd) Personen in Haus 2', type: 'num', answer: 5, unit: 'Personen', points: 1 },
@@ -4996,7 +5014,7 @@
                         parts: [
                             { label: 'a) Inkreis zeichnen: Was ist der richtige Schritt direkt nach dem Finden des Schnittpunkts I?', type: 'select', options: ['Lot von I auf eine Seite fällen – das ist der Radius', 'Zirkel von I bis zu einer Ecke aufziehen', 'Die drei Höhen einzeichnen', 'Die Seitenmitten verbinden'], correct: 0, points: 1 },
                             { label: 'b) Ein Dreieck hat α = 30°, β = 60° und γ = 90°. Wo liegt der Höhenschnittpunkt?', type: 'choice', options: ['In der Ecke C', 'In der Mitte der Seite c', 'Außerhalb des Dreiecks', 'Im Inkreismittelpunkt'], correct: 0, points: 1 },
-                            { label: 'c) Ein Seitenmittendreieck hat die Fläche 7 cm². Wie groß ist die Fläche des großen Dreiecks?', type: 'num', answer: 28, unit: 'cm²', points: 1 },
+                            { label: 'c) Ein Seitenmittendreieck hat die Fläche 7 cm². Wie groß ist die Fläche des großen Dreiecks?', hint: 'Die Seitenmitten teilen das große Dreieck in 4 deckungsgleiche Dreiecke.', type: 'num', answer: 28, unit: 'cm²', points: 1 },
                             { label: 'd) Der Schwerpunkt S (Schnittpunkt der Seitenhalbierenden) liegt …', type: 'choice', options: ['immer innerhalb des Dreiecks', 'bei stumpfwinkligen Dreiecken außerhalb', 'immer auf einer Seite', 'immer in einer Ecke'], correct: 0, points: 1 }
                         ],
                         solution: [
@@ -6640,17 +6658,21 @@
         // ==========================================
         // PROBEKLAUSUREN (ab dem Mathe-Kapitel; ein Fach bekommt sie über SUBJECTS[fach].exams)
         // Antworten: Zahl eintippen ("num"), Antwort antippen ("choice") oder Lücke auswählen ("select").
-        // Lösungsweg erst nach dem Antworten (Prüfen) bzw. nach dem Abgeben. Timer mit Countdown und „Stift weg!“.
+        // - Abgeben jederzeit (auch mit leeren oder falschen Antworten), eigener Dialog statt Systemfenster.
+        // - Timer mit Countdown, Pause/Weiter, Neu starten und „Stift weg!“ am Ende.
+        // - Lösungsweg jederzeit aufklappbar; vor dem Antworten wird das als „Lösung angesehen“ (👀) vermerkt.
+        // - 💡 Tipps zu schwierigen Teilaufgaben.
         // Eingaben werden nie als HTML eingesetzt; gespeichert wird nur der Bestwert im Browser.
         // ==========================================
         const EXAM_STORE = 'edumaster_exam_best';
         let examState = null;     // aktuell geöffnete Klausur
-        let examTimer = null;     // { examKey, end, total, handle, warned5, warned1 }
+        let examTimer = null;     // { examKey, subj, start, end, total, remaining, paused, pausedMs, pausedAt, handle, warned5, warned1 }
 
         function examList() { return (currentSubject && SUBJECTS[currentSubject].exams) || []; }
         function examKey(subj, id) { return `${subj}:${id}`; }
         function examBest() { return readJSON(EXAM_STORE, {}) || {}; }
         function examTotal(ex) { return ex.tasks.reduce((s, t) => s + t.points, 0); }
+        function timerOfState() { return !!(examTimer && examState && examTimer.examKey === examState.key); }
 
         // Notenschlüssel (übliche Orientierung, Prozent der Punkte)
         function examGrade(pct) {
@@ -6660,6 +6682,38 @@
             if (pct >= 50) return { note: '4', text: 'ausreichend', cls: 'text-amber-600' };
             if (pct >= 30) return { note: '5', text: 'mangelhaft', cls: 'text-rose-600' };
             return { note: '6', text: 'ungenügend', cls: 'text-rose-700' };
+        }
+
+        // ---------- Eigener Bestätigungs-Dialog (iPad-freundlich) ----------
+        function examAsk(opts) {
+            const old = $('exam-ask');
+            if (old) old.remove();
+            const wrap = document.createElement('div');
+            wrap.id = 'exam-ask';
+            wrap.className = 'exam-ask-backdrop';
+            wrap.setAttribute('role', 'dialog');
+            wrap.setAttribute('aria-modal', 'true');
+            wrap.innerHTML = `
+                <div class="exam-ask">
+                    <div class="exam-ask-icon">${opts.icon || '🏁'}</div>
+                    <h3 class="text-lg font-extrabold text-slate-900 text-center"></h3>
+                    <p class="text-sm text-slate-600 text-center mt-1"></p>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-5">
+                        <button type="button" class="btn btn-ghost flex-1" data-act="no"></button>
+                        <button type="button" class="btn btn-primary flex-1" data-act="yes"></button>
+                    </div>
+                </div>`;
+            wrap.querySelector('h3').textContent = opts.title;
+            wrap.querySelector('p').textContent = opts.text || '';
+            wrap.querySelector('[data-act="no"]').textContent = opts.cancel || 'Abbrechen';
+            wrap.querySelector('[data-act="yes"]').textContent = opts.ok || 'OK';
+            const close = () => wrap.remove();
+            const cancel = () => { close(); if (opts.onCancel) opts.onCancel(); };
+            wrap.addEventListener('click', e => { if (e.target === wrap) cancel(); });
+            wrap.querySelector('[data-act="no"]').onclick = cancel;
+            wrap.querySelector('[data-act="yes"]').onclick = () => { close(); opts.onOk(); };
+            document.body.appendChild(wrap);
+            wrap.querySelector('[data-act="yes"]').focus();
         }
 
         // ---------- Übersicht ----------
@@ -6674,7 +6728,7 @@
                     <div>
                         <span class="chip">Finale der Roadmap</span>
                         <h2 class="text-2xl font-extrabold text-slate-800 mt-3 flex items-center gap-2"><i class="fa-solid fa-stopwatch accent-text"></i> Probeklausuren</h2>
-                        <p class="text-slate-600 text-sm mt-1">Wie eine echte Klassenarbeit – und bewusst nicht ganz leicht. Wer eine Probe schafft, ist auf dem Weg zur Eins. Starte den Timer oder übe ohne Zeit. Zahlen tippst du ein, Terme und Gleichungen wählst du aus.</p>
+                        <p class="text-slate-600 text-sm mt-1">Wie eine echte Klassenarbeit – und bewusst nicht ganz leicht. Starte den Timer (mit Pause-Knopf) oder übe ohne Zeit. Zahlen tippst du ein, Terme und Gleichungen wählst du aus. Bei schweren Aufgaben hilft dir der 💡 Tipp.</p>
                     </div>
                     <div class="grid md:grid-cols-3 gap-4">
                         ${list.map((ex, i) => {
@@ -6696,7 +6750,7 @@
                                 </article>`;
                         }).join('')}
                     </div>
-                    <p class="text-[11px] text-slate-500">Notenschlüssel zur Orientierung: ab 92 % sehr gut · ab 81 % gut · ab 67 % befriedigend · ab 50 % ausreichend · ab 30 % mangelhaft. Deine Lehrkraft kann anders bewerten.</p>
+                    <p class="text-[11px] text-slate-500">Notenschlüssel zur Orientierung: ab 92 % sehr gut · ab 81 % gut · ab 67 % befriedigend · ab 50 % ausreichend · ab 30 % mangelhaft. Deine Lehrkraft kann anders bewerten. Als Bestwert zählt nur ein Durchgang ohne vorher angesehene Lösungen.</p>
                 </div>
             `;
         }
@@ -6716,29 +6770,30 @@
         function newExamState(ex) {
             examState = {
                 subj: currentSubject, id: ex.id, key: examKey(currentSubject, ex.id), ex,
-                answers: {}, checked: {}, submitted: false, result: null, openSol: {},
+                answers: {}, checked: {}, submitted: false, result: null, openSol: {}, peeked: {}, hints: {},
                 orders: ex.tasks.map(t => t.parts.map(p => (p.options && !p.keepOrder) ? shuffle(p.options.map((_, i) => i)) : (p.options || []).map((_, i) => i)))
             };
         }
 
         function closeExam() {
-            if (examTimer) { showToast('⏱ Der Timer läuft noch – gib die Klausur zuerst ab.'); return; }
+            if (timerOfState()) { showToast('⏱ Der Timer läuft noch – pausiere oder gib die Klausur zuerst ab.'); return; }
             examState = null;
             renderExams();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartExam() {
-            if (examTimer) return;
-            if (!window.confirm('Klausur neu beginnen? Deine Antworten werden gelöscht.')) return;
-            newExamState(examState.ex);
-            renderExam();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (timerOfState()) return;
+            examAsk({
+                icon: '🔄', title: 'Klausur neu beginnen?', text: 'Alle Antworten, Tipps und Lösungsblicke dieses Durchgangs werden gelöscht.',
+                ok: 'Neu beginnen', cancel: 'Abbrechen',
+                onOk: () => { newExamState(examState.ex); renderExam(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            });
         }
 
         // ---------- Bewertung ----------
         function parseNum(raw) {
-            let s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(/[−–]/g, '-').replace(',', '.');
+            const s = String(raw == null ? '' : raw).trim().replace(/\s+/g, '').replace(/[−–]/g, '-').replace(',', '.');
             const m = s.match(/^([+-]?\d*\.?\d+)(?:\/(\d*\.?\d+))?/);
             if (!m) return NaN;
             const v = m[2] !== undefined ? +m[1] / +m[2] : +m[1];
@@ -6755,19 +6810,18 @@
             if (part.type === 'num') return Math.abs(parseNum(v) - part.answer) <= (part.tol != null ? part.tol : 0.005);
             return +v === part.correct;
         }
-        function taskScore(t) {
-            return examState.ex.tasks[t].parts.reduce((s, p, i) => s + (partCorrect(t, i) ? p.points : 0), 0);
-        }
+        function taskScore(t) { return examState.ex.tasks[t].parts.reduce((s, p, i) => s + (partCorrect(t, i) ? p.points : 0), 0); }
         function taskComplete(t) { return examState.ex.tasks[t].parts.every((_, i) => partAnswered(t, i)); }
         function isLocked(t) { return examState.submitted || !!examState.checked[t]; }
+        function answeredCount() { return examState.ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0); }
+        function partsCount() { return examState.ex.tasks.reduce((s, t) => s + t.parts.length, 0); }
 
         // ---------- Ansicht einer Klausur ----------
         function renderExam() {
             const st = examState, ex = st.ex;
             const total = examTotal(ex);
-            const running = !!(examTimer && examTimer.examKey === st.key);
-            const answeredParts = ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0);
-            const allParts = ex.tasks.reduce((s, t) => s + t.parts.length, 0);
+            const running = timerOfState();
+            const paused = running && examTimer.paused;
             $('exams-content').innerHTML = `
                 <div class="space-y-5">
                     <div class="glass-card p-6 rounded-3xl space-y-4">
@@ -6784,18 +6838,27 @@
                         <div class="exam-start-row">
                             ${running ? `
                                 <div class="flex items-center gap-3 flex-wrap">
-                                    <span class="exam-live"><span class="dot"></span> Timer läuft</span>
-                                    <span class="text-sm text-slate-600">${answeredParts} von ${allParts} Antworten eingetragen</span>
+                                    <span class="exam-live ${paused ? 'paused' : ''}"><span class="dot"></span> ${paused ? 'Pausiert' : 'Timer läuft'}</span>
+                                    <span class="font-mono-letter text-xl font-extrabold" id="exam-head-clock">${fmtClock(timerLeft())}</span>
+                                    <span class="text-sm text-slate-600" id="exam-head-count">${answeredCount()} von ${partsCount()} Antworten</span>
                                 </div>
-                                <button type="button" class="btn btn-primary" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="toggleExamPause()">${paused ? '<i class="fa-solid fa-play"></i> Weiter' : '<i class="fa-solid fa-pause"></i> Pause'}</button>
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="restartExamTimer()"><i class="fa-solid fa-rotate-left"></i> Timer neu starten</button>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                </div>
                             ` : `
                                 <button type="button" class="exam-start-btn" onclick="startExamTimer()">
                                     <span class="exam-start-icon"><i class="fa-solid fa-stopwatch"></i></span>
-                                    <span class="text-left"><span class="block font-extrabold text-base">Timer starten</span><span class="block text-xs opacity-90">${ex.minutes}:00 Minuten wie in der echten Arbeit</span></span>
+                                    <span class="text-left"><span class="block font-extrabold text-base">Timer starten</span><span class="block text-xs opacity-90">${ex.minutes}:00 Minuten · mit Pause-Knopf</span></span>
                                 </button>
-                                <span class="text-xs text-slate-500">…oder ohne Zeit üben: Jede Aufgabe kannst du prüfen, sobald alles ausgefüllt ist.</span>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-xs text-slate-500">…oder ohne Zeit üben.</span>
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>
+                                </div>
                             `}
-                        </div>`}
+                        </div>
+                        ${paused ? '<div class="exam-pause-note"><i class="fa-solid fa-mug-hot"></i> Pause – die Zeit ist angehalten. Tippe auf „Weiter“, wenn du bereit bist.</div>' : ''}`}
                     </div>
                     ${ex.tasks.map((_, ti) => `<div id="exam-task-${ti}">${examTaskHTML(ti)}</div>`).join('')}
                     <div class="glass-card p-5 rounded-3xl flex flex-wrap items-center justify-between gap-3">
@@ -6805,7 +6868,7 @@
                                 <button type="button" class="btn btn-ghost" onclick="restartExam()"><i class="fa-solid fa-arrows-rotate"></i> Neu versuchen</button>
                                 <button type="button" class="btn btn-primary" onclick="closeExam()">Zur Übersicht</button>
                             </div>` : `
-                            <span class="text-sm text-slate-600">${answeredParts} von ${allParts} Antworten eingetragen</span>
+                            <span class="text-sm text-slate-600"><span id="exam-foot-count">${answeredCount()} von ${partsCount()}</span> Antworten eingetragen – du kannst jederzeit abgeben.</span>
                             <button type="button" class="btn btn-primary" onclick="finishExam(false)"><i class="fa-solid fa-flag-checkered"></i> Klausur abgeben</button>`}
                     </div>
                 </div>
@@ -6814,9 +6877,13 @@
         }
 
         function examResultHTML() {
-            const r = examState.result, total = examTotal(examState.ex);
+            const st = examState, r = st.result, total = examTotal(st.ex);
             const pct = Math.round(r.points / total * 100);
             const g = examGrade(r.points / total * 100);
+            const notes = [];
+            if (r.timeText) notes.push(`Bearbeitungszeit: ${r.timeText}`);
+            if (r.hints) notes.push(`💡 ${r.hints} Tipp${r.hints === 1 ? '' : 's'} genutzt`);
+            if (r.peeks) notes.push(`👀 bei ${r.peeks} Aufgabe${r.peeks === 1 ? '' : 'n'} vorher die Lösung angesehen – zählt nicht als Bestwert`);
             return `
                 <div class="exam-result">
                     <div class="flex flex-wrap items-center gap-5">
@@ -6824,11 +6891,11 @@
                         <div class="flex-1 min-w-[12rem] space-y-2">
                             <div class="text-lg font-extrabold">${r.points} von ${total} Punkten · ${pct} % · ${g.text}</div>
                             <div class="bar"><span style="width:${pct}%"></span></div>
-                            <div class="text-xs text-slate-500">${r.timeText ? `Bearbeitungszeit: ${r.timeText} · ` : ''}Öffne bei jeder Aufgabe den ausführlichen Lösungsweg.</div>
+                            <div class="text-xs text-slate-500">${notes.join(' · ')}${notes.length ? ' · ' : ''}Öffne bei jeder Aufgabe den ausführlichen Lösungsweg.</div>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
-                        ${examState.ex.tasks.map((t, ti) => `<div class="exam-mini ${taskScore(ti) === t.points ? 'ok' : taskScore(ti) === 0 ? 'bad' : ''}"><span>Aufgabe ${ti + 1}</span><strong>${taskScore(ti)} / ${t.points}</strong></div>`).join('')}
+                        ${st.ex.tasks.map((t, ti) => `<div class="exam-mini ${taskScore(ti) === t.points ? 'ok' : taskScore(ti) === 0 ? 'bad' : ''}"><span>Aufgabe ${ti + 1}${st.peeked[ti] ? ' 👀' : ''}</span><strong>${taskScore(ti)} / ${t.points}</strong></div>`).join('')}
                     </div>
                 </div>`;
         }
@@ -6836,15 +6903,16 @@
         function examTaskHTML(ti) {
             const st = examState, t = st.ex.tasks[ti];
             const locked = isLocked(ti);
-            const running = !!(examTimer && examTimer.examKey === st.key);
             const score = locked ? taskScore(ti) : null;
             const complete = taskComplete(ti);
+            const solOpen = !!st.openSol[ti];
             return `
                 <article class="ex-card space-y-4">
                     <div class="flex items-center justify-between gap-2 flex-wrap">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="chip">Aufgabe ${ti + 1}</span>
                             <span class="text-xs font-bold text-slate-500">${t.topic}</span>
+                            ${st.peeked[ti] ? '<span class="exam-peek">👀 Lösung angesehen</span>' : ''}
                         </div>
                         <span class="exam-points ${locked ? (score === t.points ? 'ok' : score === 0 ? 'bad' : 'mid') : ''}">${locked ? `${score} / ${t.points} P.` : `${t.points} P.`}</span>
                     </div>
@@ -6853,16 +6921,11 @@
                     ${t.fig ? examFigure(t.fig) : ''}
                     <div class="space-y-4">${t.parts.map((p, pi) => examPartHTML(ti, pi)).join('')}</div>
                     <div class="flex flex-wrap items-center gap-2 pt-1">
-                        ${locked ? `
-                            <button type="button" class="btn btn-soft btn-sm" onclick="toggleExamSolution(${ti})">${st.openSol[ti] ? '🔍 Lösungsweg ausblenden' : '🔍 Ausführlichen Lösungsweg anzeigen'}</button>
-                        ` : running ? `
-                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-lock"></i> Lösungen gibt es nach dem Abgeben.</span>
-                        ` : `
-                            <button type="button" class="btn btn-primary btn-sm" onclick="checkExamTask(${ti})" ${complete ? '' : 'disabled'}><i class="fa-solid fa-check-double"></i> Antworten prüfen</button>
-                            <span class="text-xs text-slate-500">${complete ? 'Danach siehst du den ausführlichen Lösungsweg.' : 'Erst alle Teilaufgaben beantworten – dann kannst du prüfen.'}</span>
-                        `}
+                        ${locked ? '' : `<button type="button" class="btn btn-primary btn-sm" onclick="checkExamTask(${ti})" ${complete ? '' : 'disabled'}><i class="fa-solid fa-check-double"></i> Antworten prüfen</button>`}
+                        <button type="button" class="btn btn-soft btn-sm" onclick="toggleExamSolution(${ti})">${solOpen ? '🔍 Lösungsweg ausblenden' : '🔍 Lösungsweg anzeigen'}</button>
+                        ${locked ? '' : `<span class="text-xs text-slate-500" data-role="hint-line">${complete ? 'Fertig? Prüfe deine Antworten.' : 'Prüfen geht, sobald alle Teilaufgaben beantwortet sind.'}</span>`}
                     </div>
-                    ${locked && st.openSol[ti] ? `
+                    ${solOpen ? `
                         <div class="solution">
                             <div class="font-extrabold mb-3">Ausführlicher Lösungsweg:</div>
                             <ol class="steps">${t.solution.map((s, i) => `<li class="step"><span class="step-n">${i + 1}</span><div class="flex-1">${s}</div></li>`).join('')}</ol>
@@ -6876,6 +6939,7 @@
             const locked = isLocked(ti);
             const ok = locked ? partCorrect(ti, pi) : null;
             const mark = locked ? `<span class="exam-mark ${ok ? 'ok' : 'bad'}"><i class="fa-solid ${ok ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${ok ? `+${p.points}` : '0'} P.</span>` : `<span class="text-[11px] font-bold text-slate-400">${p.points} P.</span>`;
+            const hintBtn = p.hint ? `<button type="button" class="exam-hint-btn ${st.hints[key] ? 'on' : ''}" onclick="toggleExamHint('${key}')" aria-expanded="${st.hints[key] ? 'true' : 'false'}">💡 ${st.hints[key] ? 'Tipp ausblenden' : 'Tipp'}</button>` : '';
             let control = '';
             if (p.type === 'num') {
                 control = `
@@ -6910,8 +6974,9 @@
                 <div class="exam-part">
                     <div class="flex items-start justify-between gap-3 mb-2">
                         <div class="text-sm font-bold text-slate-800">${p.label}</div>
-                        ${mark}
+                        <div class="flex items-center gap-2 shrink-0">${hintBtn}${mark}</div>
                     </div>
+                    ${p.hint && st.hints[key] ? `<div class="exam-hint">💡 ${p.hint}</div>` : ''}
                     ${control}
                 </div>`;
         }
@@ -6929,6 +6994,15 @@
             if (!box) return;
             box.innerHTML = examTaskHTML(ti);
             examFillInputs(box);
+            updateExamCounts();
+        }
+
+        function updateExamCounts() {
+            if (!examState) return;
+            const a = answeredCount(), n = partsCount();
+            const head = $('exam-head-count'), foot = $('exam-foot-count');
+            if (head) head.textContent = `${a} von ${n} Antworten`;
+            if (foot) foot.textContent = `${a} von ${n}`;
         }
 
         function examInput(el) {
@@ -6939,12 +7013,11 @@
             // nur Prüfen-Knopf und Zähler aktualisieren – das Feld behält den Fokus
             const box = $('exam-task-' + ti);
             const btn = box && box.querySelector('button[onclick^="checkExamTask"]');
-            if (btn) {
-                const complete = taskComplete(ti);
-                btn.disabled = !complete;
-                const hint = btn.nextElementSibling;
-                if (hint) hint.textContent = complete ? 'Danach siehst du den ausführlichen Lösungsweg.' : 'Erst alle Teilaufgaben beantworten – dann kannst du prüfen.';
-            }
+            const complete = taskComplete(ti);
+            if (btn) btn.disabled = !complete;
+            const line = box && box.querySelector('[data-role="hint-line"]');
+            if (line) line.textContent = complete ? 'Fertig? Prüfe deine Antworten.' : 'Prüfen geht, sobald alle Teilaufgaben beantwortet sind.';
+            updateExamCounts();
         }
 
         function examPick(ti, pi, oi) {
@@ -6954,7 +7027,7 @@
         }
 
         function checkExamTask(ti) {
-            if (!examState || examTimer || !taskComplete(ti)) return;
+            if (!examState || isLocked(ti) || !taskComplete(ti)) return;
             examState.checked[ti] = true;
             examState.openSol[ti] = true;
             rerenderExamTask(ti);
@@ -6962,9 +7035,19 @@
             if (taskScore(ti) === t.points && typeof confetti === 'function') confetti({ particleCount: 40, spread: 55, origin: { y: 0.7 }, zIndex: 9999 });
         }
 
+        // Lösungsweg jederzeit – vor dem Prüfen/Abgeben wird es als „Lösung angesehen“ vermerkt
         function toggleExamSolution(ti) {
+            if (!examState) return;
+            if (!examState.openSol[ti] && !isLocked(ti)) examState.peeked[ti] = true;
             examState.openSol[ti] = !examState.openSol[ti];
             rerenderExamTask(ti);
+        }
+
+        function toggleExamHint(key) {
+            if (!examState) return;
+            examState.hints[key] = !examState.hints[key];
+            if (examState.hints[key]) examState.hintsUsed = Object.assign(examState.hintsUsed || {}, { [key]: true });
+            rerenderExamTask(+key.split('-')[0]);
         }
 
         // ---------- Abbildungen ----------
@@ -7006,30 +7089,9 @@
             const s = Math.max(0, Math.ceil(ms / 1000));
             return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
         }
-
-        function startExamTimer() {
-            if (!examState || examState.submitted || examTimer) return;
-            const st = examState;
-            // Countdown-Animation: Bereit? 3 – 2 – 1 – Los!
-            const ov = examOverlay('<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-ready">Bereit?</div></div>');
-            const steps = ['3', '2', '1'];
-            steps.forEach((n, i) => setTimeout(() => {
-                ov.innerHTML = `<div class="exam-ov-box"><div class="exam-ring" key="${n}"></div><div class="exam-count">${n}</div></div>`;
-            }, 700 + i * 850));
-            setTimeout(() => {
-                ov.innerHTML = '<div class="exam-ov-box"><div class="exam-go">Los geht\'s! <span class="inline-block exam-pen-wiggle">✍️</span></div><div class="exam-ov-sub">Viel Erfolg!</div></div>';
-                if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 80, origin: { y: 0.55 }, zIndex: 10000 });
-            }, 700 + steps.length * 850);
-            setTimeout(() => {
-                ov.classList.add('out');
-                setTimeout(() => ov.remove(), 350);
-                const total = st.ex.minutes * 60000;
-                examTimer = { examKey: st.key, subj: st.subj, start: Date.now(), end: Date.now() + total, total, warned5: false, warned1: false, handle: null };
-                examTimer.handle = setInterval(tickExamTimer, 250);
-                ensureTimerPill();
-                tickExamTimer();
-                if (currentSubject === st.subj && activeTab === 'exams') renderExam();
-            }, 700 + steps.length * 850 + 1100);
+        function timerLeft() {
+            if (!examTimer) return 0;
+            return examTimer.paused ? examTimer.remaining : examTimer.end - Date.now();
         }
 
         function examOverlay(inner) {
@@ -7039,6 +7101,75 @@
             ov.innerHTML = inner;
             document.body.appendChild(ov);
             return ov;
+        }
+
+        // Countdown-Animation: Bereit? 3 – 2 – 1 – Los! (startet bzw. startet den Timer neu)
+        function startExamTimer() {
+            if (!examState || examState.submitted || examTimer) return;
+            const st = examState;
+            const ov = examOverlay('<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-ready">Bereit?</div></div>');
+            const steps = ['3', '2', '1'];
+            steps.forEach((n, i) => setTimeout(() => {
+                ov.innerHTML = `<div class="exam-ov-box"><div class="exam-ring"></div><div class="exam-count">${n}</div></div>`;
+            }, 700 + i * 850));
+            setTimeout(() => {
+                ov.innerHTML = '<div class="exam-ov-box"><div class="exam-go">Los geht\'s! <span class="inline-block exam-pen-wiggle">✍️</span></div><div class="exam-ov-sub">Viel Erfolg!</div></div>';
+                if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 80, origin: { y: 0.55 }, zIndex: 10000 });
+            }, 700 + steps.length * 850);
+            setTimeout(() => {
+                ov.classList.add('out');
+                setTimeout(() => ov.remove(), 350);
+                const total = st.ex.minutes * 60000;
+                examTimer = { examKey: st.key, subj: st.subj, start: Date.now(), end: Date.now() + total, total, remaining: total, paused: false, pausedMs: 0, pausedAt: 0, warned5: false, warned1: false, handle: null };
+                examTimer.handle = setInterval(tickExamTimer, 250);
+                ensureTimerPill();
+                tickExamTimer();
+                if (currentSubject === st.subj && activeTab === 'exams') renderExam();
+            }, 700 + steps.length * 850 + 1100);
+        }
+
+        function toggleExamPause() {
+            if (!examTimer) return;
+            if (!examTimer.paused) {
+                examTimer.remaining = Math.max(0, examTimer.end - Date.now());
+                examTimer.paused = true;
+                examTimer.pausedAt = Date.now();
+                clearInterval(examTimer.handle);
+                examTimer.handle = null;
+                showToast('⏸ Pause – die Zeit ist angehalten.');
+            } else {
+                examTimer.pausedMs += Date.now() - examTimer.pausedAt;
+                examTimer.end = Date.now() + examTimer.remaining;
+                examTimer.paused = false;
+                examTimer.handle = setInterval(tickExamTimer, 250);
+                showToast('▶ Weiter geht\'s!');
+            }
+            tickExamTimer();
+            if (examState && currentSubject === examTimer.subj && activeTab === 'exams') renderExam();
+        }
+
+        function restartExamTimer() {
+            if (!examTimer || !examState) return;
+            const wasPaused = examTimer.paused;
+            if (!wasPaused) toggleExamPause();
+            examAsk({
+                icon: '🔄', title: 'Timer neu starten?', text: `Die Zeit beginnt wieder bei ${examState.ex.minutes}:00 Minuten. Deine Antworten bleiben erhalten.`,
+                ok: 'Neu starten', cancel: 'Abbrechen',
+                onOk: () => {
+                    stopExamTimer();
+                    renderExam();
+                    startExamTimer();
+                },
+                onCancel: () => { if (!wasPaused && examTimer && examTimer.paused) toggleExamPause(); }
+            });
+        }
+
+        function stopExamTimer() {
+            if (!examTimer) return;
+            clearInterval(examTimer.handle);
+            examTimer = null;
+            const pill = $('exam-timer-pill');
+            if (pill) pill.classList.add('hidden');
         }
 
         function ensureTimerPill() {
@@ -7052,6 +7183,7 @@
                         <svg viewBox="0 0 36 36" class="exam-timer-ring"><circle cx="18" cy="18" r="15.5" class="bg" /><circle cx="18" cy="18" r="15.5" class="fg" id="exam-timer-arc" /></svg>
                         <span id="exam-timer-text" class="font-mono-letter">00:00</span>
                     </button>
+                    <button type="button" class="exam-timer-pause" id="exam-timer-pause" onclick="toggleExamPause()" aria-label="Pause"><i class="fa-solid fa-pause"></i></button>
                     <button type="button" class="exam-timer-stop" onclick="finishExam(false)" aria-label="Klausur abgeben"><i class="fa-solid fa-flag-checkered"></i> Abgeben</button>`;
                 document.body.appendChild(pill);
             }
@@ -7060,17 +7192,21 @@
 
         function tickExamTimer() {
             if (!examTimer) return;
-            const left = examTimer.end - Date.now();
-            const txt = $('exam-timer-text'), arc = $('exam-timer-arc'), pill = $('exam-timer-pill');
+            const left = timerLeft();
+            const txt = $('exam-timer-text'), arc = $('exam-timer-arc'), pill = $('exam-timer-pill'), pb = $('exam-timer-pause'), head = $('exam-head-clock');
             if (txt) txt.textContent = fmtClock(left);
+            if (head) head.textContent = fmtClock(left);
             if (arc) { const C = 2 * Math.PI * 15.5; arc.style.strokeDasharray = C; arc.style.strokeDashoffset = C * (1 - Math.max(0, left) / examTimer.total); }
             if (pill) {
-                pill.classList.toggle('warn', left <= 5 * 60000 && left > 60000);
-                pill.classList.toggle('danger', left <= 60000);
+                pill.classList.toggle('paused', !!examTimer.paused);
+                pill.classList.toggle('warn', !examTimer.paused && left <= 5 * 60000 && left > 60000);
+                pill.classList.toggle('danger', !examTimer.paused && left <= 60000);
             }
+            if (pb) { pb.innerHTML = examTimer.paused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>'; pb.setAttribute('aria-label', examTimer.paused ? 'Weiter' : 'Pause'); }
+            if (examTimer.paused) return;
             if (left <= 5 * 60000 && !examTimer.warned5 && examTimer.total > 5 * 60000) { examTimer.warned5 = true; showToast('⏱ Noch 5 Minuten – kontrolliere deine Antworten!'); }
             if (left <= 60000 && !examTimer.warned1) { examTimer.warned1 = true; showToast('⏱ Noch 1 Minute!'); }
-            if (left <= 0) finishExam(true);
+            if (left <= 0) submitExamNow(true);
         }
 
         function goToRunningExam() {
@@ -7080,43 +7216,55 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // ---------- Abgeben (jederzeit, auch mit leeren oder falschen Antworten) ----------
         function finishExam(auto) {
             if (!examState || examState.submitted) return;
-            const running = !!(examTimer && examTimer.examKey === examState.key);
-            if (!auto) {
-                const st = examState, allParts = st.ex.tasks.reduce((s, t) => s + t.parts.length, 0);
-                const answered = st.ex.tasks.reduce((s, t, ti) => s + t.parts.filter((_, pi) => partAnswered(ti, pi)).length, 0);
-                const msg = answered < allParts
-                    ? `Klausur abgeben? ${allParts - answered} Antwort(en) sind noch leer und zählen dann 0 Punkte.`
-                    : 'Klausur jetzt abgeben und auswerten?';
-                if (!window.confirm(msg)) return;
-            }
+            if (auto) { submitExamNow(true); return; }
+            const empty = partsCount() - answeredCount();
+            examAsk({
+                icon: '🏁',
+                title: 'Klausur jetzt abgeben?',
+                text: empty > 0
+                    ? `${empty} Antwort${empty === 1 ? ' ist' : 'en sind'} noch leer – das ist okay, sie zählen dann 0 Punkte. Danach siehst du deine Note und alle Lösungswege.`
+                    : 'Danach siehst du deine Punkte, die Note und alle Lösungswege.',
+                ok: 'Ja, abgeben', cancel: 'Weiterschreiben',
+                onOk: () => submitExamNow(false)
+            });
+        }
+
+        function submitExamNow(auto) {
+            if (!examState || examState.submitted) return;
             let timeText = '';
-            if (running) {
-                const used = Math.min(Date.now(), examTimer.end) - examTimer.start;
+            if (timerOfState()) {
+                const t = examTimer;
+                const pausedNow = t.paused ? Date.now() - t.pausedAt : 0;
+                const used = Math.min(t.total, Date.now() - t.start - t.pausedMs - pausedNow);
                 timeText = fmtClock(used) + ' min';
-                clearInterval(examTimer.handle);
-                examTimer = null;
-                const pill = $('exam-timer-pill');
-                if (pill) pill.classList.add('hidden');
+                stopExamTimer();
             }
-            const doSubmit = () => {
-                const st = examState;
-                st.submitted = true;
-                st.ex.tasks.forEach((_, ti) => { st.checked[ti] = true; });
-                const points = st.ex.tasks.reduce((s, _, ti) => s + taskScore(ti), 0);
-                const total = examTotal(st.ex);
-                st.result = { points, timeText };
+            const ask = $('exam-ask');
+            if (ask) ask.remove();
+            // sofort auswerten und sperren, damit nichts doppelt abgegeben wird
+            const st = examState;
+            st.submitted = true;
+            st.ex.tasks.forEach((_, ti) => { st.checked[ti] = true; });
+            const points = st.ex.tasks.reduce((s, _, ti) => s + taskScore(ti), 0);
+            const total = examTotal(st.ex);
+            const peeks = Object.keys(st.peeked).length;
+            const hints = Object.keys(st.hintsUsed || {}).length;
+            st.result = { points, timeText, peeks, hints };
+            if (!peeks) {
                 const best = examBest();
                 const prev = best[st.key];
                 if (!prev || points > prev.points) { best[st.key] = { points, total, date: new Date().toISOString().slice(0, 10) }; writeJSON(EXAM_STORE, best); }
+            }
+            const doSubmit = () => {
                 if (currentSubject !== st.subj) selectSubject(st.subj);
                 if (activeTab !== 'exams') switchTab('exams'); else renderExam();
-                examFillInputs();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (points / total >= 0.81 && typeof confetti === 'function') setTimeout(() => confetti({ particleCount: 140, spread: 90, origin: { y: 0.5 }, zIndex: 9999 }), 300);
             };
-            // „Stift weg!“-Animation (bei Zeitablauf und beim Abgeben)
+            // „Stift weg!“-Animation
             const ov = examOverlay(`
                 <div class="exam-ov-box">
                     <div class="exam-pen-drop"><i class="fa-solid fa-pen"></i></div>

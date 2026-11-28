@@ -483,6 +483,24 @@
         .exam-timer.warn .exam-timer-main { color: #b45309; } .exam-timer.warn .fg { stroke: #f59e0b; }
         .exam-timer.danger .exam-timer-main { color: #be123c; animation: livePulse 1s ease-in-out infinite; } .exam-timer.danger .fg { stroke: #e11d48; }
         .exam-timer.hidden { display: none; }
+        .exam-timer-pause { width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; color: var(--ink); background: #f1f5f9; }
+        .exam-timer.paused .exam-timer-main { color: #64748b; } .exam-timer.paused .fg { stroke: #94a3b8; }
+        .exam-timer.paused #exam-timer-text { animation: livePulse 1.6s ease-in-out infinite; }
+        .exam-timer.paused .exam-timer-pause { color: #fff; background: #2563eb; }
+        .exam-live.paused { color: #475569; background: #f1f5f9; border-color: #cbd5e1; }
+        .exam-live.paused .dot { background: #94a3b8; animation: none; }
+        .exam-pause-note { display: flex; align-items: center; gap: .6rem; padding: .75rem 1rem; border-radius: 14px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: .85rem; font-weight: 700; animation: fadeUp .3s ease both; }
+        /* Tipps & Lösungsblick */
+        .exam-hint-btn { min-height: 36px; padding: .3rem .75rem; border-radius: 999px; font-size: .75rem; font-weight: 800; color: #a16207; background: #fefce8; border: 1px solid #fde68a; white-space: nowrap; transition: transform .12s ease; }
+        .exam-hint-btn:active { transform: scale(.96); }
+        .exam-hint-btn.on { color: #fff; background: #f59e0b; border-color: #f59e0b; }
+        .exam-hint { margin: 0 0 .6rem; padding: .65rem .85rem; border-radius: 12px; background: #fefce8; border: 1px solid #fde68a; color: #713f12; font-size: .85rem; line-height: 1.5; animation: fadeUp .25s ease both; }
+        .exam-peek { font-size: .7rem; font-weight: 800; color: #6d28d9; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 999px; padding: .2rem .6rem; }
+        @media (pointer: coarse) { .exam-hint-btn { min-height: 44px; } }
+        /* Eigener Bestätigungs-Dialog */
+        .exam-ask-backdrop { position: fixed; inset: 0; z-index: 9500; display: grid; place-items: center; padding: 1rem; background: rgba(15, 23, 42, .45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: ovIn .2s ease both; }
+        .exam-ask { width: min(26rem, 100%); padding: 1.5rem; border-radius: 24px; background: rgba(255, 255, 255, .97); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lift); animation: sheetIn .25s ease both; }
+        .exam-ask-icon { font-size: 2.4rem; text-align: center; margin-bottom: .35rem; animation: gradePop .5s cubic-bezier(.2, .9, .3, 1.4) both; }
 
         /* Animationen */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

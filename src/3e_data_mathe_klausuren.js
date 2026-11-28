@@ -21,9 +21,9 @@
                         parts: [
                             { label: 'a) Wie weit ist Lena nach 40 Minuten von zu Hause entfernt?', type: 'num', answer: 9, unit: 'km', points: 1 },
                             { label: 'b) Wie lange dauert ihre erste Pause?', type: 'num', answer: 10, unit: 'min', points: 1 },
-                            { label: 'c) In welchem Abschnitt fährt Lena am schnellsten?', type: 'choice', options: ['Von 60 bis 90 Minuten', 'Von 0 bis 20 Minuten', 'Von 30 bis 50 Minuten', 'In allen Fahrabschnitten gleich schnell'], correct: 0, points: 2 },
+                            { label: 'c) In welchem Abschnitt fährt Lena am schnellsten?', hint: 'Vergleiche, wie viele Kilometer pro Minute sie in jedem Abschnitt schafft. Auch ein fallender Abschnitt kann der steilste sein.', type: 'choice', options: ['Von 60 bis 90 Minuten', 'Von 0 bis 20 Minuten', 'Von 30 bis 50 Minuten', 'In allen Fahrabschnitten gleich schnell'], correct: 0, points: 2 },
                             { label: 'd) Was passiert zwischen 60 und 90 Minuten?', type: 'choice', options: ['Sie fährt zurück nach Hause', 'Sie fährt einen Berg hinunter', 'Sie wird immer langsamer', 'Sie macht eine lange Pause'], correct: 0, points: 1 },
-                            { label: 'e) Wie viele Kilometer fährt Lena insgesamt?', type: 'num', answer: 24, unit: 'km', points: 2 },
+                            { label: 'e) Wie viele Kilometer fährt Lena insgesamt?', hint: 'Der höchste Punkt ist nur die größte Entfernung von zu Hause. Denk an Hinweg UND Rückweg.', type: 'num', answer: 24, unit: 'km', points: 2 },
                             { label: 'f) Ein Mitschüler zeichnet für seine Tour am Ende ein senkrechtes Stück nach oben. Was stimmt?', type: 'choice', options: ['Das ist unmöglich – er wäre ohne Zeit zu brauchen an einem anderen Ort', 'Das bedeutet, dass er sehr schnell fährt', 'Das bedeutet eine Pause', 'Das bedeutet, dass er umkehrt'], correct: 0, points: 1 }
                         ],
                         solution: [
@@ -41,9 +41,9 @@
                         prompt: 'Vereinfache so weit wie möglich und wähle das richtige Ergebnis.',
                         parts: [
                             { label: 'a) 2,5 · x · (−4) · y · x', type: 'choice', options: ['−10x²y', '10x²y', '−10xy²', '−1,5x²y'], correct: 0, points: 1 },
-                            { label: 'b) 6ab² − 2ba + 3b²a − 5ab', type: 'choice', options: ['9ab² − 7ab', '9ab² − 3ab', '2ab²', '9ab² + 7ab'], correct: 0, points: 2 },
+                            { label: 'b) 6ab² − 2ba + 3b²a − 5ab', hint: 'Erst alphabetisch ordnen: ba = ab und b²a = ab². Dann nur gleichartige Glieder zusammenfassen.', type: 'choice', options: ['9ab² − 7ab', '9ab² − 3ab', '2ab²', '9ab² + 7ab'], correct: 0, points: 2 },
                             { label: 'c) 4x − (3 − 2x) + (x − 5)', type: 'choice', options: ['7x − 8', '3x − 8', '7x − 2', '5x − 8'], correct: 0, points: 2 },
-                            { label: 'd) −3(2a − 5b) − 2(b − 4a)', type: 'choice', options: ['2a + 13b', '−14a + 13b', '2a + 17b', '−14a + 17b'], correct: 0, points: 3 }
+                            { label: 'd) −3(2a − 5b) − 2(b − 4a)', hint: 'Multipliziere jedes Glied mit dem Faktor davor – mit Vorzeichen. Minus mal minus ergibt plus!', type: 'choice', options: ['2a + 13b', '−14a + 13b', '2a + 17b', '−14a + 17b'], correct: 0, points: 3 }
                         ],
                         solution: [
                             '<strong>a)</strong> Zahlen: 2,5 · (−4) = −10. Variablen alphabetisch: x · x · y = x²y → <strong>−10x²y</strong>.',
@@ -58,9 +58,9 @@
                         prompt: 'Löse die Gleichungen im Heft und trage die Lösung für x ein.',
                         parts: [
                             { label: 'a) 7x − 9 = 3x + 15', type: 'num', answer: 6, prefix: 'x =', points: 2 },
-                            { label: 'b) 4(x − 2) − 3 = 2(x + 5) − 1', type: 'num', answer: 10, prefix: 'x =', points: 3 },
-                            { label: 'c) 3(2x + 5) = 2(x − 1) + 1', type: 'num', answer: -4, prefix: 'x =', points: 2 },
-                            { label: 'd) 0,5x + 9 = 2x − 3', type: 'num', answer: 8, prefix: 'x =', points: 2 }
+                            { label: 'b) 4(x − 2) − 3 = 2(x + 5) − 1', hint: 'Zuerst beide Klammern ausmultiplizieren und jede Seite für sich zusammenfassen. Dann die x-Glieder auf eine Seite.', type: 'num', answer: 10, prefix: 'x =', points: 3 },
+                            { label: 'c) 3(2x + 5) = 2(x − 1) + 1', hint: 'Vereinfache zuerst die rechte Seite: 2(x − 1) + 1 = 2x − 1. Die Lösung ist negativ.', type: 'num', answer: -4, prefix: 'x =', points: 2 },
+                            { label: 'd) 0,5x + 9 = 2x − 3', hint: 'Bring 0,5x auf die rechte Seite – dann steht dort 1,5x. Oder nimm zuerst alles mal 2.', type: 'num', answer: 8, prefix: 'x =', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> 7x − 9 = 3x + 15 &nbsp;| − 3x → 4x − 9 = 15 &nbsp;| + 9 → 4x = 24 &nbsp;| : 4 → <strong>x = 6</strong>. Probe: 33 = 33 ✓',
@@ -90,9 +90,9 @@
                         prompt: 'In Haus 2 wohnen dreimal so viele Personen wie in Haus 1. In Haus 3 wohnen 4 Personen weniger als in Haus 2. Insgesamt wohnen 66 Personen in den drei Häusern. <em>x = Anzahl Personen in Haus 1.</em>',
                         parts: [
                             { label: 'a) Welcher Term beschreibt Haus 3?', type: 'select', options: ['3x − 4', 'x − 4', '3(x − 4)', '4 − 3x'], correct: 0, points: 1 },
-                            { label: 'b) Welche Gleichung passt?', type: 'select', options: ['x + 3x + (3x − 4) = 66', 'x + 3x − 4 = 66', '3x + (x − 4) = 66', 'x · 3x · (3x − 4) = 66'], correct: 0, points: 2 },
+                            { label: 'b) Welche Gleichung passt?', hint: 'Alle drei Häuser zusammen ergeben 66 – also werden die drei Terme addiert.', type: 'select', options: ['x + 3x + (3x − 4) = 66', 'x + 3x − 4 = 66', '3x + (x − 4) = 66', 'x · 3x · (3x − 4) = 66'], correct: 0, points: 2 },
                             { label: 'c) Wie viele Personen wohnen in Haus 1?', type: 'num', answer: 10, unit: 'Personen', points: 1 },
-                            { label: 'd) Wie viele Personen wohnen in Haus 3?', type: 'num', answer: 26, unit: 'Personen', points: 2 }
+                            { label: 'd) Wie viele Personen wohnen in Haus 3?', hint: 'Rechne zuerst x (Haus 1) aus. Haus 2 = 3x, Haus 3 = Haus 2 − 4.', type: 'num', answer: 26, unit: 'Personen', points: 2 }
                         ],
                         solution: [
                             '<strong>Terme:</strong> Haus 1 = x · Haus 2 = 3x („dreimal so viele“) · Haus 3 = 3x − 4 („4 weniger als Haus 2“). <strong>a) 3x − 4</strong>',
@@ -109,7 +109,7 @@
                             { label: 'a) Der Punkt, der von allen drei Ecken gleich weit entfernt ist, ist der …', type: 'select', options: ['Schnittpunkt der Mittelsenkrechten', 'Schnittpunkt der Winkelhalbierenden', 'Schnittpunkt der Höhen', 'Schnittpunkt der Seitenhalbierenden'], correct: 0, points: 1 },
                             { label: 'b) Die Strecke von C zur Mitte der Seite c heißt …', type: 'select', options: ['Seitenhalbierende von c', 'Höhe auf c', 'Mittelsenkrechte von c', 'Winkelhalbierende von γ'], correct: 0, points: 1 },
                             { label: 'c) In einem Dreieck ist γ = 120°. Wo liegt der Mittelpunkt des Umkreises?', type: 'choice', options: ['Außerhalb des Dreiecks', 'Innerhalb des Dreiecks', 'Genau auf der Ecke C', 'Es gibt keinen Umkreis'], correct: 0, points: 1 },
-                            { label: 'd) Ein rechtwinkliges Dreieck hat die längste Seite 13 cm. Wie groß ist der Radius des Umkreises?', type: 'num', answer: 6.5, unit: 'cm', points: 2 }
+                            { label: 'd) Ein rechtwinkliges Dreieck hat die längste Seite 13 cm. Wie groß ist der Radius des Umkreises?', hint: 'Im rechtwinkligen Dreieck liegt der Umkreismittelpunkt genau in der Mitte der längsten Seite.', type: 'num', answer: 6.5, unit: 'cm', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Jeder Punkt einer Mittelsenkrechten ist von zwei Ecken gleich weit entfernt. Der Schnittpunkt aller drei ist von <em>allen</em> Ecken gleich weit entfernt → <strong>Schnittpunkt der Mittelsenkrechten</strong> (Umkreismittelpunkt).',
@@ -142,11 +142,11 @@
                             { label: 'D', xmax: 5.5, ymax: 15, segs: [[[0, 3], [5, 13]]] }
                         ] },
                         parts: [
-                            { label: 'a) Tabelle 1 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 3, keepOrder: true, points: 1 },
+                            { label: 'a) Tabelle 1 gehört zu Graph …', hint: 'Schau, wie sich y verändert: gleichmäßig, gar nicht oder immer weniger? Und beginnt die Linie bei 0 oder weiter oben?', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 3, keepOrder: true, points: 1 },
                             { label: 'b) Tabelle 2 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 1, keepOrder: true, points: 1 },
                             { label: 'c) Tabelle 3 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 0, keepOrder: true, points: 1 },
                             { label: 'd) Tabelle 4 gehört zu Graph …', type: 'select', options: ['A', 'B', 'C', 'D'], correct: 2, keepOrder: true, points: 1 },
-                            { label: 'e) In Tabelle 2 gilt dieselbe Regel weiter. Welcher y-Wert gehört zu x = 16?', type: 'num', answer: 2.5, prefix: 'y =', points: 2 },
+                            { label: 'e) In Tabelle 2 gilt dieselbe Regel weiter. Welcher y-Wert gehört zu x = 16?', hint: 'Rechne in Tabelle 2 für jede Spalte x · y aus. Was fällt dir auf?', type: 'num', answer: 2.5, prefix: 'y =', points: 2 },
                             { label: 'f) Bei welcher Tabelle wird y kleiner, wenn x größer wird?', type: 'choice', options: ['Tabelle 2', 'Tabelle 1', 'Tabelle 3', 'Tabelle 4'], correct: 0, points: 1 }
                         ],
                         solution: [
@@ -164,9 +164,9 @@
                         prompt: 'Vereinfache und wähle das richtige Ergebnis.',
                         parts: [
                             { label: 'a) −0,5 · a · 8 · b · a · b', type: 'choice', options: ['−4a²b²', '4a²b²', '−4ab', '−8,5a²b²'], correct: 0, points: 1 },
-                            { label: 'b) 3x² − 5x + 2x · x − (x² − 4x)', type: 'choice', options: ['4x² − x', '4x² − 9x', '6x² − x', '2x² − x'], correct: 0, points: 3 },
+                            { label: 'b) 3x² − 5x + 2x · x − (x² − 4x)', hint: '2x · x = 2x². Bei der Minusklammer drehen sich beide Vorzeichen in der Klammer um.', type: 'choice', options: ['4x² − x', '4x² − 9x', '6x² − x', '2x² − x'], correct: 0, points: 3 },
                             { label: 'c) 2(3x − 4) − 3(x − 2) + x', type: 'choice', options: ['4x − 2', '4x − 14', '2x − 2', '4x + 2'], correct: 0, points: 2 },
-                            { label: 'd) Welcher Term ist NICHT gleichwertig zu 6x + 9?', type: 'choice', options: ['3(2x + 9)', '3(2x + 3)', '2(3x + 4,5)', '6(x + 1,5)'], correct: 0, points: 2 }
+                            { label: 'd) Welcher Term ist NICHT gleichwertig zu 6x + 9?', hint: 'Multipliziere jede Klammer aus und vergleiche das Ergebnis mit 6x + 9.', type: 'choice', options: ['3(2x + 9)', '3(2x + 3)', '2(3x + 4,5)', '6(x + 1,5)'], correct: 0, points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Zahlen: −0,5 · 8 = −4. Variablen: a · a · b · b = a²b² → <strong>−4a²b²</strong>.',
@@ -180,9 +180,9 @@
                         title: 'Gleichungen und Sonderfälle', topic: 'Gleichungen (LU 10)', points: 10,
                         prompt: 'Löse im Heft. Bei a) und b) trägst du x ein, bei c) und d) wählst du aus.',
                         parts: [
-                            { label: 'a) 5(x − 3) − 2(x − 6) = 3 + x', type: 'num', answer: 3, prefix: 'x =', points: 3 },
-                            { label: 'b) x : 4 + 5 = x − 1', type: 'num', answer: 8, prefix: 'x =', points: 3 },
-                            { label: 'c) Wie viele Lösungen hat 3(x + 2) = 3x + 6?', type: 'choice', options: ['Jede Zahl ist eine Lösung', 'Keine Lösung', 'Genau eine: x = 0', 'Genau eine: x = 2'], correct: 0, points: 2 },
+                            { label: 'a) 5(x − 3) − 2(x − 6) = 3 + x', hint: 'Achtung bei −2(x − 6): −2 · (−6) = +12.', type: 'num', answer: 3, prefix: 'x =', points: 3 },
+                            { label: 'b) x : 4 + 5 = x − 1', hint: 'Nimm beide Seiten zuerst mal 4 – dann ist die Division weg.', type: 'num', answer: 8, prefix: 'x =', points: 3 },
+                            { label: 'c) Wie viele Lösungen hat 3(x + 2) = 3x + 6?', hint: 'Multipliziere aus und ziehe auf beiden Seiten 3x ab. Was bleibt übrig – stimmt das immer, nie oder nur manchmal?', type: 'choice', options: ['Jede Zahl ist eine Lösung', 'Keine Lösung', 'Genau eine: x = 0', 'Genau eine: x = 2'], correct: 0, points: 2 },
                             { label: 'd) Wie viele Lösungen hat 4(x + 1) = 4x + 1?', type: 'choice', options: ['Keine Lösung', 'Jede Zahl ist eine Lösung', 'Genau eine: x = 1', 'Genau eine: x = −1'], correct: 0, points: 2 }
                         ],
                         solution: [
@@ -196,7 +196,7 @@
                         title: 'Fehler finden', topic: 'Gleichungen (LU 10)', points: 4,
                         prompt: 'Tim löst die Gleichung 2(x + 3) = 5x − 9 so:<div class="font-mono-letter mt-2 space-y-0.5"><div>Zeile 1: 2x + 3 = 5x − 9</div><div>Zeile 2: 3 = 3x − 9</div><div>Zeile 3: 12 = 3x</div><div>Zeile 4: x = 4</div></div>',
                         parts: [
-                            { label: 'a) In welcher Zeile steckt der erste Fehler?', type: 'select', options: ['Zeile 1', 'Zeile 2', 'Zeile 3', 'Zeile 4'], correct: 0, keepOrder: true, points: 2 },
+                            { label: 'a) In welcher Zeile steckt der erste Fehler?', hint: 'Prüfe Zeile 1: Wird die 2 mit BEIDEN Gliedern der Klammer multipliziert?', type: 'select', options: ['Zeile 1', 'Zeile 2', 'Zeile 3', 'Zeile 4'], correct: 0, keepOrder: true, points: 2 },
                             { label: 'b) Wie lautet die richtige Lösung?', type: 'num', answer: 5, prefix: 'x =', points: 2 }
                         ],
                         solution: [
@@ -209,12 +209,12 @@
                         title: 'Anwendung: drei Häuser', topic: 'Anwendung (LU 10)', points: 7,
                         prompt: 'In Haus 1 wohnen 5 Personen mehr als in Haus 2. In Haus 3 wohnen halb so viele Personen wie in Haus 1. Insgesamt wohnen 45 Personen in den drei Häusern.',
                         parts: [
-                            { label: 'a) x = Anzahl Personen in Haus 2. Welcher Term beschreibt dann Haus 3?', type: 'select', options: ['½(x + 5)', '½x + 5', '2(x + 5)', 'x − 5'], correct: 0, points: 1 },
-                            { label: 'b) Welche Wahl für x vermeidet Brüche?', type: 'select', options: ['x = Personen in Haus 3', 'x = Personen in Haus 1', 'x = Personen in Haus 2', 'Es gibt keine Wahl ohne Brüche'], correct: 0, points: 1 },
+                            { label: 'a) x = Anzahl Personen in Haus 2. Welcher Term beschreibt dann Haus 3?', hint: 'Haus 3 ist die Hälfte von Haus 1, und Haus 1 ist x + 5. Die Hälfte gilt für die ganze Klammer.', type: 'select', options: ['½(x + 5)', '½x + 5', '2(x + 5)', 'x − 5'], correct: 0, points: 1 },
+                            { label: 'b) Welche Wahl für x vermeidet Brüche?', hint: 'Mit welchem Haus werden die anderen verglichen? Haus 1 ist das Doppelte von Haus 3.', type: 'select', options: ['x = Personen in Haus 3', 'x = Personen in Haus 1', 'x = Personen in Haus 2', 'Es gibt keine Wahl ohne Brüche'], correct: 0, points: 1 },
                             { label: 'c) Personen in Haus 1', type: 'num', answer: 20, unit: 'Personen', points: 1 },
                             { label: 'd) Personen in Haus 2', type: 'num', answer: 15, unit: 'Personen', points: 1 },
                             { label: 'e) Personen in Haus 3', type: 'num', answer: 10, unit: 'Personen', points: 1 },
-                            { label: 'f) Gleiche Regeln – aber jetzt wohnen in Haus 3 genau 12 Personen. Wie viele Personen wohnen dann insgesamt?', type: 'num', answer: 55, unit: 'Personen', points: 2 }
+                            { label: 'f) Gleiche Regeln – aber jetzt wohnen in Haus 3 genau 12 Personen. Wie viele Personen wohnen dann insgesamt?', hint: 'Haus 3 = 12 → Haus 1 ist doppelt so groß → Haus 2 hat 5 weniger als Haus 1.', type: 'num', answer: 55, unit: 'Personen', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Haus 1 = x + 5, Haus 3 ist die Hälfte davon: <strong>½(x + 5)</strong>. (½x + 5 wäre falsch – dann würde nur x halbiert.)',
@@ -231,7 +231,7 @@
                             { label: 'a) „Jeder Punkt auf dieser Geraden hat von den Seiten b und c den gleichen Abstand.“ Das ist die …', type: 'select', options: ['Winkelhalbierende von α', 'Mittelsenkrechte von a', 'Winkelhalbierende von γ', 'Höhe auf a'], correct: 0, points: 1 },
                             { label: 'b) α = 64°. Wie groß sind die beiden Winkel, in die die Winkelhalbierende α teilt?', type: 'num', answer: 32, unit: '° (je)', points: 1 },
                             { label: 'c) Ein Dreieck hat die Fläche 30 cm². Wie groß ist die Fläche eines der beiden Teildreiecke, in die die Seitenhalbierende s<sub>a</sub> es teilt?', type: 'num', answer: 15, unit: 'cm²', points: 1 },
-                            { label: 'd) Ein Dreieck hat die Seiten 10 cm, 8 cm und 6 cm. Wie groß ist der Umfang seines Seitenmittendreiecks?', type: 'num', answer: 12, unit: 'cm', points: 1 }
+                            { label: 'd) Ein Dreieck hat die Seiten 10 cm, 8 cm und 6 cm. Wie groß ist der Umfang seines Seitenmittendreiecks?', hint: 'Die Seiten des Seitenmittendreiecks sind halb so lang wie die des großen Dreiecks.', type: 'num', answer: 12, unit: 'cm', points: 1 }
                         ],
                         solution: [
                             '<strong>a)</strong> Die Seiten b und c treffen sich in der Ecke A und bilden dort den Winkel α → <strong>Winkelhalbierende von α</strong>.',
@@ -255,8 +255,8 @@
                         fig: { type: 'graph', xLabel: 'Zeit in min', yLabel: 'Wasserstand in cm', xmax: 50, ymax: 60, xstep: 5, ystep: 10, segs: [[[0, 10], [10, 40], [25, 40], [35, 20], [50, 50]]] },
                         parts: [
                             { label: 'a) Wie hoch steht das Wasser zu Beginn?', type: 'num', answer: 10, unit: 'cm', points: 1 },
-                            { label: 'b) Um wie viele Zentimeter steigt das Wasser in den ersten 10 Minuten pro Minute?', type: 'num', answer: 3, unit: 'cm pro min', points: 2 },
-                            { label: 'c) Nach wie vielen Minuten steht das Wasser zum zweiten Mal bei 30 cm?', type: 'num', answer: 30, unit: 'min', points: 2 },
+                            { label: 'b) Um wie viele Zentimeter steigt das Wasser in den ersten 10 Minuten pro Minute?', hint: 'Wie viele Zentimeter steigt das Wasser von 0 bis 10 Minuten insgesamt? Teile durch 10.', type: 'num', answer: 3, unit: 'cm pro min', points: 2 },
+                            { label: 'c) Nach wie vielen Minuten steht das Wasser zum zweiten Mal bei 30 cm?', hint: 'Denk dir eine waagrechte Linie bei 30 cm. Zähle von links, wo sie den Graphen schneidet. Beim Sinken fällt der Stand um 2 cm pro Minute.', type: 'num', answer: 30, unit: 'min', points: 2 },
                             { label: 'd) Welche Aussage stimmt?', type: 'choice', options: ['Zwischen 25 und 35 Minuten wird Wasser abgelassen', 'Zwischen 10 und 25 Minuten ist das Becken leer', 'Am Ende ist weniger Wasser im Becken als am Anfang', 'Am Ende steigt das Wasser schneller als am Anfang'], correct: 0, points: 2 }
                         ],
                         solution: [
@@ -271,10 +271,10 @@
                         title: 'Terme vereinfachen', topic: 'Terme (LU 10)', points: 8,
                         prompt: 'Wähle jeweils das richtige Ergebnis.',
                         parts: [
-                            { label: 'a) 1,5a · 4b − 2ab + 3b · (−2a)', type: 'choice', options: ['−2ab', '10ab', '−14ab', '2ab'], correct: 0, points: 2 },
-                            { label: 'b) x(3x − 2) − 2(x² − x)', type: 'choice', options: ['x²', 'x² − 4x', '5x² − 4x', 'x² + 4x'], correct: 0, points: 3 },
+                            { label: 'a) 1,5a · 4b − 2ab + 3b · (−2a)', hint: 'Rechne zuerst die beiden Produkte aus: 1,5a · 4b und 3b · (−2a).', type: 'choice', options: ['−2ab', '10ab', '−14ab', '2ab'], correct: 0, points: 2 },
+                            { label: 'b) x(3x − 2) − 2(x² − x)', hint: 'x(3x − 2): x mal jedes Glied in der Klammer. Bei −2(x² − x) auf die Vorzeichen achten.', type: 'choice', options: ['x²', 'x² − 4x', '5x² − 4x', 'x² + 4x'], correct: 0, points: 3 },
                             { label: 'c) Ergänze: 4 · ( ? ) = 12x − 8', type: 'select', options: ['3x − 2', '3x − 8', '12x − 2', '8x − 4'], correct: 0, points: 1 },
-                            { label: 'd) Mia rechnet: −(2a − 3b) + 4a = −2a − 3b + 4a = 2a − 3b. Was ist das richtige Ergebnis?', type: 'choice', options: ['2a + 3b', '2a − 3b', '6a − 3b', '−6a + 3b'], correct: 0, points: 2 }
+                            { label: 'd) Mia rechnet: −(2a − 3b) + 4a = −2a − 3b + 4a = 2a − 3b. Was ist das richtige Ergebnis?', hint: 'Bei einer Minusklammer dreht sich JEDES Vorzeichen in der Klammer um.', type: 'choice', options: ['2a + 3b', '2a − 3b', '6a − 3b', '−6a + 3b'], correct: 0, points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> Produkte: 1,5a · 4b = 6ab und 3b · (−2a) = −6ab. Zusammen: 6ab − 2ab − 6ab = <strong>−2ab</strong>.',
@@ -288,10 +288,10 @@
                         title: 'Gleichungen mit Klammern, Kommas und Brüchen', topic: 'Gleichungen (LU 10)', points: 10,
                         prompt: 'Löse im Heft und trage x ein.',
                         parts: [
-                            { label: 'a) 2(3x − 1) − (x + 4) = 3(x − 4)', type: 'num', answer: -3, prefix: 'x =', points: 3 },
-                            { label: 'b) 0,2x + 1,4 = 0,5x − 0,4', type: 'num', answer: 6, prefix: 'x =', points: 2 },
-                            { label: 'c) ½(4x + 10) = 3(x − 2)', type: 'num', answer: 11, prefix: 'x =', points: 3 },
-                            { label: 'd) x : 3 − 2 = x : 5 + 2', type: 'num', answer: 30, prefix: 'x =', points: 2 }
+                            { label: 'a) 2(3x − 1) − (x + 4) = 3(x − 4)', hint: 'Die Minusklammer −(x + 4) wird zu −x − 4. Die Lösung ist negativ.', type: 'num', answer: -3, prefix: 'x =', points: 3 },
+                            { label: 'b) 0,2x + 1,4 = 0,5x − 0,4', hint: 'Nimm beide Seiten mal 10 – dann verschwinden die Kommas.', type: 'num', answer: 6, prefix: 'x =', points: 2 },
+                            { label: 'c) ½(4x + 10) = 3(x − 2)', hint: '½(4x + 10) = 2x + 5.', type: 'num', answer: 11, prefix: 'x =', points: 3 },
+                            { label: 'd) x : 3 − 2 = x : 5 + 2', hint: 'Nimm beide Seiten mal 15 – das passt zu 3 und zu 5, dann sind beide Divisionen weg.', type: 'num', answer: 30, prefix: 'x =', points: 2 }
                         ],
                         solution: [
                             '<strong>a)</strong> 6x − 2 − x − 4 = 3x − 12 → 5x − 6 = 3x − 12 &nbsp;| − 3x → 2x − 6 = −12 &nbsp;| + 6 → 2x = −6 &nbsp;| : 2 → <strong>x = −3</strong>. Probe: 2 · (−10) − 1 = −21 und 3 · (−7) = −21 ✓',
@@ -319,7 +319,7 @@
                         title: 'Anwendung mit Vergleich', topic: 'Anwendung (LU 10)', points: 7,
                         prompt: 'In Haus 1 wohnen doppelt so viele Personen wie in Haus 3. In Haus 2 wohnen 7 Personen weniger als in Haus 1. In Haus 1 und Haus 2 zusammen wohnen genau 11 Personen mehr als in Haus 3. <em>x = Anzahl Personen in Haus 3.</em>',
                         parts: [
-                            { label: 'a) Welche Gleichung beschreibt die Situation?', type: 'select', options: ['2x + (2x − 7) = x + 11', '2x + 2x − 7 + 11 = x', '2x + (2x − 7) + x = 11', '2x + (x − 7) = x + 11'], correct: 0, points: 2 },
+                            { label: 'a) Welche Gleichung beschreibt die Situation?', hint: '„Haus 1 und Haus 2 zusammen“ ist die linke Seite, „11 mehr als Haus 3“ die rechte Seite.', type: 'select', options: ['2x + (2x − 7) = x + 11', '2x + 2x − 7 + 11 = x', '2x + (2x − 7) + x = 11', '2x + (x − 7) = x + 11'], correct: 0, points: 2 },
                             { label: 'b) Personen in Haus 3', type: 'num', answer: 6, unit: 'Personen', points: 1 },
                             { label: 'c) Personen in Haus 1', type: 'num', answer: 12, unit: 'Personen', points: 1 },
                             { label: 'd) Personen in Haus 2', type: 'num', answer: 5, unit: 'Personen', points: 1 },
@@ -339,7 +339,7 @@
                         parts: [
                             { label: 'a) Inkreis zeichnen: Was ist der richtige Schritt direkt nach dem Finden des Schnittpunkts I?', type: 'select', options: ['Lot von I auf eine Seite fällen – das ist der Radius', 'Zirkel von I bis zu einer Ecke aufziehen', 'Die drei Höhen einzeichnen', 'Die Seitenmitten verbinden'], correct: 0, points: 1 },
                             { label: 'b) Ein Dreieck hat α = 30°, β = 60° und γ = 90°. Wo liegt der Höhenschnittpunkt?', type: 'choice', options: ['In der Ecke C', 'In der Mitte der Seite c', 'Außerhalb des Dreiecks', 'Im Inkreismittelpunkt'], correct: 0, points: 1 },
-                            { label: 'c) Ein Seitenmittendreieck hat die Fläche 7 cm². Wie groß ist die Fläche des großen Dreiecks?', type: 'num', answer: 28, unit: 'cm²', points: 1 },
+                            { label: 'c) Ein Seitenmittendreieck hat die Fläche 7 cm². Wie groß ist die Fläche des großen Dreiecks?', hint: 'Die Seitenmitten teilen das große Dreieck in 4 deckungsgleiche Dreiecke.', type: 'num', answer: 28, unit: 'cm²', points: 1 },
                             { label: 'd) Der Schwerpunkt S (Schnittpunkt der Seitenhalbierenden) liegt …', type: 'choice', options: ['immer innerhalb des Dreiecks', 'bei stumpfwinkligen Dreiecken außerhalb', 'immer auf einer Seite', 'immer in einer Ecke'], correct: 0, points: 1 }
                         ],
                         solution: [

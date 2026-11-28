@@ -49,9 +49,13 @@ Jedes neue Kapitel bekommt am Ende der Roadmap **2–3 Probeklausuren** (Reiter 
 Erdkunde, Deutsch und Chemie bleiben bewusst ohne.
 
 - Antworten iPad-tauglich: **Zahlen eintippen** (`num`), Terme/Gleichungen/Begriffe **auswählen** (`choice`, `select`).
-- Ohne Zeit üben: Jede Aufgabe lässt sich prüfen, sobald alles ausgefüllt ist – dann erscheint der ausführliche Lösungsweg.
-- Mit Timer: Countdown-Animation (3 – 2 – 1 – Los!), Zeit läuft unten rechts weiter, auch beim Fachwechsel. Bei Zeitablauf
-  oder beim Abgeben kommt „Stift weg!“, danach Punkte, Note (Orientierung: ab 92 % sehr gut) und alle Lösungswege.
+- **Abgeben jederzeit** – auch mit leeren oder falschen Antworten (eigener Dialog „Klausur jetzt abgeben?“).
+- **Prüfen** einer Aufgabe, sobald alles ausgefüllt ist. Der **Lösungsweg** lässt sich jederzeit aufklappen; vor dem Prüfen wird
+  das als „👀 Lösung angesehen“ vermerkt, und so ein Durchgang zählt nicht als Bestwert.
+- **💡 Tipps** neben schwierigen Teilaufgaben (`hint` in den Daten), die Anzahl genutzter Tipps steht im Ergebnis.
+- **Timer:** Countdown-Animation (3 – 2 – 1 – Los!), **Pause/Weiter**, **Neu starten** (Antworten bleiben), Anzeige unten rechts –
+  auch beim Fachwechsel. Bei Zeitablauf oder beim Abgeben kommt „Stift weg!“, danach Punkte, Note (ab 92 % sehr gut) und
+  alle Lösungswege.
 - Gespeichert wird nur der Bestwert im Browser (`edumaster_exam_best`).
 
 ## Updates mit der Werkbank
