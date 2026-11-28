@@ -100,9 +100,9 @@ def main() -> int:
             r = subprocess.run([node, "--check", str(js)], capture_output=True, text=True, encoding="utf-8", errors="replace")
             check(r.returncode == 0, "JavaScript-Syntax fehlerfrei" + (f": {r.stderr.strip()[:300]}" if r.returncode else ""))
 
-            data_js = "".join((ROOT / "src" / n).read_text(encoding="utf-8") for n in ("2_data_original.js", "3_data_chemie.js", "3c_data_mathe.js"))
+            data_js = "".join((ROOT / "src" / n).read_text(encoding="utf-8") for n in ("2_data_original.js", "3_data_chemie.js", "3c_data_mathe.js", "3e_data_mathe_klausuren.js"))
             harness = Path(tmp) / "data.cjs"
-            harness.write_text(data_js + "\nmodule.exports = { erdkundeLevels, deutschLevels, chemieLevels, matheLevels, deutschExercises, chemieExercises, matheExercises, puzzleData, chemiePuzzle, mathePuzzle, cheatsheetData, chemieCheatsheet, matheCheatsheet };\n"
+            harness.write_text(data_js + "\nmodule.exports = { erdkundeLevels, deutschLevels, chemieLevels, matheLevels, deutschExercises, chemieExercises, matheExercises, puzzleData, chemiePuzzle, mathePuzzle, cheatsheetData, chemieCheatsheet, matheCheatsheet, matheExams };\n"
                                "if (require.main === module) process.stdout.write(JSON.stringify(module.exports));\n", encoding="utf-8")
             r = subprocess.run([node, str(harness)], capture_output=True, text=True, encoding="utf-8", errors="replace")
             if r.returncode != 0:
@@ -135,6 +135,29 @@ def main() -> int:
                     check(15 <= len(ex) <= 20 and all(e.get("level") in levels_ok for e in ex), f"{name}: 15–20 Übungen mit Schwierigkeitsgrad")
                     check(all(p["term"] and p["exp"] for p in d[pre + "Puzzle"]), f"{name}-Puzzle: {len(d[pre + 'Puzzle'])} Paare")
                     check(len(d[pre + "Cheatsheet"]) >= 5, f"{name}-Spickzettel: {len(d[pre + 'Cheatsheet'])} Karten")
+                # Probeklausuren (ab Mathe): 2–3 Stück, Punkte stimmen, jede Antwort prüfbar, Lösungsweg vorhanden
+                exams = d["matheExams"]
+                problems = []
+                for ex in exams:
+                    total = 0
+                    for ti, t in enumerate(ex.get("tasks", [])):
+                        parts = t.get("parts", [])
+                        if sum(p.get("points", 0) for p in parts) != t.get("points"):
+                            problems.append(f"{ex['id']} A{ti + 1}: Punkte stimmen nicht")
+                        if not t.get("solution"):
+                            problems.append(f"{ex['id']} A{ti + 1}: Lösungsweg fehlt")
+                        for pi, p in enumerate(parts):
+                            kind = p.get("type")
+                            if kind == "num" and not isinstance(p.get("answer"), (int, float)):
+                                problems.append(f"{ex['id']} A{ti + 1}.{pi + 1}: Zahl fehlt")
+                            elif kind in ("choice", "select") and not (isinstance(p.get("correct"), int) and 0 <= p["correct"] < len(p.get("options", [])) and len(set(p.get("options", []))) == len(p.get("options", []))):
+                                problems.append(f"{ex['id']} A{ti + 1}.{pi + 1}: Auswahl fehlerhaft")
+                            elif kind not in ("num", "choice", "select"):
+                                problems.append(f"{ex['id']} A{ti + 1}.{pi + 1}: unbekannter Typ")
+                        total += t.get("points", 0)
+                    if not ex.get("minutes"):
+                        problems.append(f"{ex['id']}: Zeit fehlt")
+                check(2 <= len(exams) <= 3 and not problems, f"Mathe-Probeklausuren: {len(exams)} vollständig (Punkte, Antworten, Lösungswege)" + (f" – {problems[:4]}" if problems else ""))
 
     width = max(len(t) for _, t in results)
     for ok, text in results:

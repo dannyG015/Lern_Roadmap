@@ -424,6 +424,66 @@
             .level-card:hover, .subject-card:hover { transform: none; }
         }
 
+        /* Probeklausuren */
+        .exam-start-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding-top: .25rem; }
+        .exam-start-btn { display: inline-flex; align-items: center; gap: .85rem; padding: .8rem 1.25rem .8rem .8rem; border-radius: 20px; color: #fff; background: var(--ac-grad); box-shadow: 0 12px 28px -12px var(--ac); transition: transform .15s ease, filter .15s ease; }
+        .exam-start-btn:hover { filter: brightness(1.06); }
+        .exam-start-btn:active { transform: scale(.97); }
+        .exam-start-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: rgba(255, 255, 255, .22); font-size: 1.2rem; animation: tickTock 2.4s ease-in-out infinite; }
+        @keyframes tickTock { 0%, 100% { transform: rotate(0); } 10% { transform: rotate(-14deg); } 20% { transform: rotate(12deg); } 30% { transform: rotate(0); } }
+        .exam-live { display: inline-flex; align-items: center; gap: .45rem; font-size: .8rem; font-weight: 800; color: #be123c; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 999px; padding: .35rem .75rem; }
+        .exam-live .dot { width: 8px; height: 8px; border-radius: 50%; background: #e11d48; animation: livePulse 1.2s ease-in-out infinite; }
+        @keyframes livePulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+        .exam-part { padding: .9rem 1rem; border-radius: 16px; background: rgba(248, 250, 252, .8); border: 1px solid var(--line); }
+        .exam-input, .exam-select { min-height: 44px; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #fff; padding: .5rem .8rem; font-size: 16px; font-weight: 700; color: var(--ink); }
+        .exam-input { width: 8.5rem; font-family: 'Fira Code', ui-monospace, monospace; }
+        .exam-select { min-width: 12rem; max-width: 100%; }
+        .exam-input:focus, .exam-select:focus { outline: none; border-color: var(--ac); box-shadow: 0 0 0 3px var(--ac-soft-2); }
+        .exam-input.is-ok, .exam-select.is-ok { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+        .exam-input.is-bad, .exam-select.is-bad { border-color: #f43f5e; background: #fff1f2; color: #9f1239; }
+        .opt.picked { border-color: var(--ac); background: var(--ac-soft); box-shadow: 0 0 0 3px var(--ac-soft-2); }
+        .opt.picked .key { background: var(--ac); color: #fff; }
+        .exam-mark { font-size: .75rem; font-weight: 800; white-space: nowrap; }
+        .exam-mark.ok { color: #059669; } .exam-mark.bad { color: #e11d48; }
+        .exam-points { font-size: .78rem; font-weight: 800; padding: .3rem .7rem; border-radius: 999px; background: #f1f5f9; color: var(--ink-2); }
+        .exam-points.ok { background: #ecfdf5; color: #047857; } .exam-points.mid { background: #fffbeb; color: #b45309; } .exam-points.bad { background: #fff1f2; color: #be123c; }
+        .exam-result { padding: 1.1rem; border-radius: 20px; background: rgba(255, 255, 255, .9); border: 1px solid var(--line); animation: fadeUp .4s ease both; }
+        .exam-grade { width: 84px; height: 84px; border-radius: 26px; display: grid; place-items: center; font-size: 2.6rem; font-weight: 800; background: #fff; border: 3px solid currentColor; animation: gradePop .6s cubic-bezier(.2, .9, .3, 1.4) both; }
+        @keyframes gradePop { from { transform: scale(.3) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+        .exam-mini { display: flex; justify-content: space-between; gap: .5rem; padding: .5rem .75rem; border-radius: 12px; background: #fffbeb; color: #92400e; font-size: .8rem; }
+        .exam-mini.ok { background: #ecfdf5; color: #065f46; } .exam-mini.bad { background: #fff1f2; color: #9f1239; }
+        /* Countdown & „Stift weg!“ */
+        .exam-overlay { position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, rgba(59, 130, 246, .55), rgba(15, 23, 42, .78)); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); animation: ovIn .25s ease both; text-align: center; padding: 1rem; }
+        .exam-overlay.stop { background: radial-gradient(circle at 50% 40%, rgba(244, 63, 94, .55), rgba(15, 23, 42, .82)); }
+        .exam-overlay.out { animation: ovOut .35s ease both; }
+        @keyframes ovIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes ovOut { from { opacity: 1; } to { opacity: 0; transform: scale(1.04); } }
+        .exam-ov-box { position: relative; display: grid; place-items: center; min-width: 16rem; min-height: 16rem; color: #fff; }
+        .exam-ring { position: absolute; inset: 0; margin: auto; width: 16rem; height: 16rem; border-radius: 50%; border: 6px solid rgba(255, 255, 255, .45); animation: ringPulse .85s ease-out both; }
+        @keyframes ringPulse { from { transform: scale(.35); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+        .exam-ready { font-size: clamp(2.2rem, 8vw, 3.5rem); font-weight: 800; animation: fadeUp .4s ease both; }
+        .exam-count { font-size: clamp(6rem, 24vw, 11rem); font-weight: 800; line-height: 1; text-shadow: 0 14px 40px rgba(0, 0, 0, .35); animation: countPop .85s cubic-bezier(.2, .9, .3, 1.4) both; }
+        @keyframes countPop { 0% { transform: scale(.25); opacity: 0; } 35% { transform: scale(1.15); opacity: 1; } 70% { transform: scale(1); opacity: 1; } 100% { transform: scale(.85); opacity: .15; } }
+        .exam-go { font-size: clamp(2.6rem, 10vw, 5rem); font-weight: 800; animation: goIn .6s cubic-bezier(.2, .9, .3, 1.35) both; }
+        @keyframes goIn { from { transform: scale(.4) rotate(-6deg); opacity: 0; } to { transform: none; opacity: 1; } }
+        .exam-pen-wiggle { animation: penWiggle .5s ease-in-out 3; transform-origin: 70% 90%; }
+        @keyframes penWiggle { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-18deg) translateX(-4px); } }
+        .exam-ov-sub { margin-top: .75rem; font-size: 1rem; font-weight: 700; opacity: .9; animation: fadeUp .5s .3s ease both; }
+        .exam-pen-drop { font-size: clamp(3.5rem, 12vw, 5.5rem); line-height: 1; animation: penDrop 1.1s cubic-bezier(.3, 1.5, .5, 1) both; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35)); }
+        @keyframes penDrop { 0% { transform: translateY(-70vh) rotate(-60deg); } 55% { transform: translateY(0) rotate(25deg); } 72% { transform: translateY(-26px) rotate(-12deg); } 86% { transform: translateY(0) rotate(6deg); } 100% { transform: translateY(0) rotate(-35deg); } }
+        .exam-stift { margin-top: .5rem; font-size: clamp(3rem, 13vw, 6rem); font-weight: 800; letter-spacing: -.02em; text-shadow: 0 14px 40px rgba(0, 0, 0, .35); animation: slam .55s .55s cubic-bezier(.2, .9, .3, 1.4) both, shake .35s 1.1s ease both; }
+        @keyframes slam { 0% { transform: scale(2.6); opacity: 0; } 60% { transform: scale(.92); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        /* Timer unten rechts (bleibt beim Fachwechsel sichtbar) */
+        .exam-timer { position: fixed; right: 16px; bottom: 16px; z-index: 70; display: flex; align-items: center; gap: .35rem; padding: .35rem; border-radius: 999px; background: rgba(255, 255, 255, .92); border: 1px solid var(--glass-border); box-shadow: var(--shadow-lift); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); animation: fadeUp .35s ease both; }
+        .exam-timer-main { display: flex; align-items: center; gap: .5rem; min-height: 44px; padding: 0 .75rem 0 .35rem; border-radius: 999px; font-size: 1.15rem; font-weight: 800; color: var(--ink); }
+        .exam-timer-ring { width: 34px; height: 34px; transform: rotate(-90deg); }
+        .exam-timer-ring .bg { fill: none; stroke: #e2e8f0; stroke-width: 4; }
+        .exam-timer-ring .fg { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset .25s linear; }
+        .exam-timer-stop { min-height: 44px; padding: 0 1rem; border-radius: 999px; font-size: .85rem; font-weight: 800; color: #fff; background: #0f172a; }
+        .exam-timer.warn .exam-timer-main { color: #b45309; } .exam-timer.warn .fg { stroke: #f59e0b; }
+        .exam-timer.danger .exam-timer-main { color: #be123c; animation: livePulse 1s ease-in-out infinite; } .exam-timer.danger .fg { stroke: #e11d48; }
+        .exam-timer.hidden { display: none; }
+
         /* Animationen */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         @keyframes sheetIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
@@ -605,6 +665,11 @@
                     </div>
                     <div class="space-y-4" id="exercises-container"></div>
                 </div>
+            </section>
+
+            <!-- REITER: PROBEKLAUSUREN (ab dem Mathe-Kapitel) -->
+            <section id="sec-exams" class="hidden space-y-6">
+                <div id="exams-content"></div>
             </section>
 
             <!-- REITER 5: MATCH-PUZZLE -->

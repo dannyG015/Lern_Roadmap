@@ -15,9 +15,11 @@ EduMaster\
 │   ├── 3b_chemie_labor.js  Chemie-Labor (Teilchenbilder, Simulationen, Piktogramme …)
 │   ├── 3c_data_mathe.js    Mathe: 7 Level, 20 Übungen, Puzzle, Spickzettel (Buch S. 18–19, 26–33 + Checkliste)
 │   ├── 3d_mathe_labor.js   Mathe-Labor (Graph-Detektiv, Knack die Box, Gleichungs-/Term-Trainer, Dreiecke, Trapez)
+│   ├── 3e_data_mathe_klausuren.js  Mathe: 3 Probeklausuren (je 45 min, 40 Punkte, mit Lösungswegen)
 │   ├── 4_labor_original.js Geo-Labor, DIN-5008-Trainer, Unterlagen-Analyse
 │   ├── 5_app.js            Navigation, Roadmap, Quiz, Videos, Fortschritts-Code
 │   ├── 5b_feedback.js      Feedback-Dialog
+│   ├── 5c_klausuren.js     Probeklausuren: Timer mit Countdown, „Stift weg!“, Auswertung mit Note
 │   └── 6_shell_bottom.html
 ├── tools\build.py          baut index.html aus src\
 ├── tools\check_app.py      Prüfung vor jeder Veröffentlichung (auch Test der Werkbank)
@@ -30,7 +32,7 @@ EduMaster\
 
 ```
 python tools\build.py        # nur bauen
-python tools\check_app.py    # bauen + 36 Prüfungen (Daten, Syntax, Sicherheit, iPad)
+python tools\check_app.py    # bauen + 37 Prüfungen (Daten, Syntax, Sicherheit, iPad)
 ```
 
 ## Veröffentlichen (GitHub Pages)
@@ -40,6 +42,17 @@ Repo: **[dannyG015/Lern_Roadmap](https://github.com/dannyG015/Lern_Roadmap)** �
 
 Bei jedem Update: **`veroeffentlichen.bat`** doppelklicken. Das Skript prüft die App, und nur wenn alles grün ist,
 committet es und lädt hoch (`git push`). Nach 1–2 Minuten ist die neue Version online.
+
+## Probeklausuren (ab dem Mathe-Kapitel)
+
+Jedes neue Kapitel bekommt am Ende der Roadmap **2–3 Probeklausuren** (Reiter „Probeklausuren“, in `SUBJECTS[fach].exams`).
+Erdkunde, Deutsch und Chemie bleiben bewusst ohne.
+
+- Antworten iPad-tauglich: **Zahlen eintippen** (`num`), Terme/Gleichungen/Begriffe **auswählen** (`choice`, `select`).
+- Ohne Zeit üben: Jede Aufgabe lässt sich prüfen, sobald alles ausgefüllt ist – dann erscheint der ausführliche Lösungsweg.
+- Mit Timer: Countdown-Animation (3 – 2 – 1 – Los!), Zeit läuft unten rechts weiter, auch beim Fachwechsel. Bei Zeitablauf
+  oder beim Abgeben kommt „Stift weg!“, danach Punkte, Note (Orientierung: ab 92 % sehr gut) und alle Lösungswege.
+- Gespeichert wird nur der Bestwert im Browser (`edumaster_exam_best`).
 
 ## Updates mit der Werkbank
 

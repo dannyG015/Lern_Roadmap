@@ -5,7 +5,7 @@
         // ==========================================
         // Reihenfolge nie ändern – neue Fächer nur hinten anhängen (der Fortschritts-Code hängt davon ab).
         const SUBJECT_ORDER = ['erdkunde', 'deutsch', 'chemie', 'mathe'];
-        const SECTION_IDS = ['roadmap', 'visuals', 'analysis', 'exercises', 'puzzle', 'cheatsheet', 'notes'];
+        const SECTION_IDS = ['roadmap', 'visuals', 'analysis', 'exercises', 'exams', 'puzzle', 'cheatsheet', 'notes'];
 
         const SUBJECTS = {
             erdkunde: {
@@ -105,10 +105,12 @@
                 exercisesDesc: 'Rechne jede Aufgabe zuerst selbst im Heft. Die Musterlösung deckst du danach Schritt für Schritt auf. Die Farbe zeigt den Schwierigkeitsgrad: Grundlagen → Anwenden → Transfer → Klausur.',
                 puzzle: mathePuzzle,
                 cheatsheet: matheCheatsheet,
+                exams: matheExams,
                 tabs: [
                     ['roadmap', 'fa-map', 'Roadmap'],
                     ['visuals', 'fa-shapes', 'Mathe-Labor'],
                     ['exercises', 'fa-pen-ruler', '20 Übungen'],
+                    ['exams', 'fa-stopwatch', 'Probeklausuren'],
                     ['puzzle', 'fa-puzzle-piece', 'Match-Puzzle'],
                     ['cheatsheet', 'fa-file-invoice', 'Spickzettel'],
                     ['notes', 'fa-pen-to-square', 'Notizen']
@@ -407,6 +409,7 @@
             if (tId === 'visuals') s.renderVisuals();
             else if (tId === 'analysis') renderAnalysisTab('elias');
             else if (tId === 'exercises') renderExercises();
+            else if (tId === 'exams' && typeof renderExams === 'function') renderExams();
         }
 
         function updateGlobalStats() {
@@ -450,7 +453,31 @@
                         </div>
                     </div>
                 `;
-            }).join('');
+            }).join('') + roadmapFinale(s);
+        }
+
+        // Ziel am Ende der Roadmap: Probeklausuren (nur Fächer, die welche haben)
+        function roadmapFinale(s) {
+            if (!s.exams || !s.exams.length) return '';
+            const side = s.levels.length % 2 === 0 ? 'zz-left' : 'zz-right';
+            return `
+                <div class="zz-item ${side}">
+                    <button type="button" onclick="switchTab('exams')" class="tl-node zz-node bg-gradient-to-br from-amber-400 to-rose-500" aria-label="Probeklausuren öffnen">
+                        <i class="fa-solid fa-flag-checkered"></i>
+                    </button>
+                    <div class="glass level-card zz-card">
+                        <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                            <span class="chip">Finale</span>
+                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-stopwatch"></i> mit Timer</span>
+                        </div>
+                        <h3 class="text-lg font-extrabold leading-snug">${s.exams.length} Probeklausuren</h3>
+                        <p class="text-xs font-bold accent-text mb-1.5">Wie die echte Klassenarbeit – für die Eins</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">Alle Themen gemischt, mit Punkten, Note und ausführlichen Lösungswegen. Am besten nach den Leveln und Übungen.</p>
+                        <button type="button" onclick="switchTab('exams')" class="btn w-full mt-4 text-white bg-gradient-to-r from-amber-400 to-rose-500 shadow-md hover:brightness-105">
+                            Zu den Probeklausuren <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>`;
         }
 
         // ==========================================

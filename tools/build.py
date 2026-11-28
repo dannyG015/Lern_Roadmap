@@ -25,8 +25,10 @@ ORDER = [
     "3b_chemie_labor.js",
     "3c_data_mathe.js",
     "3d_mathe_labor.js",
+    "3e_data_mathe_klausuren.js",
     "4_labor_original.js",
     "5_app.js",
+    "5c_klausuren.js",
     "5b_feedback.js",
     "6_shell_bottom.html",
 ]
